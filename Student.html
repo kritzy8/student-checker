@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <base target="_top" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>เช็กชื่อ</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #14213d;
+        --mute: #64708a;
+        --ok: #15803d;
+        --okbg: #dcfce7;
+        --bad: #b91c1c;
+        --badbg: #fee2e2;
+        --brand: #2563eb;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Noto Sans Thai", system-ui, sans-serif;
+        background: #f4f6fb;
+        color: var(--ink);
+        padding: 20px;
+      }
+      .card {
+        width: 100%;
+        max-width: 380px;
+        background: #fff;
+        border-radius: 20px;
+        padding: 36px 24px;
+        text-align: center;
+        box-shadow: 0 6px 30px rgba(20, 33, 61, 0.08);
+      }
+      .icon {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        margin: 0 auto 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 44px;
+        font-weight: 800;
+      }
+      .icon.spin {
+        border: 6px solid #dbe4f7;
+        border-top-color: var(--brand);
+        animation: s 0.9s linear infinite;
+      }
+      .icon.ok {
+        background: var(--okbg);
+        color: var(--ok);
+      }
+      .icon.bad {
+        background: var(--badbg);
+        color: var(--bad);
+      }
+      @keyframes s {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0 0 10px;
+      }
+      p {
+        margin: 6px 0;
+        color: var(--mute);
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      .name {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div id="icon" class="icon spin"></div>
+      <h1 id="title">กำลังเช็กชื่อ…</h1>
+      <p id="sub"></p>
+      <p id="sub2"></p>
+    </main>
+
+    <script>
+      const SESSION_ID = <?!= JSON.stringify(sessionId) ?>;
+      const TOKEN = <?!= JSON.stringify(token) ?>;
+      const AUTH = <?!= JSON.stringify(auth) ?>;
+
+      function deviceId() {
+        try {
+          let d = localStorage.getItem('att_device');
+          if (!d) {
+            d = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now();
+            localStorage.setItem('att_device', d);
+          }
+          return d;
+        } catch (e) { return ''; }
+      }
+
+      function set(kind, glyph, title, sub, sub2) {
+        const icon = document.getElementById('icon');
+        icon.className = 'icon ' + kind;
+        icon.textContent = glyph;
+        document.getElementById('title').textContent = title;
+        const s = document.getElementById('sub');
+        s.textContent = sub || '';
+        s.className = kind === 'ok' ? 'name' : '';
+        document.getElementById('sub2').textContent = sub2 || '';
+      }
+
+      if (!SESSION_ID || !TOKEN) {
+        set('bad', '!', 'ลิงก์ไม่ถูกต้อง', 'กรุณาสแกน QR Code จากหน้าจอหน้าห้องเรียนอีกครั้ง');
+      } else {
+        google.script.run
+          .withSuccessHandler(function (r) {
+            if (r.ok) {
+              set('ok', '✓', r.already ? 'เช็กชื่อไว้แล้ว' : 'เช็กชื่อสำเร็จ',
+                r.name, 'เลขที่ ' + r.studentId + ' · ห้อง ' + r.cls + ' · ' + r.timeText);
+            } else {
+              set('bad', '✕', 'เช็กชื่อไม่สำเร็จ', r.msg);
+            }
+          })
+          .withFailureHandler(function (e) {
+            set('bad', '✕', 'เชื่อมต่อไม่ได้',
+              (e && e.message) ? e.message.replace(/^Error:\s*/, '') : 'ตรวจสอบอินเทอร์เน็ตแล้วสแกน QR Code ใหม่อีกครั้ง');
+          })
+          .api(AUTH, 'checkin', [SESSION_ID, TOKEN, deviceId()]);
+      }
+    </script>
+  </body>
+</html>

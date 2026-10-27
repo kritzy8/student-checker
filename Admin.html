@@ -1,0 +1,2100 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <base target="_top" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ระบบหลังบ้าน</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #fff;
+        --ink: #14213d;
+        --mute: #64708a;
+        --line: #e3e8f2;
+        --brand: #2563eb;
+        --brandbg: #e8effd;
+        --p: #16a34a;
+        --l: #d97706;
+        --v: #2563eb;
+        --a: #dc2626;
+        --badbg: #fee2e2;
+        --bad: #b91c1c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      body {
+        margin: 0;
+        font-family: "Noto Sans Thai", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        width: 100%;
+        overflow-x: hidden;
+      }
+
+      .app {
+        display: grid;
+        grid-template-columns: 230px 1fr;
+        min-height: 100vh;
+        width: 100%;
+        max-width: 100vw;
+      }
+      .side {
+        background: var(--card);
+        border-right: 1px solid var(--line);
+        padding: 18px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        z-index: 100;
+        transition: transform 0.3s ease;
+      }
+      .brand {
+        font-weight: 800;
+        font-size: 17px;
+        padding: 4px 12px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .brand small {
+        display: block;
+        font-weight: 400;
+        color: var(--mute);
+        font-size: 12px;
+      }
+      .nav {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        width: 100%;
+        text-align: left;
+        background: transparent;
+        color: var(--ink);
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 0;
+        cursor: pointer;
+      }
+      .nav.on {
+        background: var(--brandbg);
+        color: var(--brand);
+      }
+      .nav:hover:not(.on) {
+        background: #f1f4fb;
+      }
+      .nav.ext {
+        margin-top: auto;
+        border: 1px solid var(--line);
+      }
+
+      .menu-toggle {
+        display: none;
+        background: transparent;
+        border: 0;
+        font-size: 22px;
+        cursor: pointer;
+        color: var(--ink);
+        padding: 4px 8px;
+      }
+      .overlay-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 33, 61, 0.45);
+        z-index: 90;
+        display: none;
+      }
+
+      .content {
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 20px;
+        background: var(--card);
+        border-bottom: 1px solid var(--line);
+        gap: 12px;
+        width: 100%;
+      }
+      header h1 {
+        font-size: 17px;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      #who {
+        color: var(--mute);
+        font-size: 13px;
+        text-align: right;
+        word-break: break-all;
+        max-width: 45%;
+      }
+
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 16px;
+        width: 100%;
+      }
+      .view {
+        display: grid;
+        gap: 16px;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+      }
+      .cardtop {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+      .cardtop h2 {
+        margin: 0;
+      }
+
+      .report-filter {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        align-items: end;
+        width: 100%;
+      }
+      .report-filter .quick-btns {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .report-filter .quick-btns button {
+        flex: 1;
+        min-width: 50px;
+        padding: 8px 4px;
+        font-size: 12px;
+      }
+
+      label {
+        display: block;
+        font-size: 13px;
+        color: var(--mute);
+        margin-bottom: 4px;
+      }
+      select,
+      input {
+        font: inherit;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        width: 100%;
+        max-width: 100%;
+      }
+      button {
+        font: inherit;
+        font-weight: 600;
+        border: 0;
+        border-radius: 10px;
+        padding: 9px 16px;
+        cursor: pointer;
+        background: var(--brand);
+        color: #fff;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      button.ghost {
+        background: #eef2fb;
+        color: var(--ink);
+      }
+      button.ghost.on {
+        background: var(--ink);
+        color: #fff;
+      }
+      button.danger {
+        background: var(--bad);
+      }
+      button.small {
+        padding: 4px 10px;
+        font-size: 13px;
+      }
+      .err {
+        margin-top: 12px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: var(--badbg);
+        color: var(--bad);
+        word-break: break-word;
+      }
+
+      .grid2 {
+        display: grid;
+        grid-template-columns: minmax(260px, 340px) 1fr;
+        gap: 16px;
+        width: 100%;
+        min-width: 0;
+      }
+      .dgrid {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 16px;
+        align-items: start;
+        width: 100%;
+        min-width: 0;
+      }
+      h2 {
+        font-size: 16px;
+        margin: 0 0 12px;
+      }
+      .hint {
+        font-size: 13px;
+        color: var(--mute);
+        word-break: break-word;
+      }
+
+      .sumrow {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .legend {
+        display: grid;
+        gap: 6px;
+        font-size: 13px;
+      }
+      .legend div {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        display: inline-block;
+        flex-shrink: 0;
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+      }
+
+      .bars {
+        display: flex;
+        gap: 4px;
+        align-items: flex-end;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        width: 100%;
+      }
+      .vb {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 24px;
+        flex: 1;
+        max-width: 48px;
+      }
+      .vb .pct {
+        font-size: 10px;
+        color: var(--mute);
+      }
+      .stack {
+        display: flex;
+        flex-direction: column-reverse;
+        width: 100%;
+        height: 140px;
+        background: var(--line);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .stack i {
+        display: block;
+        width: 100%;
+      }
+      .vb .vl {
+        font-size: 10px;
+        color: var(--mute);
+        margin-top: 4px;
+        text-align: center;
+        line-height: 1.1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+      }
+      .tabs {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 12px;
+        width: 100%;
+      }
+      .tabs .sp {
+        flex: 1;
+      }
+      .toolbar-right {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .tablewrap {
+        overflow-x: auto;
+        width: 100%;
+        -webkit-overflow-scrolling: touch;
+        max-height: 60vh;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--line);
+      }
+      th {
+        position: sticky;
+        top: 0;
+        background: #fafbfe;
+        font-size: 12px;
+        color: var(--mute);
+        z-index: 2;
+      }
+      td.n,
+      th.n {
+        text-align: right;
+      }
+      tr.click {
+        cursor: pointer;
+      }
+      tr.click:hover {
+        background: #f7f9fe;
+      }
+      .hb {
+        display: flex;
+        height: 8px;
+        width: 80px;
+        border-radius: 99px;
+        overflow: hidden;
+        background: var(--line);
+      }
+      .hb i {
+        display: block;
+        height: 100%;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+      }
+      .low {
+        color: var(--bad);
+        font-weight: 600;
+      }
+      .empty {
+        color: var(--mute);
+        padding: 18px 4px;
+        text-align: center;
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 33, 61, 0.45);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 12px;
+        overflow-y: auto;
+        z-index: 100;
+      }
+      .panel {
+        background: var(--card);
+        border-radius: 18px;
+        width: 100%;
+        max-width: 860px;
+        padding: 16px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .panel.sm {
+        max-width: 480px;
+        margin-top: 5vh;
+      }
+      .panel .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+      .chips {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin: 8px 0 14px;
+      }
+      .void-zone {
+        margin-top: 18px;
+        padding-top: 10px;
+        border-top: 1px dashed var(--line);
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .void-zone .hint {
+        font-size: 11px;
+        flex: 1;
+        min-width: 180px;
+      }
+      button.voidbtn {
+        background: transparent;
+        color: var(--bad);
+        border: 1px solid var(--badbg);
+        font-size: 11px;
+        font-weight: 400;
+        padding: 3px 8px;
+        border-radius: 8px;
+      }
+      button.voidbtn:hover {
+        background: var(--badbg);
+      }
+      .saved {
+        font-size: 12px;
+        color: var(--p);
+      }
+      td input.note {
+        width: 140px;
+      }
+      .hist {
+        display: grid;
+        gap: 6px;
+        margin-top: 12px;
+        font-size: 13px;
+      }
+      .hist div {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        border-top: 1px solid var(--line);
+        padding-top: 6px;
+        flex-wrap: wrap;
+      }
+
+      /* แดชบอร์ด */
+      .hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .hero h2 {
+        font-size: 18px;
+        margin: 0 0 4px;
+      }
+      .clock {
+        text-align: right;
+      }
+      .clock .d {
+        color: var(--mute);
+        font-size: 12px;
+      }
+      .clock .t {
+        font-size: 24px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.1;
+      }
+      .tl {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+      }
+      .tl + .tl {
+        margin-top: 4px;
+      }
+      .tl-time {
+        min-width: 85px;
+        font-size: 11px;
+        line-height: 1.4;
+        color: var(--mute);
+      }
+      .tl-main {
+        flex: 1;
+        display: grid;
+        min-width: 0;
+      }
+      .tl-main b,
+      .tl-main span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .tl.cls {
+        background: #f7f9fe;
+      }
+      .tl.brk {
+        font-size: 11px;
+        color: var(--mute);
+        padding: 3px 8px;
+      }
+      .tl.past {
+        opacity: 0.5;
+      }
+      .tl.now {
+        border-color: var(--brand);
+        background: var(--brandbg);
+        opacity: 1;
+      }
+      .pill {
+        background: var(--brand);
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 99px;
+        white-space: nowrap;
+      }
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .kpi {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px;
+      }
+      .kpi b {
+        display: block;
+        font-size: 20px;
+        font-variant-numeric: tabular-nums;
+      }
+      .kpi span {
+        font-size: 11px;
+        color: var(--mute);
+      }
+
+      /* ตารางสอน */
+      table.tt {
+        table-layout: fixed;
+        min-width: 1050px;
+      }
+      table.tt th,
+      table.tt td {
+        white-space: normal;
+        vertical-align: top;
+        border: 1px solid var(--line);
+      }
+      .tt thead th {
+        text-align: center;
+        z-index: 2;
+      }
+      .tt thead th .hint {
+        display: block;
+        font-weight: 400;
+      }
+      .tt th.dayh {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        width: 90px;
+        background: #fafbfe;
+        color: var(--ink);
+        font-size: 14px;
+        text-align: left;
+        vertical-align: middle;
+      }
+      .tt tbody th.dayh {
+        top: auto;
+      }
+      .tt thead th.corner {
+        z-index: 3;
+      }
+      .tt th.dayh.today {
+        background: var(--brandbg);
+        color: var(--brand);
+      }
+      .tt th.brkh {
+        width: 50px;
+        background: #fafbfe;
+        font-size: 11px;
+        padding: 6px 2px;
+      }
+      .tt td.brkcell {
+        background: #fafbfe;
+        color: var(--mute);
+        font-size: 12px;
+        text-align: center;
+        vertical-align: middle;
+        padding: 4px;
+      }
+      .tt td.brkcell span {
+        writing-mode: vertical-rl;
+        letter-spacing: 0.05em;
+      }
+      .tt .cell {
+        height: 72px;
+        cursor: pointer;
+      }
+      .tt .cell:hover {
+        background: #f1f4fb;
+      }
+      .tt .cell.has {
+        background: var(--brandbg);
+      }
+      .tt tr.todayrow .cell:not(.has) {
+        background: #fbfcff;
+      }
+      .tt .cell .plus {
+        color: var(--line);
+        font-size: 20px;
+      }
+      .form {
+        display: grid;
+        gap: 12px;
+      }
+      .form input,
+      .form select {
+        width: 100%;
+      }
+      .mobile-sched-select {
+        display: none;
+        margin-bottom: 12px;
+      }
+
+      @media (max-width: 860px) {
+        .app {
+          display: block;
+        }
+        .side {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          width: 260px;
+          transform: translateX(-100%);
+          box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .side.open {
+          transform: translateX(0);
+        }
+        .menu-toggle {
+          display: inline-block;
+        }
+        .brand .close-btn {
+          display: inline-block;
+          background: transparent;
+          border: 0;
+          font-size: 20px;
+          cursor: pointer;
+          color: var(--mute);
+        }
+        .backdrop.show {
+          display: block;
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.4);
+          z-index: 95;
+        }
+
+        .grid2,
+        .dgrid {
+          grid-template-columns: 1fr;
+        }
+        header h1 {
+          font-size: 14px;
+          max-width: 50vw;
+        }
+        #who {
+          font-size: 11px;
+        }
+        .clock .t {
+          font-size: 22px;
+        }
+
+        .desktop-tt-wrap {
+          display: none;
+        }
+        .mobile-sched-select {
+          display: block;
+        }
+        .tabs .sp {
+          display: none;
+        }
+        .tabs {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .tabs button,
+        .tabs select {
+          width: 100%;
+          text-align: center;
+        }
+      }
+      @media (min-width: 861px) {
+        .menu-toggle,
+        .backdrop,
+        .close-btn {
+          display: none !important;
+        }
+        .mobile-sched-view {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="backdrop" id="backdrop" onclick="toggleMenu(false)"></div>
+    <div class="app">
+      <aside class="side" id="sideNav">
+        <div class="brand">
+          <div>ระบบเช็กชื่อ<small>ผู้ดูแลระบบ</small></div>
+          <button class="close-btn" onclick="toggleMenu(false)">✕</button>
+        </div>
+        <button class="nav on" data-a="nav" data-v="dash">🏠 แดชบอร์ด</button>
+        <button class="nav" data-a="nav" data-v="sched">📅 ตารางสอน</button>
+        <button class="nav" data-a="nav" data-v="students">
+          👥 รายชื่อนักเรียน
+        </button>
+        <button class="nav" data-a="nav" data-v="report">📊 รายงานผล</button>
+        <a class="nav ext" id="goTeacher" href="#" target="_top" hidden
+          >✅ เช็กชื่อ</a
+        >
+      </aside>
+
+      <div class="content">
+        <header>
+          <div
+            style="display: flex; align-items: center; gap: 8px; min-width: 0"
+          >
+            <button class="menu-toggle" onclick="toggleMenu(true)">☰</button>
+            <h1 id="pageTitle">แดชบอร์ด</h1>
+          </div>
+          <span id="who"></span>
+        </header>
+
+        <main>
+          <!-- ================= แดชบอร์ด ================= -->
+          <div class="view" id="v-dash">
+            <section class="card hero">
+              <div>
+                <h2 id="dHello">กำลังโหลด…</h2>
+                <div class="hint" id="dSub"></div>
+              </div>
+              <div class="clock">
+                <div class="d" id="dDate"></div>
+                <div class="t" id="dTime"></div>
+              </div>
+            </section>
+            <div id="dErr" class="err" hidden></div>
+
+            <div class="dgrid">
+              <section class="card">
+                <div class="cardtop">
+                  <h2>ตารางสอนวันนี้</h2>
+                  <span id="dTodayBtn"></span>
+                </div>
+                <div id="dToday"></div>
+              </section>
+
+              <section class="card">
+                <div class="cardtop">
+                  <h2>สรุปการเข้าเรียน 7 วันล่าสุด</h2>
+                  <button class="ghost small" data-a="dreload">รีเฟรช</button>
+                </div>
+                <div id="dKpi"></div>
+              </section>
+
+              <section class="card">
+                <h2>แยกตามห้อง</h2>
+                <div id="dClass"></div>
+              </section>
+
+              <section class="card">
+                <h2>นักเรียนที่ควรติดตาม</h2>
+                <div id="dWatch"></div>
+                <p class="hint">
+                  อัตราเข้าเรียนต่ำกว่าเกณฑ์ (มีข้อมูลอย่างน้อย 3 คาบ)
+                </p>
+              </section>
+            </div>
+          </div>
+
+          <!-- ================= ตารางสอน ================= -->
+          <div class="view" id="v-sched" hidden>
+            <section class="card">
+              <div class="cardtop">
+                <h2>ตารางสอนประจำสัปดาห์ของฉัน</h2>
+                <span class="hint">กดที่ช่องเพื่อเพิ่ม/แก้ไข/ลบวิชา</span>
+              </div>
+
+              <div class="mobile-sched-select">
+                <label for="mobDaySel">เลือกวัน</label>
+                <select id="mobDaySel" onchange="renderMobileSched()">
+                  <option value="1">วันจันทร์</option>
+                  <option value="2">วันอังคาร</option>
+                  <option value="3">วันพุธ</option>
+                  <option value="4">วันพฤหัสบดี</option>
+                  <option value="5">วันศุกร์</option>
+                </select>
+              </div>
+
+              <div class="tablewrap desktop-tt-wrap" id="schedBox"></div>
+              <div class="mobile-sched-view" id="mobileSchedBox"></div>
+            </section>
+          </div>
+
+          <!-- ================= หน้ารายชื่อนักเรียน ================= -->
+          <div class="view" id="v-students" hidden>
+            <section class="card">
+              <div class="cardtop">
+                <h2>จัดการรายชื่อนักเรียน</h2>
+                <button data-a="open-add-student">+ เพิ่มนักเรียนใหม่</button>
+              </div>
+              <div class="row" style="margin-bottom: 12px">
+                <div style="flex: 1; min-width: 180px">
+                  <label for="studentClassFilter">เลือกห้องเรียน</label>
+                  <select
+                    id="studentClassFilter"
+                    onchange="loadStudentsData()"
+                  ></select>
+                </div>
+                <div style="flex: 2; min-width: 200px">
+                  <label for="studentSearch">ค้นหา (เลขที่ หรือ ชื่อ)</label>
+                  <input
+                    id="studentSearch"
+                    type="text"
+                    placeholder="พิมพ์เพื่อค้นหา..."
+                    oninput="filterStudentTable()"
+                  />
+                </div>
+              </div>
+              <div id="studentErr" class="err" hidden></div>
+            </section>
+
+            <section class="card">
+              <div class="tablewrap" id="studentTableBox">
+                <div class="empty">กำลังโหลดข้อมูล...</div>
+              </div>
+            </section>
+          </div>
+
+          <!-- ================= รายงานผล ================= -->
+          <div class="view" id="v-report" hidden>
+            <section class="card">
+              <div class="report-filter">
+                <div>
+                  <label for="cls">ห้องเรียน</label
+                  ><select id="cls"></select>
+                </div>
+                <div>
+                  <label for="from">ตั้งแต่วันที่</label
+                  ><input id="from" type="date" />
+                </div>
+                <div>
+                  <label for="to">ถึงวันที่</label><input id="to" type="date" />
+                </div>
+                <div>
+                  <label>ค้นหาด่วน</label>
+                  <div class="quick-btns">
+                    <button class="ghost small" data-a="quick" data-v="today">
+                      วันนี้
+                    </button>
+                    <button class="ghost small" data-a="quick" data-v="7">
+                      7 วัน
+                    </button>
+                    <button class="ghost small" data-a="quick" data-v="30">
+                      30 วัน
+                    </button>
+                    <button class="ghost small" data-a="quick" data-v="all">
+                      ทั้งหมด
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label>&nbsp;</label>
+                  <button
+                    id="btnLoad"
+                    data-a="load"
+                    disabled
+                    style="width: 100%"
+                  >
+                    ค้นหา
+                  </button>
+                </div>
+              </div>
+              <div id="err" class="err" hidden></div>
+            </section>
+
+            <section id="report" hidden>
+              <div class="grid2">
+                <div class="card">
+                  <h2>ภาพรวมในช่วงเวลาที่เลือก</h2>
+                  <div id="overall"></div>
+                </div>
+                <div class="card">
+                  <h2 id="barsTitle">แนวโน้มรายคาบ</h2>
+                  <div id="bars"></div>
+                  <div
+                    class="legend"
+                    id="barLegend"
+                    style="
+                      display: flex;
+                      flex-wrap: wrap;
+                      gap: 10px;
+                      margin-top: 10px;
+                    "
+                  ></div>
+                </div>
+              </div>
+
+              <div class="card" style="margin-top: 16px">
+                <div class="tabs">
+                  <button
+                    class="ghost"
+                    id="tabSessions"
+                    data-a="tab"
+                    data-v="sessions"
+                  >
+                    แยกแต่ละคาบ
+                  </button>
+                  <button
+                    class="ghost"
+                    id="tabStudents"
+                    data-a="tab"
+                    data-v="students"
+                  >
+                    แยกรายบุคคล
+                  </button>
+                  <span class="sp"></span>
+                  <div class="toolbar-right">
+                    <span id="modeBox">
+                      <button
+                        class="ghost small"
+                        id="modeSession"
+                        data-a="mode"
+                        data-v="session"
+                      >
+                        รายคาบ
+                      </button>
+                      <button
+                        class="ghost small"
+                        id="modeDay"
+                        data-a="mode"
+                        data-v="day"
+                      >
+                        รายวัน
+                      </button>
+                    </span>
+                    <span id="sortBox" hidden>
+                      <label
+                        for="sort"
+                        style="display: inline; margin-right: 6px"
+                        >เรียงตาม</label
+                      >
+                      <select
+                        id="sort"
+                        style="display: inline-block; width: auto"
+                      >
+                        <option value="id">เลขที่</option>
+                        <option value="rateDesc">% เข้าเรียนมาก → น้อย</option>
+                        <option value="rateAsc">% เข้าเรียนน้อย → มาก</option>
+                        <option value="absentDesc">ขาดมาก → น้อย</option>
+                      </select>
+                    </span>
+                    <button class="ghost small" data-a="csv" id="csvBtn" hidden>
+                      ดาวน์โหลด Excel
+                    </button>
+                  </div>
+                </div>
+                <div class="tablewrap" id="tableBox"></div>
+                <p class="hint" style="margin-top: 10px">
+                  อัตราเข้าเรียน = (มาเรียน + มาสาย) ÷ จำนวนทั้งหมด ·
+                  การลาไม่นับเป็นเข้าเรียน
+                </p>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Modal เพิ่มนักเรียน -->
+    <div class="overlay" id="studentModal" hidden>
+      <div class="panel sm">
+        <div class="top">
+          <h2 style="margin: 0; font-size: 16px">เพิ่มรายชื่อนักเรียนใหม่</h2>
+          <button class="ghost small" data-a="close-student-modal">ปิด</button>
+        </div>
+        <div class="form">
+          <div>
+            <label for="insStudentId">เลขที่ (เช่น 01)</label>
+            <input id="insStudentId" maxlength="20" placeholder="เช่น 01" />
+          </div>
+          <div>
+            <label for="insName">ชื่อ นามสกุล</label>
+            <input
+              id="insName"
+              maxlength="100"
+              placeholder="เช่น สาธิต มอดินแดง"
+            />
+          </div>
+          <div>
+            <label for="insClass">ห้องเรียน (เช่น ม.5/1)</label>
+            <input id="insClass" maxlength="40" placeholder="เช่น ม.5/1" />
+          </div>
+          <div>
+            <label for="insEmail">อีเมลนักเรียน</label>
+            <input
+              id="insEmail"
+              type="email"
+              maxlength="100"
+              placeholder="student@school.com"
+            />
+          </div>
+          <div class="row" style="margin-top: 4px; display: flex; gap: 8px">
+            <button data-a="save-student" id="btnSaveStudent" style="flex: 1">
+              บันทึกข้อมูล
+            </button>
+            <button class="ghost" data-a="close-student-modal">ยกเลิก</button>
+          </div>
+          <div id="modalErr" class="err" hidden></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal แก้ไข/ลบนักเรียน -->
+    <div class="overlay" id="editStudentModal" hidden>
+      <div class="panel sm">
+        <div class="top">
+          <h2 style="margin: 0; font-size: 16px">แก้ไขข้อมูลนักเรียน</h2>
+          <button class="ghost small" data-a="close-edit-student-modal">
+            ปิด
+          </button>
+        </div>
+        <div class="form">
+          <input type="hidden" id="editOldEmail" />
+          <div>
+            <label for="editStudentId">เลขที่</label>
+            <input id="editStudentId" maxlength="20" />
+          </div>
+          <div>
+            <label for="editName">ชื่อ นามสกุล</label>
+            <input id="editName" maxlength="100" />
+          </div>
+          <div>
+            <label for="editClass">ห้องเรียน</label>
+            <input id="editClass" maxlength="40" />
+          </div>
+          <div>
+            <label for="editEmail">อีเมลนักเรียน</label>
+            <input id="editEmail" type="email" maxlength="100" />
+          </div>
+          <div class="row" style="margin-top: 4px; display: flex; gap: 8px">
+            <button
+              data-a="update-student"
+              id="btnUpdateStudent"
+              style="flex: 1"
+            >
+              บันทึกการแก้ไข
+            </button>
+            <button class="danger" data-a="delete-student">ลบนักเรียน</button>
+            <button class="ghost" data-a="close-edit-student-modal">
+              ยกเลิก
+            </button>
+          </div>
+          <div id="editModalErr" class="err" hidden></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- แผงรายละเอียดรายงานผล -->
+    <div class="overlay" id="overlay" hidden>
+      <div class="panel" id="panel"></div>
+    </div>
+    <!-- หน้าต่างแก้ไขช่องตารางสอน -->
+    <div class="overlay" id="sOverlay" hidden>
+      <div class="panel sm" id="sPanel"></div>
+    </div>
+
+    <script>
+              const AUTH = <?!= JSON.stringify(auth) ?>;
+              const KEYS = ["p", "l", "v", "a"];
+              const LABEL = { p: "มาเรียน", l: "มาสาย", v: "ลา", a: "ขาด" };
+              const WORD = { p: "present", l: "late", v: "leave", a: "absent" };
+              const LOW_RATE = 80;
+
+              const PERIODS = [
+                { t: "c", n: 1, s: "08:30", e: "09:20" },
+                { t: "c", n: 2, s: "09:20", e: "10:10" },
+                { t: "b", label: "พัก 10 นาที", s: "10:10", e: "10:20" },
+                { t: "c", n: 3, s: "10:20", e: "11:10" },
+                { t: "c", n: 4, s: "11:10", e: "12:00" },
+                { t: "b", label: "พักเที่ยง", s: "12:00", e: "13:00" },
+                { t: "c", n: 5, s: "13:00", e: "13:50" },
+                { t: "c", n: 6, s: "13:50", e: "14:40" },
+                { t: "b", label: "พัก 10 นาที", s: "14:40", e: "14:50" },
+                { t: "c", n: 7, s: "14:50", e: "15:40" },
+                { t: "c", n: 8, s: "15:40", e: "16:30" },
+              ];
+              const DAY_LABEL = { 1: "จันทร์", 2: "อังคาร", 3: "พุธ", 4: "พฤหัสบดี", 5: "ศุกร์" };
+              const DOW = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
+              const MONTHS = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+              const TITLES = { dash: "แดชบอร์ด", sched: "ตารางสอน", students: "รายชื่อนักเรียน", report: "รายงานผลการเช็กชื่อ" };
+
+              function emptyCounts() { return { p: 0, l: 0, v: 0, a: 0 }; }
+              function addCounts(a, b) { KEYS.forEach(function (k) { a[k] += b[k]; }); return a; }
+              function total(c) { return c.p + c.l + c.v + c.a; }
+              function rateOf(c) { const t = total(c); return t ? ((c.p + c.l) / t) * 100 : 0; }
+
+              /* ---- ตัวช่วยของหน้ารายงาน (ฉบับเดิมไม่มีนิยามชุดนี้ ทำให้รายงานผลพัง) ---- */
+              function replaceAt(str, i, ch) { return str.substring(0, i) + ch + str.substring(i + 1); }
+              function sessionById(id) {
+                return DATA.sessions.filter(function (s) { return s.id === id; })[0];
+              }
+              // จำนวนมา/สาย/ลา/ขาด ของนักเรียนคนที่ i ตลอดทุกคาบในรายงาน
+              function studentCounts(i) {
+                const c = emptyCounts();
+                DATA.sessions.forEach(function (se) { c[se.st[i]]++; });
+                return c;
+              }
+              // รวมคาบที่อยู่วันเดียวกันเป็นกลุ่ม (ใช้ในโหมด "รายวัน")
+              function groupByDay() {
+                const map = {}, out = [];
+                DATA.sessions.forEach(function (se) {
+                  let g = map[se.date];
+                  if (!g) { g = map[se.date] = { date: se.date, sessions: [], c: emptyCounts() }; out.push(g); }
+                  g.sessions.push(se);
+                  addCounts(g.c, sessionCounts(se));
+                });
+                return out;
+              }
+              function chip(code) {
+                return '<span class="chip"><span class="dot" style="background:var(--' + code + ')"></span>' + LABEL[code] + "</span>";
+              }
+              function hbar(c) {
+                const t = total(c);
+                return '<div class="hb" aria-hidden="true">' + KEYS.map(function (k) {
+                  return c[k] ? '<i style="width:' + (c[k] / t) * 100 + "%;background:var(--" + k + ')"></i>' : "";
+                }).join("") + "</div>";
+              }
+
+              function donut(c, size, label) {
+                const t = total(c);
+                let off = 0, segs = "";
+                if (!t) {
+                  segs = '<circle cx="18" cy="18" r="15.9155" fill="none" style="stroke:var(--line)" stroke-width="5"/>';
+                } else {
+                  KEYS.forEach(function (k) {
+                    if (!c[k]) return;
+                    const v = (c[k] / t) * 100;
+                    segs += '<circle cx="18" cy="18" r="15.9155" fill="none" style="stroke:var(--' + k + ')" stroke-width="5" stroke-dasharray="' + v + " " + (100 - v) + '" stroke-dashoffset="' + -off + '" transform="rotate(-90 18 18)"/>';
+                    off += v;
+                  });
+                }
+                return '<svg viewBox="0 0 36 36" width="' + size + '" height="' + size + '" role="img" aria-label="กราฟวงกลมสถานะการเข้าเรียน">' + segs + '<text x="18" y="19.6" text-anchor="middle" font-size="6.5" font-weight="800" fill="currentColor">' + esc(label) + "</text></svg>";
+              }
+
+              function legend(c) {
+                const t = total(c);
+                return '<div class="legend">' + KEYS.map(function (k) {
+                  return '<div><span class="dot" style="background:var(--' + k + ')"></span>' + LABEL[k] + ' <b class="num">' + c[k] + '</b> <span class="hint num">(' + pct(t ? (c[k] / t) * 100 : 0) + "%)</span></div>";
+                }).join("") + "</div>";
+              }
+
+              function vbars(rows) {
+                return '<div class="bars">' + rows.map(function (r) {
+                  const t = total(r.c);
+                  const tip = r.label + " — " + KEYS.map(function (k) { return LABEL[k] + " " + r.c[k]; }).join(", ");
+                  return '<div class="vb" title="' + esc(tip) + '"><span class="pct num">' + pct(rateOf(r.c)) + "%</span>" +
+                    '<div class="stack">' + KEYS.map(function (k) {
+                      return r.c[k] ? '<i style="height:' + (r.c[k] / t) * 100 + "%;background:var(--" + k + ')"></i>' : "";
+                    }).join("") + '</div><span class="vl">' + esc(r.label) + "</span></div>";
+                }).join("") + "</div>";
+              }
+
+              let DATA = null, TAB = "sessions", MODE = "session", SORT = "id";
+              let PANEL = null;
+              let IDX = {};
+              let VIEW = "dash", INIT_DONE = false, REPORT_LOADED = false;
+              let CLASSES = [], ME = null, SCHED = [], SUM = null, LOADED = false;
+              let SLOT = null, LAST_KEY = "", MOB_DAY_SET = false;
+              let STUDENTS_DATA = { classes: [], currentClass: "", students: [] };
+
+              const $ = function (id) { return document.getElementById(id); };
+              const esc = function (s) {
+                return String(s || "").replace(/[&<>"']/g, function (c) {
+                  return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+                });
+              };
+              function run(fn) {
+                const args = Array.prototype.slice.call(arguments, 1);
+                return new Promise(function (res, rej) {
+                  google.script.run.withSuccessHandler(res).withFailureHandler(rej).api(AUTH, fn, args);
+                });
+              }
+              function showErr(e, id) {
+                const el = $(id || "err");
+                el.textContent = e && e.message ? e.message.replace(/^Error:\s*/, "") : String(e);
+                el.hidden = false;
+              }
+              function ymd(d) {
+                return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+              }
+              function fmtDate(s) {
+                return new Date(s + "T00:00:00").toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" });
+              }
+              function fmtDateDow(s) {
+                return DOW[new Date(s + "T00:00:00").getDay()] + " " + fmtDate(s);
+              }
+              function pct(x) {
+                return (Math.round(x * 10) / 10).toString().replace(/\.0$/, "");
+              }
+              function pad2(n) { return ("0" + n).slice(-2); }
+
+              function toggleMenu(open) {
+                $("sideNav").classList.toggle("open", open);
+                $("backdrop").classList.toggle("show", open);
+              }
+
+              function nav(v) {
+                VIEW = v;
+                toggleMenu(false);
+                ["dash", "sched", "students", "report"].forEach(function (k) { $("v-" + k).hidden = k !== v; });
+                Array.prototype.forEach.call(document.querySelectorAll(".nav"), function (b) {
+                  b.classList.toggle("on", b.getAttribute("data-v") === v);
+                });
+                $("pageTitle").textContent = TITLES[v];
+                if (v === "sched") renderSched();
+                if (v === "students") loadStudentsData();
+                ensureReport();
+                window.scrollTo(0, 0);
+              }
+              function ensureReport() {
+                if (VIEW === "report" && INIT_DONE && !REPORT_LOADED) { REPORT_LOADED = true; quick("30"); }
+              }
+
+              /* ==================== รายชื่อนักเรียน ==================== */
+              // วาดรายการห้อง + ตารางจากข้อมูลที่เซิร์ฟเวอร์ส่งกลับ (ใช้ร่วมกันทุกปุ่ม: โหลด/เพิ่ม/แก้/ลบ)
+              function applyStudentsData(res) {
+                STUDENTS_DATA = res;
+                const clsSel = $("studentClassFilter");
+                clsSel.innerHTML = res.classes.map(function (c) {
+                  return '<option value="' + esc(c) + '">ห้อง ' + esc(c) + "</option>";
+                }).join("");
+                if (res.currentClass) clsSel.value = res.currentClass;
+                filterStudentTable();
+              }
+
+              function loadStudentsData() {
+                const clsSel = $("studentClassFilter");
+                const cls = clsSel ? clsSel.value : "";
+                $("studentErr").hidden = true;
+                run("getStudentsPage", cls)
+                  .then(applyStudentsData)
+                  .catch(function (e) { showErr(e, "studentErr"); });
+              }
+
+              function renderStudentTable(list) {
+                const box = $("studentTableBox");
+                if (!list || !list.length) {
+                  box.innerHTML = '<div class="empty">ไม่พบรายชื่อนักเรียนในห้องนี้</div>';
+                  return;
+                }
+                let h = '<table><thead><tr><th>เลขที่</th><th>ชื่อ - นามสกุล</th><th>อีเมล</th></tr></thead><tbody>';
+                list.forEach(function (s) {
+                  h += '<tr class="click" title="กดเพื่อแก้ไข/ลบ" data-a="edit-student" data-email="' + esc(s.email) + '" data-id="' + esc(s.studentId) + '" data-name="' + esc(s.name) + '" data-cls="' + esc(s.cls) + '">' +
+                      '<td class="num"><b>' + esc(s.studentId) + '</b></td><td>' + esc(s.name) + '</td><td>' + esc(s.email) + '</td></tr>';
+                });
+                h += '</tbody></table>';
+                box.innerHTML = h;
+              }
+
+              function filterStudentTable() {
+                const kw = $("studentSearch").value.trim().toLowerCase();
+                const filtered = STUDENTS_DATA.students.filter(function (s) {
+                  return !kw ||
+                    String(s.studentId).toLowerCase().indexOf(kw) >= 0 ||
+                    String(s.name).toLowerCase().indexOf(kw) >= 0 ||
+                    String(s.email).toLowerCase().indexOf(kw) >= 0;
+                });
+                renderStudentTable(filtered);
+              }
+
+              function openStudentModal() {
+                $("insStudentId").value = "";
+                $("insName").value = "";
+                $("insEmail").value = "";
+                $("insClass").value = $("studentClassFilter").value || "";
+                $("modalErr").hidden = true;
+                $("studentModal").hidden = false;
+                $("insStudentId").focus();
+              }
+              function closeStudentModal() { $("studentModal").hidden = true; }
+
+              function saveNewStudent() {
+                const studentId = $("insStudentId").value.trim();
+                const name = $("insName").value.trim();
+                const cls = $("insClass").value.trim();
+                const email = $("insEmail").value.trim();
+
+                if (!studentId || !name || !cls || !email) {
+                  showErr("กรุณากรอกข้อมูลให้ครบทุกช่อง", "modalErr");
+                  return;
+                }
+                $("modalErr").hidden = true;
+                $("btnSaveStudent").disabled = true;
+                run("addStudent", studentId, name, cls, email)
+                  .then(function (res) {
+                    $("btnSaveStudent").disabled = false;
+                    closeStudentModal();
+                    applyStudentsData(res);
+                    alert("เพิ่มรายชื่อนักเรียนเรียบร้อยแล้ว");
+                  })
+                  .catch(function (e) {
+                    $("btnSaveStudent").disabled = false;
+                    showErr(e, "modalErr");
+                  });
+              }
+
+              function openEditStudentModal(dataset) {
+                $("editOldEmail").value = dataset.email;
+                $("editStudentId").value = dataset.id;
+                $("editName").value = dataset.name;
+                $("editClass").value = dataset.cls;
+                $("editEmail").value = dataset.email;
+                $("editModalErr").hidden = true;
+                $("editStudentModal").hidden = false;
+              }
+              function closeEditStudentModal() { $("editStudentModal").hidden = true; }
+
+              function saveUpdateStudent() {
+                const oldEmail = $("editOldEmail").value;
+                const studentId = $("editStudentId").value.trim();
+                const name = $("editName").value.trim();
+                const cls = $("editClass").value.trim();
+                const email = $("editEmail").value.trim();
+
+                if (!studentId || !name || !cls || !email) {
+                  showErr("กรุณากรอกข้อมูลให้ครบทุกช่อง", "editModalErr");
+                  return;
+                }
+                $("editModalErr").hidden = true;
+                $("btnUpdateStudent").disabled = true;
+                run("updateStudent", oldEmail, studentId, name, cls, email)
+                  .then(function (res) {
+                    $("btnUpdateStudent").disabled = false;
+                    closeEditStudentModal();
+                    applyStudentsData(res);
+                    alert("อัปเดตข้อมูลนักเรียนเรียบร้อยแล้ว");
+                  })
+                  .catch(function (e) {
+                    $("btnUpdateStudent").disabled = false;
+                    showErr(e, "editModalErr");
+                  });
+              }
+
+              function removeStudentRecord() {
+                const email = $("editOldEmail").value;
+                // ใช้ห้องที่กำลังเปิดดูอยู่ ไม่ใช่ค่าในช่องแก้ไข (ผู้ใช้อาจพิมพ์ห้องใหม่ค้างไว้)
+                const cls = STUDENTS_DATA.currentClass || "";
+                if (!confirm("ต้องการลบรายชื่อนักเรียนนี้ออกจากระบบใช่หรือไม่?")) return;
+                $("editModalErr").hidden = true;
+                run("deleteStudent", email, cls)
+                  .then(function (res) {
+                    closeEditStudentModal();
+                    applyStudentsData(res);
+                    alert("ลบรายชื่อนักเรียนเรียบร้อยแล้ว");
+                  })
+                  .catch(function (e) { showErr(e, "editModalErr"); });
+              }
+
+              /* ฟังก์ชันอื่นๆ (แดชบอร์ด, ตารางสอน, รายงานผล) คงเดิม */
+              function toMin(t) { const a = t.split(":"); return Number(a[0]) * 60 + Number(a[1]); }
+              function nowMin(d) { return d.getHours() * 60 + d.getMinutes(); }
+              function curIdx(d) {
+                const m = nowMin(d);
+                for (let i = 0; i < PERIODS.length; i++) {
+                  if (m >= toMin(PERIODS[i].s) && m < toMin(PERIODS[i].e)) return i;
+                }
+                return -1;
+              }
+              function slotOf(day, n) {
+                return SCHED.filter(function (x) { return x.day === day && x.period === n; })[0];
+              }
+              function slotInfo(s) {
+                return [s.cls, s.room ? "📍 " + s.room : ""].filter(Boolean).join(" · ");
+              }
+
+              function tick() {
+                const n = new Date();
+                $("dDate").textContent = "วัน" + DOW[n.getDay()] + "ที่ " + n.getDate() + " " + MONTHS[n.getMonth()] + " " + (n.getFullYear() + 543);
+                $("dTime").textContent = pad2(n.getHours()) + ":" + pad2(n.getMinutes()) + ":" + pad2(n.getSeconds());
+                const key = n.getDay() + "|" + curIdx(n);
+                if (key !== LAST_KEY) { LAST_KEY = key; renderToday(); }
+              }
+
+              function renderHello() {
+                const h = new Date().getHours();
+                const greet = h < 12 ? "สวัสดีตอนเช้า" : h < 17 ? "สวัสดีตอนบ่าย" : "สวัสดีตอนเย็น";
+                const name = ME.name || ME.email.split("@")[0];
+                $("dHello").textContent = greet + " " + name;
+              }
+
+              function renderToday() {
+                const box = $("dToday"), btn = $("dTodayBtn"), sub = $("dSub");
+                if (!LOADED) { box.innerHTML = '<div class="empty">กำลังโหลด…</div>'; return; }
+                if (!SCHED.length) {
+                  btn.innerHTML = '<button class="small" data-a="nav" data-v="sched">ตั้งค่าตารางสอน</button>';
+                  box.innerHTML = '<div class="empty">ยังไม่มีข้อมูลตารางสอน กดปุ่ม “ตั้งค่าตารางสอน” เพื่อเริ่มเพิ่มคาบสอนของคุณ</div>';
+                  sub.textContent = ME && !ME.name ? "ยังไม่ได้ตั้งค่าตารางสอน · ผู้ดูแลระบบยังไม่ได้ใส่ชื่อในชีต" : "ยังไม่ได้ตั้งค่าตารางสอน";
+                  return;
+                }
+                btn.innerHTML = '<button class="ghost small" data-a="nav" data-v="sched">ดูตารางทั้งสัปดาห์</button>';
+                const now = new Date(), day = now.getDay(), ci = curIdx(now), m = nowMin(now);
+                if (day < 1 || day > 5) {
+                  box.innerHTML = '<div class="empty">วันนี้เป็นวันหยุดสุดสัปดาห์ ไม่มีคาบเรียน</div>';
+                  sub.textContent = "วันนี้เป็นวันหยุดสุดสัปดาห์";
+                  return;
+                }
+                let cnt = 0, html = "";
+                PERIODS.forEach(function (p, i) {
+                  const time = p.s + "–" + p.e;
+                  const past = toMin(p.e) <= m;
+                  const cls = (past ? " past" : "") + (i === ci ? " now" : "");
+                  if (p.t === "b") {
+                    html += '<div class="tl brk' + cls + '"><span class="tl-time num">' + time + "</span><span>" + esc(p.label) + "</span></div>";
+                    return;
+                  }
+                  const s = slotOf(day, p.n);
+                  if (s) cnt++;
+                  html += '<div class="tl cls' + cls + '"><span class="tl-time num">คาบ ' + p.n + "<br>" + time + "</span>" +
+                    '<div class="tl-main">' + (s ? "<b>" + esc(s.subject) + '</b><span class="hint">' + esc(slotInfo(s)) + "</span>" : '<span class="hint">ว่าง</span>') + "</div>" +
+                    (i === ci ? '<span class="pill">ขณะนี้</span>' : "") + "</div>";
+                });
+                box.innerHTML = html;
+                sub.textContent = cnt ? "วันนี้มีคาบสอน " + cnt + " คาบ" : "วันนี้ไม่มีคาบสอน";
+              }
+
+              function renderSummary() {
+                const s = SUM;
+                if (!s || !s.sessions) {
+                  $("dKpi").innerHTML = '<div class="empty">ยังไม่มีคาบเช็กชื่อที่เสร็จแล้วใน 7 วันล่าสุด</div>';
+                  $("dClass").innerHTML = '<div class="empty">—</div>';
+                  $("dWatch").innerHTML = '<div class="empty">—</div>';
+                  return;
+                }
+                const c = s.counts;
+                $("dKpi").innerHTML = '<div class="kpis">' +
+                  '<div class="kpi"><b>' + pct(rateOf(c)) + '%</b><span>อัตราเข้าเรียนรวม</span></div>' +
+                  '<div class="kpi"><b>' + s.sessions + '</b><span>คาบที่เช็กชื่อแล้ว</span></div>' +
+                  '<div class="kpi"><b style="color:var(--l)">' + c.l + '</b><span>มาสาย (ครั้ง)</span></div>' +
+                  '<div class="kpi"><b style="color:var(--a)">' + c.a + '</b><span>ขาด (ครั้ง)</span></div></div>';
+
+                $("dClass").innerHTML = '<div class="tablewrap"><table><thead><tr><th>ห้อง</th><th class="n">คาบ</th><th class="n">เข้าเรียน</th><th></th></tr></thead><tbody>' +
+                  s.byClass.map(function (r) {
+                    const rate = rateOf(r.c);
+                    return "<tr><td>" + esc(r.cls) + '</td><td class="n num">' + r.sessions + '</td><td class="n num ' + (rate < s.lowRate ? "low" : "") + '">' + pct(rate) + "%</td><td>" + hbar(r.c) + "</td></tr>";
+                  }).join("") + "</tbody></table></div>";
+
+                $("dWatch").innerHTML = s.watch.length
+                  ? '<div class="tablewrap"><table><thead><tr><th>ชื่อ</th><th>ห้อง</th><th class="n">เข้าเรียน</th><th class="n">ขาด</th><th class="n">สาย</th></tr></thead><tbody>' +
+                    s.watch.map(function (r) {
+                      return "<tr><td>" + esc(r.name) + "</td><td>" + esc(r.cls) + '</td><td class="n num low">' + pct(rateOf(r.c)) + '%</td><td class="n num">' + r.c.a + '</td><td class="n num">' + r.c.l + "</td></tr>";
+                    }).join("") + "</tbody></table></div>"
+                  : '<div class="empty">ไม่มีนักเรียนที่ต่ำกว่าเกณฑ์ ✓</div>';
+              }
+
+              function loadDash() {
+                const now = new Date(), from = new Date(now);
+                from.setDate(from.getDate() - 6);
+                $("dErr").hidden = true;
+                return run("getDashboard", ymd(from), ymd(now))
+                  .then(function (d) {
+                    ME = d; SCHED = d.schedule; SUM = d.summary; LOADED = true;
+                    if (d.bridgeUrl) {
+                      const g = $("goTeacher");
+                      g.href = d.bridgeUrl + "?p=t";
+                      g.hidden = false;
+                    }
+                    renderHello(); renderToday(); renderSummary();
+                    if (VIEW === "sched") renderSched();
+                  })
+                  .catch(function (e) { showErr(e, "dErr"); $("dHello").textContent = "โหลดข้อมูลไม่สำเร็จ"; });
+              }
+
+              function renderSched() {
+                const today = new Date().getDay();
+                const days = [1, 2, 3, 4, 5];
+
+                let h = '<table class="tt"><thead><tr><th class="dayh corner">วัน / เวลา</th>';
+                PERIODS.forEach(function (p) {
+                  if (p.t === "b") {
+                    h += '<th class="brkh num" title="' + esc(p.label) + '">' + p.s + "<br>" + p.e + "</th>";
+                  } else {
+                    h += "<th><b>คาบ " + p.n + '</b><span class="hint num">' + p.s + "–" + p.e + "</span></th>";
+                  }
+                });
+                h += "</tr></thead><tbody>";
+
+                days.forEach(function (d, di) {
+                  const isToday = d === today;
+                  h += "<tr" + (isToday ? ' class="todayrow"' : "") + '><th class="dayh' + (isToday ? " today" : "") + '">' + DAY_LABEL[d] + "</th>";
+                  PERIODS.forEach(function (p) {
+                    if (p.t === "b") {
+                      if (di === 0) {
+                        h += '<td class="brkcell" rowspan="' + days.length + '"><span>' + esc(p.label) + "</span></td>";
+                      }
+                      return;
+                    }
+                    const s = slotOf(d, p.n);
+                    h += '<td class="cell' + (s ? " has" : "") + '" data-a="cell" data-day="' + d + '" data-p="' + p.n + '">' +
+                      (s ? "<b>" + esc(s.subject) + '</b><div class="hint">' + esc(slotInfo(s)) + "</div>" : '<span class="plus">+</span>') + "</td>";
+                  });
+                  h += "</tr>";
+                });
+                $("schedBox").innerHTML = h + "</tbody></table>";
+
+                const mobSel = $("mobDaySel");
+                if (mobSel && !MOB_DAY_SET) {
+                  MOB_DAY_SET = true;
+                  if (today >= 1 && today <= 5) mobSel.value = String(today);
+                }
+                renderMobileSched();
+              }
+
+              function renderMobileSched() {
+                const selDay = Number($("mobDaySel").value || 1);
+                let h = '<div style="display:grid; gap:8px;">';
+                PERIODS.forEach(function (p) {
+                  const time = p.s + "–" + p.e;
+                  if (p.t === "b") {
+                    h += '<div style="background:#fafbfe; padding:8px 12px; border-radius:8px; font-size:13px; color:var(--mute); text-align:center;">☕ ' + esc(p.label) + ' (' + time + ')</div>';
+                    return;
+                  }
+                  const s = slotOf(selDay, p.n);
+                  h += '<div class="cell' + (s ? " has" : "") + '" data-a="cell" data-day="' + selDay + '" data-p="' + p.n + '" style="background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">' +
+                    '<div><div class="hint num">คาบ ' + p.n + ' · ' + time + '</div>' +
+                    (s ? '<b style="font-size:15px; display:block; margin-top:2px;">' + esc(s.subject) + '</b><div class="hint" style="margin-top:2px;">' + esc(slotInfo(s)) + '</div>' : '<span style="color:var(--mute)">ยังไม่มีวิชา (แตะเพื่อเพิ่ม)</span>') +
+                    '</div><span style="font-size:18px; color:var(--mute);">›</span></div>';
+                });
+                h += '</div>';
+                $("mobileSchedBox").innerHTML = h;
+              }
+
+              function openSlot(day, n) {
+                SLOT = { day: day, p: n };
+                const s = slotOf(day, n) || {};
+                const per = PERIODS.filter(function (x) { return x.n === n; })[0];
+                const opts = PERIODS.filter(function (x) { return x.t === "c" && x.n >= n; }).map(function (x) {
+                  return '<option value="' + x.n + '">คาบ ' + x.n + " (สิ้นสุด " + x.e + ")</option>";
+                }).join("");
+                $("sPanel").innerHTML =
+                  '<div class="top"><h2 style="margin:0; font-size:16px;">วัน' + DAY_LABEL[day] + " · คาบ " + n + ' <span class="hint">(' + per.s + "–" + per.e + ')</span></h2><button class="ghost small" data-a="sclose">ปิด</button></div>' +
+                  '<div class="form">' +
+                  '<div><label for="fSubject">วิชา / กิจกรรม</label><input id="fSubject" maxlength="80" value="' + esc(s.subject || "") + '" placeholder="เช่น เคมี"></div>' +
+                  '<div><label for="fClass">ห้องเรียนของนักเรียน</label><input id="fClass" maxlength="40" list="clsList" value="' + esc(s.cls || "") + '" placeholder="เช่น ม.5/1"><datalist id="clsList">' +
+                  CLASSES.map(function (c) { return '<option value="' + esc(c) + '">'; }).join("") + "</datalist></div>" +
+                  '<div><label for="fRoom">สถานที่สอน (ถ้ามี)</label><input id="fRoom" maxlength="40" value="' + esc(s.room || "") + '" placeholder="เช่น ห้องแลปเคมี 1"></div>' +
+                  '<div><label for="fTo">สอนต่อเนื่องถึง</label><select id="fTo">' + opts + "</select>" +
+                  '<div class="hint" style="margin-top:4px">ช่องที่มีอยู่แล้วในช่วงที่เลือกจะถูกแทนที่</div></div>' +
+                  '<div class="row" style="margin-top:4px; display:flex; gap:8px;"><button data-a="ssave" id="btnSSave" style="flex:1">บันทึก</button>' +
+                  (s.subject ? '<button class="danger" data-a="sdel" id="btnSDel">ลบคาบนี้</button>' : "") +
+                  '<button class="ghost" data-a="sclose">ยกเลิก</button></div>' +
+                  '<div id="sErr" class="err" hidden></div></div>';
+                $("sOverlay").hidden = false;
+                $("fSubject").focus();
+              }
+              function closeSlot() { SLOT = null; $("sOverlay").hidden = true; $("sPanel").innerHTML = ""; }
+
+              function afterSlotChange(r) {
+                SCHED = r.schedule;
+                closeSlot();
+                renderSched();
+                LAST_KEY = ""; renderToday();
+              }
+              function saveSlot() {
+                const subject = $("fSubject").value.trim();
+                if (!subject) { showErr("กรุณาใส่ชื่อวิชา", "sErr"); return; }
+                $("btnSSave").disabled = true;
+                run("saveSchedule", SLOT.day, SLOT.p, Number($("fTo").value), $("fClass").value, subject, $("fRoom").value)
+                  .then(afterSlotChange)
+                  .catch(function (e) { $("btnSSave").disabled = false; showErr(e, "sErr"); });
+              }
+              function deleteSlot() {
+                $("btnSDel").disabled = true;
+                run("deleteSchedule", SLOT.day, SLOT.p)
+                  .then(afterSlotChange)
+                  .catch(function (e) { $("btnSDel").disabled = false; showErr(e, "sErr"); });
+              }
+
+              run("getAdminInit")
+                .then(function (init) {
+                  $("who").textContent = init.email;
+                  CLASSES = init.classes;
+                  init.classes.forEach(function (c) {
+                    const o = document.createElement("option");
+                    o.value = o.textContent = c;
+                    $("cls").appendChild(o);
+                  });
+                  $("btnLoad").disabled = false;
+                  INIT_DONE = true;
+                  ensureReport();
+                })
+                .catch(showErr);
+
+              function quick(v) {
+                const now = new Date();
+                if (v === "all") {
+                  $("from").value = "";
+                  $("to").value = "";
+                } else {
+                  const from = new Date(now);
+                  if (v !== "today") from.setDate(from.getDate() - Number(v) + 1);
+                  $("from").value = ymd(from);
+                  $("to").value = ymd(now);
+                }
+                load();
+              }
+
+              function load() {
+                if (!$("cls").value) return;
+                $("err").hidden = true;
+                $("btnLoad").disabled = true;
+                run("getReport", $("cls").value, $("from").value, $("to").value)
+                  .then(function (d) {
+                    DATA = d;
+                    IDX = {};
+                    d.students.forEach(function (s, i) { IDX[s.email] = i; });
+                    $("report").hidden = false;
+                    renderReport();
+                  })
+                  .catch(showErr)
+                  .then(function () { $("btnLoad").disabled = false; });
+              }
+
+              function sessionCounts(se) {
+                const c = emptyCounts();
+                for (let i = 0; i < se.st.length; i++) c[se.st[i]]++;
+                return c;
+              }
+
+              function dayRows() {
+                return groupByDay().map(function (g) { return { label: fmtDate(g.date), c: g.c, g: g }; });
+              }
+              function sessionRows() {
+                return DATA.sessions.map(function (se) {
+                  return { label: fmtDate(se.date) + " " + se.time, c: sessionCounts(se), se: se };
+                });
+              }
+
+              function renderReport() {
+                const all = emptyCounts();
+                DATA.sessions.forEach(function (se) { addCounts(all, sessionCounts(se)); });
+
+                if (!DATA.sessions.length) {
+                  $("overall").innerHTML = '<div class="empty">ไม่มีคาบเช็กชื่อที่เสร็จแล้วในช่วงที่เลือก</div>';
+                  $("bars").innerHTML = "";
+                  $("barLegend").innerHTML = "";
+                  $("tableBox").innerHTML = "";
+                  return;
+                }
+
+                $("overall").innerHTML = '<div class="sumrow">' + donut(all, 130, pct(rateOf(all)) + "%") + legend(all) +
+                  '</div><p class="hint" style="margin-top:10px; text-align:center;">ช่วงที่เลือกมี ' + DATA.sessions.length + " คาบ · นักเรียน " + DATA.students.length + " คน</p>";
+
+                const rows = (MODE === "day" ? dayRows() : sessionRows()).slice(-40);
+                $("barsTitle").textContent = MODE === "day" ? "แนวโน้มรายวัน" : "แนวโน้มรายคาบ";
+                $("bars").innerHTML = vbars(rows);
+                $("barLegend").innerHTML = KEYS.map(function (k) {
+                  return '<div><span class="dot" style="background:var(--' + k + ')"></span>' + LABEL[k] + "</div>";
+                }).join("");
+
+                $("tabSessions").classList.toggle("on", TAB === "sessions");
+                $("tabStudents").classList.toggle("on", TAB === "students");
+                $("modeBox").hidden = TAB !== "sessions";
+                $("sortBox").hidden = TAB !== "students";
+                $("csvBtn").hidden = TAB !== "students";
+                $("modeSession").classList.toggle("on", MODE === "session");
+                $("modeDay").classList.toggle("on", MODE === "day");
+                $("tableBox").innerHTML = TAB === "sessions" ? sessionsTable() : studentsTable();
+              }
+
+              function sessionsTable() {
+                const day = MODE === "day";
+                const rows = day ? dayRows() : sessionRows();
+                const head = "<tr><th>วันที่</th>" + (day ? '<th class="n">จำนวนคาบ</th>' : "<th>เวลา</th>") +
+                  KEYS.map(function (k) { return '<th class="n">' + LABEL[k] + "</th>"; }).join("") +
+                  '<th class="n">อัตราเข้าเรียน</th><th></th></tr>';
+                const body = rows.slice().reverse().map(function (r) {
+                  const rate = rateOf(r.c);
+                  const first = day ? r.g.date : r.se.date;
+                  const target = day ? r.g.sessions[0].id : r.se.id;
+                  return '<tr class="click" data-a="sess" data-v="' + esc(target) + '"><td>' + esc(fmtDateDow(first)) + "</td>" +
+                    (day ? '<td class="n">' + r.g.sessions.length + "</td>" : "<td>" + esc(r.se.time) + "</td>") +
+                    KEYS.map(function (k) { return '<td class="n num">' + r.c[k] + "</td>"; }).join("") +
+                    '<td class="n num ' + (rate < LOW_RATE ? "low" : "") + '">' + pct(rate) + "%</td><td>" + hbar(r.c) + "</td></tr>";
+                }).join("");
+                return "<table><thead>" + head + "</thead><tbody>" + body + "</tbody></table>";
+              }
+
+              function studentStats() {
+                return DATA.students.map(function (s, i) {
+                  const c = studentCounts(i);
+                  return { s: s, i: i, c: c, rate: rateOf(c) };
+                });
+              }
+
+        function studentsTable() {
+          let list = studentStats();
+          if (SORT === "rateDesc") list.sort(function (a, b) { return b.rate - a.rate || a.c.a - b.c.a; });
+          else if (SORT === "rateAsc") list.sort(function (a, b) { return a.rate - b.rate; });
+          else if (SORT === "absentDesc") list.sort(function (a, b) { return b.c.a - a.c.a; });
+
+          // จัดกลุ่มวันที่ทั้งหมดตามเดือน (เช่น "พฤษภาคม 2568")
+          const sessions = DATA.sessions; // แต่ละ session มี .date (YYYY-MM-DD) และเวลา
+          const monthMap = {};
+          const monthOrder = [];
+
+          sessions.forEach(function (se, sIdx) {
+            const d = new Date(se.date + "T00:00:00");
+            const mKey = d.toLocaleDateString("th-TH", { month: "long", year: "numeric" });
+            if (!monthMap[mKey]) {
+              monthMap[mKey] = { name: mKey, sessions: [] };
+              monthOrder.push(mKey);
+            }
+            monthMap[mKey].sessions.push({ session: se, index: sIdx });
+          });
+
+          // สร้างแถว Header แถวที่ 1: ชื่อเดือน
+          let head1 = '<tr><th rowspan="2">ลำดับ</th><th rowspan="2">เลขที่</th><th rowspan="2" style="min-width:140px">ชื่อ-สกุล</th>';
+          monthOrder.forEach(function (mKey) {
+            const m = monthMap[mKey];
+            head1 += '<th colspan="' + m.sessions.length + '" style="text-align:center">' + m.name + '</th>';
+          });
+          head1 += '<th rowspan="2" class="n">มาเรียน</th><th rowspan="2" class="n">ป่วย/ลา</th><th rowspan="2" class="n">สาย</th><th rowspan="2" class="n">ขาด</th><th rowspan="2" class="n">รวมไม่มา</th><th rowspan="2" class="n">รวมเวลา</th><th rowspan="2" class="n">ร้อยละ</th></tr>';
+
+          // สร้างแถว Header แถวที่ 2: วันที่และวันในสัปดาห์
+          let head2 = '<tr>';
+          monthOrder.forEach(function (mKey) {
+            const m = monthMap[mKey];
+            m.sessions.forEach(function (item) {
+              const se = item.session;
+              const d = new Date(se.date + "T00:00:00");
+              const dayNum = d.getDate();
+              const dowChar = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."][d.getDay()];
+              head2 += '<th style="text-align:center; min-width:38px;"><span style="display:block">' + dayNum + '</span><span class="hint" style="font-size:10px">' + dowChar + '</span></th>';
+            });
+          });
+          head2 += '</tr>';
+
+          const head = "<thead>" + head1 + head2 + "</thead>";
+
+          // ตัวย่อสัญลักษณ์สถานะตามระบบ (p=มา, l=สาย, v=ลา, a=ขาด)
+          const statusSymbol = { p: "/", l: "ส", v: "ล", a: "ข" }; // ใช้ตัวอักษรย่อตามมาตรฐานระบบเดิม
+
+          let body = "<tbody>";
+          list.forEach(function (r, rIndex) {
+            const s = r.s;
+            const stuIdx = r.i;
+            const c = r.c; // {p, l, v, a}
+            const totalNotCome = c.v + c.a; // รวมไม่มา (ลา + ขาด)
+            const totalTime = total(c); // รวมเวลาทั้งหมดที่เช็กชื่อ
+            const low = r.rate < LOW_RATE;
+
+            body += '<tr class="click" data-a="stu" data-v="' + esc(s.email) + '">';
+            body += '<td class="num">' + (rIndex + 1) + '</td>';
+            body += '<td class="num">' + esc(s.studentId) + '</td>';
+            body += '<td>' + esc(s.name) + '</td>';
+
+            // วนลูปแสดงสถานะในแต่ละคาบตามคอลัมน์วันที่
+            monthOrder.forEach(function (mKey) {
+              const m = monthMap[mKey];
+              m.sessions.forEach(function (item) {
+                const se = item.session;
+                const code = se.st[stuIdx]; // สถานะของนักเรียนในคาบนี้ (p, l, v, a หรือ undefined)
+                let sym = "";
+                let colorStyle = "";
+                if (code === "p") { sym = "/"; colorStyle = "color:var(--p);"; }
+                else if (code === "l") { sym = "ส"; colorStyle = "color:var(--l); font-weight:650;"; }
+                else if (code === "v") { sym = "ล"; colorStyle = "color:var(--v); font-weight:650;"; }
+                else if (code === "a") { sym = "ข"; colorStyle = "color:var(--a); font-weight:650;"; }
+
+                //ห่อด้วยช่อง <td> ที่ใส่ class="click-cell", เก็บ session id และ student email ไว้
+
+                body += '<td style="text-align:center; ' + colorStyle + ' cursor:pointer;" class="click-cell" ' +
+                  'data-sid="' + esc(se.id) + '" ' +
+                  'data-email="' + esc(s.email) + '" ' +
+                  'title="คลิกเพื่อแก้ไขสถานะคาบนี้">' + (sym || "-") + '</td>';
+              });
+            });
+
+            body += '<td class="n num">' + (c.p || "") + '</td>';
+            body += '<td class="n num">' + (c.v || "") + '</td>';
+            body += '<td class="n num">' + (c.l || "") + '</td>';
+            body += '<td class="n num">' + (c.a || "") + '</td>';
+            body += '<td class="n num">' + (totalNotCome || "") + '</td>';
+            body += '<td class="n num">' + totalTime + '</td>';
+            body += '<td class="n num ' + (low ? "low" : "") + '">' + pct(r.rate) + '%</td>';
+            body += '</tr>';
+          });
+          body += "</tbody>";
+
+          return '<table style="white-space:nowrap;">' + head + body + "</table>";
+        }
+
+              function openPanel(p) { PANEL = p; renderPanel(); $("overlay").hidden = false; }
+              function closePanel() { PANEL = null; $("overlay").hidden = true; $("panel").innerHTML = ""; }
+              function renderPanel() {
+                if (!PANEL) return;
+                $("panel").innerHTML = PANEL.type === "session" ? sessionPanel() : studentPanel();
+              }
+
+      function sessionPanel() {
+        const se = sessionById(PANEL.sid);
+        // ค้นหาคาบเรียนทั้งหมดในวันเดียวกัน
+        const sameDay = DATA.sessions.filter(function (s) { return s.date === se.date; });
+        const c = sessionCounts(se);
+
+        // [ปรับปรุงตรงนี้] คำนวณใส่ชื่อคาบที่ 1, คาบที่ 2... อิงตามลำดับเวลาในวันนั้น
+        const chips = sameDay.length > 1
+          ? '<div class="chips">' + sameDay.map(function (s, index) {
+              const periodLabel = "คาบที่ " + (index + 1) + " (" + s.time + ")";
+              return '<button class="ghost small ' + (s.id === se.id ? "on" : "") + '" data-a="sess" data-v="' + esc(s.id) + '">' + periodLabel + "</button>";
+            }).join("") + "</div>"
+          : "";
+
+        const rows = DATA.students.map(function (s, i) {
+          const code = se.st[i];
+          const adjusted = se.ad[i] === "1";
+          return '<tr data-email="' + esc(s.email) + '"><td>' + esc(s.studentId) + "</td><td>" + esc(s.name) + "</td>" +
+            '<td><select data-st="' + esc(s.email) + '" style="width: 90px;">' +
+            KEYS.map(function (k) { return '<option value="' + k + '"' + (k === code ? " selected" : "") + ">" + LABEL[k] + "</option>"; }).join("") +
+            "</select></td>" +
+            '<td><input class="note" data-note="' + esc(s.email) + '" maxlength="200" placeholder="หมายเหตุ" value="' + esc(se.notes[s.email] || "") + '"></td>' +
+            '<td class="st">' + (adjusted ? '<span class="hint">✎ ปรับ</span> <button class="ghost small" data-a="reset" data-email="' + esc(s.email) + '">คืนค่า</button>' : "") +
+            ' <span class="saved"></span></td></tr>';
+        }).join("");
+
+        return '<div class="top"><h2 style="margin:0; font-size:15px;">ห้อง ' + esc(DATA.cls) + " · " + esc(fmtDateDow(se.date)) + " " + esc(se.time) + "</h2>" +
+          '<button class="ghost small" data-a="close">ปิด</button></div>' + chips +
+          '<div class="sumrow" id="panelHead">' + donut(c, 100, pct(rateOf(c)) + "%") + legend(c) + "</div>" +
+          '<div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>เลขที่</th><th>ชื่อ</th><th>สถานะ</th><th>หมายเหตุ</th><th></th></tr></thead><tbody>' + rows + "</tbody></table></div>" +
+          '<div class="void-zone"><button class="voidbtn" data-a="void">ตั้งค่าให้ไม่นับคาบนี้ในรายงาน</button>' +
+          '<span class="hint">⚠ ใช้เฉพาะกรณีเปิดคาบผิด/ทดลองเท่านั้น คาบที่ไม่นับจะหายจากรายงานและแดชบอร์ดทันที และกู้คืนในหน้านี้ไม่ได้</span></div>';
+      }
+
+              function studentPanel() {
+                const i = IDX[PANEL.email];
+                const s = DATA.students[i];
+                const c = studentCounts(i);
+                const hist = DATA.sessions.slice().reverse().map(function (se) {
+                  return '<div><span class="num" style="min-width:110px">' + esc(fmtDate(se.date)) + " " + esc(se.time) + "</span>" + chip(se.st[i]) +
+                    (se.ad[i] === "1" ? '<span class="hint">✎</span>' : "") +
+                    (se.notes[s.email] ? '<span class="hint">· ' + esc(se.notes[s.email]) + "</span>" : "") + "</div>";
+                }).join("");
+                return '<div class="top"><h2 style="margin:0; font-size:15px;">' + esc(s.name) + ' <span class="hint">(' + esc(s.studentId) + ")</span></h2>" +
+                  '<button class="ghost small" data-a="close">ปิด</button></div>' +
+                  '<div class="sumrow">' + donut(c, 110, pct(rateOf(c)) + "%") + legend(c) + "</div>" +
+                  '<div style="margin-top:10px">' + hbar(c) + '</div><div class="hist">' + hist + "</div>";
+              }
+
+              function rowFor(email) {
+                return Array.prototype.slice.call(document.querySelectorAll("#panel tr[data-email]")).filter(function (r) {
+                  return r.getAttribute("data-email") === email;
+                })[0];
+              }
+
+              function saveStatus(email, word, note) {
+                const se = sessionById(PANEL.sid);
+                const row = rowFor(email);
+                const sel = row.querySelector("select");
+                const saved = row.querySelector(".saved");
+                sel.disabled = true;
+                saved.textContent = "กำลังบันทึก…";
+                run("setStatus", se.id, email, word, note)
+                  .then(function (r) {
+                    const i = IDX[email];
+                    se.st = replaceAt(se.st, i, r.code);
+                    se.ad = replaceAt(se.ad, i, r.adjusted ? "1" : "0");
+                    if (note && r.adjusted) se.notes[email] = note;
+                    else delete se.notes[email];
+                    renderReport();
+                    renderPanel();
+                    const again = rowFor(email);
+                    if (again) again.querySelector(".saved").textContent = "บันทึกแล้ว ✓";
+                  })
+                  .catch(function (e) {
+                    sel.disabled = false;
+                    saved.textContent = "";
+                    showErr(e);
+                    alert("บันทึกไม่สำเร็จ: " + ((e && e.message) || e));
+                  });
+              }
+
+        function exportCsv() {
+          const btn = $("csvBtn");
+          btn.disabled = true;
+          btn.textContent = "กำลังสร้างไฟล์…";
+
+          run("downloadExcelReport", DATA.cls, $("from").value, $("to").value)
+            .then(function (res) {
+              btn.disabled = false;
+              btn.textContent = "ดาวน์โหลด Excel";
+
+              // แปลง Base64 เป็นไฟล์ดาวน์โหลด
+              const byteCharacters = atob(res.content);
+              const byteNumbers = new Array(byteCharacters.length);
+              for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+              }
+              const byteArray = new Uint8Array(byteNumbers);
+              const blob = new Blob([byteArray], { type: "application/vnd.ms-excel" });
+
+              const a = document.createElement("a");
+              a.href = URL.createObjectURL(blob);
+              a.download = res.filename;
+              document.body.appendChild(a);
+              a.click();
+              setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+            })
+            .catch(function (e) {
+              btn.disabled = false;
+              btn.textContent = "ดาวน์โหลด Excel";
+              showErr(e);
+            });
+        }
+
+              document.addEventListener("click", function (e) {
+                if (e.target === $("overlay")) { closePanel(); return; }
+                if (e.target === $("sOverlay")) { closeSlot(); return; }
+                if (e.target === $("studentModal")) { closeStudentModal(); return; }
+                if (e.target === $("editStudentModal")) { closeEditStudentModal(); return; }
+
+                const cell = e.target.closest(".click-cell");
+                if (cell) {
+                  const sid = cell.getAttribute("data-sid");
+                    if (sid) {
+                      openPanel({ type: "session", sid: sid });
+                      return;
+                    }
+                  }
+
+                const t = e.target.closest("[data-a]");
+                if (!t) return;
+                const a = t.getAttribute("data-a"), v = t.getAttribute("data-v");
+                if (t.tagName === "A") e.preventDefault();
+
+                if (a === "nav") nav(v);
+                else if (a === "dreload") loadDash();
+                else if (a === "cell") openSlot(Number(t.getAttribute("data-day")), Number(t.getAttribute("data-p")));
+                else if (a === "ssave") saveSlot();
+                else if (a === "sdel") deleteSlot();
+                else if (a === "sclose") closeSlot();
+                else if (a === "open-add-student") openStudentModal();
+                else if (a === "close-student-modal") closeStudentModal();
+                else if (a === "save-student") saveNewStudent();
+                else if (a === "load") load();
+                else if (a === "quick") quick(v);
+                else if (a === "tab") { TAB = v; renderReport(); }
+                else if (a === "mode") { MODE = v; renderReport(); }
+                else if (a === "sess") openPanel({ type: "session", sid: v });
+                else if (a === "stu") openPanel({ type: "student", email: v });
+                else if (a === "close") closePanel();
+                else if (a === "csv") exportCsv();
+                else if (a === "reset") saveStatus(t.getAttribute("data-email"), "auto", "");
+                else if (a === "void") {
+                  if (!confirm("⚠ คำเตือน\n\nคาบนี้จะถูกตัดออกจากรายงานและแดชบอร์ดทันที\nและกู้คืนจากหน้านี้ไม่ได้\n\nใช้เฉพาะกรณีเปิดคาบผิด/ทดลองเท่านั้น\nต้องการดำเนินการต่อหรือไม่?")) return;
+                  const sid = PANEL.sid;
+                  run("voidSession", sid)
+                    .then(function () {
+                      DATA.sessions = DATA.sessions.filter(function (s) { return s.id !== sid; });
+                      closePanel();
+                      renderReport();
+                    })
+                    .catch(showErr);
+                }
+                else if (a === "edit-student") openEditStudentModal(t.dataset);
+                else if (a === "close-edit-student-modal") closeEditStudentModal();
+                else if (a === "update-student") saveUpdateStudent();
+                else if (a === "delete-student") removeStudentRecord();
+
+              });
+
+              document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") {
+                  if (!$("sOverlay").hidden) closeSlot();
+                  else if (!$("studentModal").hidden) closeStudentModal();
+                  else if (!$("editStudentModal").hidden) closeEditStudentModal();
+                  else if (PANEL) closePanel();
+                }
+              });
+
+              document.addEventListener("change", function (e) {
+                const el = e.target;
+                if (el.id === "sort") { SORT = el.value; renderReport(); return; }
+                if (!PANEL || PANEL.type !== "session") return;
+                const se = sessionById(PANEL.sid);
+                if (el.hasAttribute("data-st")) {
+                  const email = el.getAttribute("data-st");
+                  const row = rowFor(email);
+                  saveStatus(email, WORD[el.value], row.querySelector("input.note").value);
+                } else if (el.hasAttribute("data-note")) {
+                  const email = el.getAttribute("data-note");
+                  const code = se.st[IDX[email]];
+                  saveStatus(email, WORD[code], el.value);
+                }
+              });
+
+              setInterval(tick, 1000);
+              tick();
+              loadDash();
+    </script>
+  </body>
+</html>
