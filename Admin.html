@@ -155,6 +155,186 @@
         padding: 16px;
         width: 100%;
       }
+      #report {
+        min-width: 0;
+        width: 100%;
+      }
+      /* ตารางรายบุคคล: ตรึงคอลัมน์ซ้าย (ลำดับ/เลขที่/ชื่อ) และขวา (สรุป) ให้ช่องสถานะเลื่อนซ้าย-ขวาได้ */
+      .stt tbody tr {
+        background: #fff;
+      }
+      .stt tr.click:hover {
+        background: #f7f9fe;
+      }
+      .stt .sc {
+        position: sticky;
+        background: inherit;
+        z-index: 3;
+      }
+      .stt th.sc {
+        background: #fafbfe;
+        z-index: 5;
+      }
+      .stt .c1 {
+        left: 0;
+        width: 36px;
+        min-width: 36px;
+        max-width: 36px;
+        padding-left: 4px;
+        padding-right: 4px;
+        text-align: center;
+      }
+      .stt .c2 {
+        left: 36px;
+        width: 48px;
+        min-width: 48px;
+        max-width: 48px;
+        padding-left: 4px;
+        padding-right: 4px;
+        text-align: center;
+      }
+      .stt .c3 {
+        left: 84px;
+        width: 190px;
+        min-width: 190px;
+        max-width: 190px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-shadow: inset -1px 0 0 var(--line);
+      }
+      .stt .r1 {
+        right: 0;
+        width: 56px;
+        min-width: 56px;
+      }
+      .stt .r2 {
+        right: 56px;
+        width: 64px;
+        min-width: 64px;
+      }
+      .stt .r3 {
+        right: 120px;
+        width: 44px;
+        min-width: 44px;
+      }
+      .stt .r4 {
+        right: 164px;
+        width: 44px;
+        min-width: 44px;
+      }
+      .stt .r5 {
+        right: 208px;
+        width: 44px;
+        min-width: 44px;
+      }
+      .stt .r6 {
+        right: 252px;
+        width: 44px;
+        min-width: 44px;
+      }
+      .stt .r7 {
+        right: 296px;
+        width: 52px;
+        min-width: 52px;
+        box-shadow: inset 1px 0 0 var(--line);
+      }
+      .stt .r1,
+      .stt .r2,
+      .stt .r3,
+      .stt .r4,
+      .stt .r5,
+      .stt .r6,
+      .stt .r7 {
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+      /* แถวหัวตาราง 2 ชั้น: เดือน (ชั้นบน) ตรึงที่ 0 / วันที่ (ชั้นล่าง) ตรึงต่อจากชั้นบน */
+      .stt thead tr:first-child th {
+        top: 0;
+        height: 34px;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      /* แถวที่ 2 = วัน, แถวที่ 3 = คาบ (sticky ต่อจากแถวเดือน) */
+      .stt thead tr:nth-child(2) th {
+        top: 34px;
+        height: 28px;
+        padding: 0 4px;
+        text-align: center;
+      }
+      .stt thead tr:nth-child(3) th {
+        top: 62px;
+        height: 26px;
+        padding: 0 4px;
+        text-align: center;
+      }
+      /* ความกว้างช่องสถานะรายคาบ (หัวคาบ + ช่องข้อมูล) */
+      .stt thead tr:nth-child(3) th,
+      .stt td.click-cell {
+        box-sizing: border-box;
+        width: 40px;
+        min-width: 40px;
+        max-width: 40px;
+        padding-left: 2px;
+        padding-right: 2px;
+      }
+      /* เส้นคั่นวันแบบจาง ๆ */
+      .stt .db {
+        box-shadow: inset 1px 0 0 #eceff7;
+      }
+      .stt thead th.db {
+        box-shadow:
+          inset 1px 0 0 #eceff7,
+          inset 0 -1px 0 var(--line);
+      }
+      /* เส้นใต้หัวตารางวาดด้วย box-shadow เพื่อให้ตรึงตามหัวตาราง (เส้นขอบปกติจะเลื่อนหาย) */
+      .stt thead th {
+        box-shadow: inset 0 -1px 0 var(--line);
+      }
+      .stt thead th.mb {
+        box-shadow:
+          inset 1px 0 0 #d5dbea,
+          inset 0 -1px 0 var(--line);
+      }
+      .stt thead th.c3 {
+        box-shadow:
+          inset -1px 0 0 var(--line),
+          inset 0 -1px 0 var(--line);
+      }
+      .stt thead th.r7 {
+        box-shadow:
+          inset 1px 0 0 var(--line),
+          inset 0 -1px 0 var(--line);
+      }
+      .stt thead tr:first-child th.sc {
+        height: auto;
+      }
+      .stt th.mh {
+        text-align: left;
+      }
+      .stt th.mh > span {
+        position: sticky;
+        left: 352px; /* ถัดจากคอลัมน์ที่ตรึงฝั่งซ้าย (342px) เพื่อไม่ให้ชื่อเดือนหลุดขอบ */
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .stt .mb {
+        box-shadow: inset 1px 0 0 #d5dbea;
+      }
+      @media (max-width: 900px) {
+        .stt th.mh > span {
+          left: 352px;
+        }
+        .stt .r1,
+        .stt .r2,
+        .stt .r3,
+        .stt .r4,
+        .stt .r5,
+        .stt .r6,
+        .stt .r7 {
+          position: static;
+        }
+      }
       .view {
         display: grid;
         gap: 16px;
@@ -185,21 +365,58 @@
 
       .report-filter {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        grid-template-columns: minmax(160px, 1.2fr) minmax(140px, 1fr) minmax(
+            140px,
+            1fr
+          ) auto;
         gap: 12px;
         align-items: end;
         width: 100%;
       }
-      .report-filter .quick-btns {
+      .report-filter .actions {
         display: flex;
-        gap: 4px;
-        flex-wrap: wrap;
+        gap: 8px;
       }
-      .report-filter .quick-btns button {
-        flex: 1;
-        min-width: 50px;
-        padding: 8px 4px;
-        font-size: 12px;
+      .report-filter .actions button {
+        white-space: nowrap;
+      }
+
+      /* แถวค้นหาด่วน */
+      .report-filter .quick-row {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--line);
+      }
+      .report-filter .quick-row .ql {
+        font-size: 13px;
+        color: var(--mute);
+        margin-right: 4px;
+      }
+      .report-filter .quick-row button {
+        padding: 6px 14px;
+        font-size: 13px;
+        border-radius: 999px;
+      }
+      .report-filter .quick-row button.active {
+        background: var(--ink);
+        color: #fff;
+      }
+
+      /* จอแคบ (มือถือ) */
+      @media (max-width: 720px) {
+        .report-filter {
+          grid-template-columns: 1fr 1fr;
+        }
+        .report-filter .actions {
+          grid-column: 1 / -1;
+        }
+        .report-filter .actions button {
+          flex: 1;
+        }
       }
 
       label {
@@ -209,6 +426,7 @@
         margin-bottom: 4px;
       }
       select,
+      textarea,
       input {
         font: inherit;
         padding: 8px 10px;
@@ -322,9 +540,9 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        min-width: 24px;
+        min-width: 27px;
         flex: 1;
-        max-width: 48px;
+        max-width: 39px;
       }
       .vb .pct {
         font-size: 10px;
@@ -348,11 +566,12 @@
         color: var(--mute);
         margin-top: 4px;
         text-align: center;
-        line-height: 1.1;
+        line-height: 1.2;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         width: 100%;
+      }
+      .vb .vl span {
+        display: block;
       }
       .tabs {
         display: flex;
@@ -507,6 +726,64 @@
       }
       td input.note {
         width: 140px;
+      }
+      .cellinfo {
+        display: grid;
+        gap: 4px;
+        margin: 4px 0 12px;
+        font-size: 14px;
+      }
+      .cellinfo .hint {
+        font-size: 12.5px;
+      }
+      .cellbox {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px 12px;
+        margin-bottom: 12px;
+        font-size: 14px;
+        display: grid;
+        gap: 4px;
+      }
+      .seg {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        margin: 6px 0 12px;
+      }
+      .seg label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border: 2px solid var(--line);
+        border-radius: 10px;
+        padding: 8px 4px;
+        cursor: pointer;
+        font-size: 14px;
+        margin: 0;
+        position: relative;
+      }
+      .seg input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .seg label.on {
+        border-color: var(--on, var(--p));
+        font-weight: 700;
+      }
+      .cellnote {
+        width: 100%;
+        min-height: 64px;
+        resize: vertical;
+        box-sizing: border-box;
+      }
+      .cellact {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 12px;
       }
       .hist {
         display: grid;
@@ -930,42 +1207,33 @@
             <section class="card">
               <div class="report-filter">
                 <div>
-                  <label for="cls">ห้องเรียน</label
-                  ><select id="cls"></select>
+                  <label for="cls">ห้องเรียน</label>
+                  <select id="cls"></select>
                 </div>
                 <div>
-                  <label for="from">ตั้งแต่วันที่</label
-                  ><input id="from" type="date" />
+                  <label for="from">ตั้งแต่วันที่</label>
+                  <input id="from" type="date" />
                 </div>
                 <div>
-                  <label for="to">ถึงวันที่</label><input id="to" type="date" />
+                  <label for="to">ถึงวันที่</label>
+                  <input id="to" type="date" />
                 </div>
-                <div>
-                  <label>ค้นหาด่วน</label>
-                  <div class="quick-btns">
-                    <button class="ghost small" data-a="quick" data-v="today">
-                      วันนี้
-                    </button>
-                    <button class="ghost small" data-a="quick" data-v="7">
-                      7 วัน
-                    </button>
-                    <button class="ghost small" data-a="quick" data-v="30">
-                      30 วัน
-                    </button>
-                    <button class="ghost small" data-a="quick" data-v="all">
-                      ทั้งหมด
-                    </button>
-                  </div>
+                <div class="actions">
+                  <button id="btnLoad" data-a="load" disabled>ค้นหา</button>
+                  <button class="ghost" data-a="clear">ล้างค่าตัวกรอง</button>
                 </div>
-                <div>
-                  <label>&nbsp;</label>
-                  <button
-                    id="btnLoad"
-                    data-a="load"
-                    disabled
-                    style="width: 100%"
-                  >
-                    ค้นหา
+
+                <div class="quick-row">
+                  <span class="ql">ค้นหาด่วน</span>
+                  <button class="ghost" data-a="quick" data-v="today">
+                    วันนี้
+                  </button>
+                  <button class="ghost" data-a="quick" data-v="7">7 วัน</button>
+                  <button class="ghost" data-a="quick" data-v="30">
+                    30 วัน
+                  </button>
+                  <button class="ghost" data-a="quick" data-v="all">
+                    ทั้งหมด
                   </button>
                 </div>
               </div>
@@ -998,19 +1266,19 @@
                 <div class="tabs">
                   <button
                     class="ghost"
-                    id="tabSessions"
-                    data-a="tab"
-                    data-v="sessions"
-                  >
-                    แยกแต่ละคาบ
-                  </button>
-                  <button
-                    class="ghost"
                     id="tabStudents"
                     data-a="tab"
                     data-v="students"
                   >
                     แยกรายบุคคล
+                  </button>
+                  <button
+                    class="ghost"
+                    id="tabSessions"
+                    data-a="tab"
+                    data-v="sessions"
+                  >
+                    แยกแต่ละวัน/คาบ
                   </button>
                   <span class="sp"></span>
                   <div class="toolbar-right">
@@ -1074,8 +1342,8 @@
         </div>
         <div class="form">
           <div>
-            <label for="insStudentId">เลขที่ (เช่น 01)</label>
-            <input id="insStudentId" maxlength="20" placeholder="เช่น 01" />
+            <label for="insStudentId">เลขที่ (เช่น 1)</label>
+            <input id="insStudentId" maxlength="20" placeholder="เช่น 1" />
           </div>
           <div>
             <label for="insName">ชื่อ นามสกุล</label>
@@ -1086,8 +1354,29 @@
             />
           </div>
           <div>
-            <label for="insClass">ห้องเรียน (เช่น ม.5/1)</label>
-            <input id="insClass" maxlength="40" placeholder="เช่น ม.5/1" />
+            <label for="insClassSelect">ห้องเรียน</label>
+            <select
+              id="insClassSelect"
+              onchange="handleClassSelectChange('ins')"
+              style="
+                width: 100%;
+                padding: 8px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                background: var(--card);
+                color: var(--text);
+              "
+            >
+              <!-- ตัวเลือกห้องจะถูกเติมด้วย JavaScript -->
+            </select>
+          </div>
+          <div id="insCustomClassBox" style="display: none; margin-top: 8px">
+            <label for="insCustomClass">ระบุชื่อห้องเรียนใหม่</label>
+            <input
+              id="insCustomClass"
+              maxlength="40"
+              placeholder="เช่น ม.6/3"
+            />
           </div>
           <div>
             <label for="insEmail">อีเมลนักเรียน</label>
@@ -1129,8 +1418,29 @@
             <input id="editName" maxlength="100" />
           </div>
           <div>
-            <label for="editClass">ห้องเรียน</label>
-            <input id="editClass" maxlength="40" />
+            <label for="editClassSelect">ห้องเรียน</label>
+            <select
+              id="editClassSelect"
+              onchange="handleClassSelectChange('edit')"
+              style="
+                width: 100%;
+                padding: 8px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                background: var(--card);
+                color: var(--text);
+              "
+            >
+              <!-- ตัวเลือกห้องจะถูกเติมด้วย JavaScript -->
+            </select>
+          </div>
+          <div id="editCustomClassBox" style="display: none; margin-top: 8px">
+            <label for="editCustomClass">ระบุชื่อห้องเรียนใหม่</label>
+            <input
+              id="editCustomClass"
+              maxlength="40"
+              placeholder="เช่น ม.6/3"
+            />
           </div>
           <div>
             <label for="editEmail">อีเมลนักเรียน</label>
@@ -1164,937 +1474,1503 @@
     </div>
 
     <script>
-              const AUTH = <?!= JSON.stringify(auth) ?>;
-              const KEYS = ["p", "l", "v", "a"];
-              const LABEL = { p: "มาเรียน", l: "มาสาย", v: "ลา", a: "ขาด" };
-              const WORD = { p: "present", l: "late", v: "leave", a: "absent" };
-              const LOW_RATE = 80;
+                    const AUTH = <?!= JSON.stringify(auth) ?>;
+                    const KEYS = ["p", "l", "v", "a"];
+                    const LABEL = { p: "มาเรียน", l: "มาสาย", v: "ลา", a: "ขาด" };
+                    const WORD = { p: "present", l: "late", v: "leave", a: "absent" };
+                    const LOW_RATE = 80;
 
-              const PERIODS = [
-                { t: "c", n: 1, s: "08:30", e: "09:20" },
-                { t: "c", n: 2, s: "09:20", e: "10:10" },
-                { t: "b", label: "พัก 10 นาที", s: "10:10", e: "10:20" },
-                { t: "c", n: 3, s: "10:20", e: "11:10" },
-                { t: "c", n: 4, s: "11:10", e: "12:00" },
-                { t: "b", label: "พักเที่ยง", s: "12:00", e: "13:00" },
-                { t: "c", n: 5, s: "13:00", e: "13:50" },
-                { t: "c", n: 6, s: "13:50", e: "14:40" },
-                { t: "b", label: "พัก 10 นาที", s: "14:40", e: "14:50" },
-                { t: "c", n: 7, s: "14:50", e: "15:40" },
-                { t: "c", n: 8, s: "15:40", e: "16:30" },
-              ];
-              const DAY_LABEL = { 1: "จันทร์", 2: "อังคาร", 3: "พุธ", 4: "พฤหัสบดี", 5: "ศุกร์" };
-              const DOW = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
-              const MONTHS = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
-              const TITLES = { dash: "แดชบอร์ด", sched: "ตารางสอน", students: "รายชื่อนักเรียน", report: "รายงานผลการเช็กชื่อ" };
+                    const PERIODS = [
+                      { t: "c", n: 1, s: "08:30", e: "09:20" },
+                      { t: "c", n: 2, s: "09:20", e: "10:10" },
+                      { t: "b", label: "พัก 10 นาที", s: "10:10", e: "10:20" },
+                      { t: "c", n: 3, s: "10:20", e: "11:10" },
+                      { t: "c", n: 4, s: "11:10", e: "12:00" },
+                      { t: "b", label: "พักเที่ยง", s: "12:00", e: "13:00" },
+                      { t: "c", n: 5, s: "13:00", e: "13:50" },
+                      { t: "c", n: 6, s: "13:50", e: "14:40" },
+                      { t: "b", label: "พัก 10 นาที", s: "14:40", e: "14:50" },
+                      { t: "c", n: 7, s: "14:50", e: "15:40" },
+                      { t: "c", n: 8, s: "15:40", e: "16:30" },
+                    ];
+                    const DAY_LABEL = { 1: "จันทร์", 2: "อังคาร", 3: "พุธ", 4: "พฤหัสบดี", 5: "ศุกร์" };
+                    const DOW = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
+                    const MONTHS = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+                    const TITLES = { dash: "แดชบอร์ด", sched: "ตารางสอน", students: "รายชื่อนักเรียน", report: "รายงานผลการเช็กชื่อ" };
 
-              function emptyCounts() { return { p: 0, l: 0, v: 0, a: 0 }; }
-              function addCounts(a, b) { KEYS.forEach(function (k) { a[k] += b[k]; }); return a; }
-              function total(c) { return c.p + c.l + c.v + c.a; }
-              function rateOf(c) { const t = total(c); return t ? ((c.p + c.l) / t) * 100 : 0; }
+                    function emptyCounts() { return { p: 0, l: 0, v: 0, a: 0 }; }
+                    function addCounts(a, b) { KEYS.forEach(function (k) { a[k] += b[k]; }); return a; }
+                    function total(c) { return c.p + c.l + c.v + c.a; }
+                    function rateOf(c) { const t = total(c); return t ? ((c.p + c.l) / t) * 100 : 0; }
 
-              /* ---- ตัวช่วยของหน้ารายงาน (ฉบับเดิมไม่มีนิยามชุดนี้ ทำให้รายงานผลพัง) ---- */
-              function replaceAt(str, i, ch) { return str.substring(0, i) + ch + str.substring(i + 1); }
-              function sessionById(id) {
-                return DATA.sessions.filter(function (s) { return s.id === id; })[0];
-              }
-              // จำนวนมา/สาย/ลา/ขาด ของนักเรียนคนที่ i ตลอดทุกคาบในรายงาน
-              function studentCounts(i) {
-                const c = emptyCounts();
-                DATA.sessions.forEach(function (se) { c[se.st[i]]++; });
-                return c;
-              }
-              // รวมคาบที่อยู่วันเดียวกันเป็นกลุ่ม (ใช้ในโหมด "รายวัน")
-              function groupByDay() {
-                const map = {}, out = [];
-                DATA.sessions.forEach(function (se) {
-                  let g = map[se.date];
-                  if (!g) { g = map[se.date] = { date: se.date, sessions: [], c: emptyCounts() }; out.push(g); }
-                  g.sessions.push(se);
-                  addCounts(g.c, sessionCounts(se));
-                });
-                return out;
-              }
-              function chip(code) {
-                return '<span class="chip"><span class="dot" style="background:var(--' + code + ')"></span>' + LABEL[code] + "</span>";
-              }
-              function hbar(c) {
-                const t = total(c);
-                return '<div class="hb" aria-hidden="true">' + KEYS.map(function (k) {
-                  return c[k] ? '<i style="width:' + (c[k] / t) * 100 + "%;background:var(--" + k + ')"></i>' : "";
-                }).join("") + "</div>";
-              }
-
-              function donut(c, size, label) {
-                const t = total(c);
-                let off = 0, segs = "";
-                if (!t) {
-                  segs = '<circle cx="18" cy="18" r="15.9155" fill="none" style="stroke:var(--line)" stroke-width="5"/>';
-                } else {
-                  KEYS.forEach(function (k) {
-                    if (!c[k]) return;
-                    const v = (c[k] / t) * 100;
-                    segs += '<circle cx="18" cy="18" r="15.9155" fill="none" style="stroke:var(--' + k + ')" stroke-width="5" stroke-dasharray="' + v + " " + (100 - v) + '" stroke-dashoffset="' + -off + '" transform="rotate(-90 18 18)"/>';
-                    off += v;
-                  });
-                }
-                return '<svg viewBox="0 0 36 36" width="' + size + '" height="' + size + '" role="img" aria-label="กราฟวงกลมสถานะการเข้าเรียน">' + segs + '<text x="18" y="19.6" text-anchor="middle" font-size="6.5" font-weight="800" fill="currentColor">' + esc(label) + "</text></svg>";
-              }
-
-              function legend(c) {
-                const t = total(c);
-                return '<div class="legend">' + KEYS.map(function (k) {
-                  return '<div><span class="dot" style="background:var(--' + k + ')"></span>' + LABEL[k] + ' <b class="num">' + c[k] + '</b> <span class="hint num">(' + pct(t ? (c[k] / t) * 100 : 0) + "%)</span></div>";
-                }).join("") + "</div>";
-              }
-
-              function vbars(rows) {
-                return '<div class="bars">' + rows.map(function (r) {
-                  const t = total(r.c);
-                  const tip = r.label + " — " + KEYS.map(function (k) { return LABEL[k] + " " + r.c[k]; }).join(", ");
-                  return '<div class="vb" title="' + esc(tip) + '"><span class="pct num">' + pct(rateOf(r.c)) + "%</span>" +
-                    '<div class="stack">' + KEYS.map(function (k) {
-                      return r.c[k] ? '<i style="height:' + (r.c[k] / t) * 100 + "%;background:var(--" + k + ')"></i>' : "";
-                    }).join("") + '</div><span class="vl">' + esc(r.label) + "</span></div>";
-                }).join("") + "</div>";
-              }
-
-              let DATA = null, TAB = "sessions", MODE = "session", SORT = "id";
-              let PANEL = null;
-              let IDX = {};
-              let VIEW = "dash", INIT_DONE = false, REPORT_LOADED = false;
-              let CLASSES = [], ME = null, SCHED = [], SUM = null, LOADED = false;
-              let SLOT = null, LAST_KEY = "", MOB_DAY_SET = false;
-              let STUDENTS_DATA = { classes: [], currentClass: "", students: [] };
-
-              const $ = function (id) { return document.getElementById(id); };
-              const esc = function (s) {
-                return String(s || "").replace(/[&<>"']/g, function (c) {
-                  return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
-                });
-              };
-              function run(fn) {
-                const args = Array.prototype.slice.call(arguments, 1);
-                return new Promise(function (res, rej) {
-                  google.script.run.withSuccessHandler(res).withFailureHandler(rej).api(AUTH, fn, args);
-                });
-              }
-              function showErr(e, id) {
-                const el = $(id || "err");
-                el.textContent = e && e.message ? e.message.replace(/^Error:\s*/, "") : String(e);
-                el.hidden = false;
-              }
-              function ymd(d) {
-                return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
-              }
-              function fmtDate(s) {
-                return new Date(s + "T00:00:00").toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" });
-              }
-              function fmtDateDow(s) {
-                return DOW[new Date(s + "T00:00:00").getDay()] + " " + fmtDate(s);
-              }
-              function pct(x) {
-                return (Math.round(x * 10) / 10).toString().replace(/\.0$/, "");
-              }
-              function pad2(n) { return ("0" + n).slice(-2); }
-
-              function toggleMenu(open) {
-                $("sideNav").classList.toggle("open", open);
-                $("backdrop").classList.toggle("show", open);
-              }
-
-              function nav(v) {
-                VIEW = v;
-                toggleMenu(false);
-                ["dash", "sched", "students", "report"].forEach(function (k) { $("v-" + k).hidden = k !== v; });
-                Array.prototype.forEach.call(document.querySelectorAll(".nav"), function (b) {
-                  b.classList.toggle("on", b.getAttribute("data-v") === v);
-                });
-                $("pageTitle").textContent = TITLES[v];
-                if (v === "sched") renderSched();
-                if (v === "students") loadStudentsData();
-                ensureReport();
-                window.scrollTo(0, 0);
-              }
-              function ensureReport() {
-                if (VIEW === "report" && INIT_DONE && !REPORT_LOADED) { REPORT_LOADED = true; quick("30"); }
-              }
-
-              /* ==================== รายชื่อนักเรียน ==================== */
-              // วาดรายการห้อง + ตารางจากข้อมูลที่เซิร์ฟเวอร์ส่งกลับ (ใช้ร่วมกันทุกปุ่ม: โหลด/เพิ่ม/แก้/ลบ)
-              function applyStudentsData(res) {
-                STUDENTS_DATA = res;
-                const clsSel = $("studentClassFilter");
-                clsSel.innerHTML = res.classes.map(function (c) {
-                  return '<option value="' + esc(c) + '">ห้อง ' + esc(c) + "</option>";
-                }).join("");
-                if (res.currentClass) clsSel.value = res.currentClass;
-                filterStudentTable();
-              }
-
-              function loadStudentsData() {
-                const clsSel = $("studentClassFilter");
-                const cls = clsSel ? clsSel.value : "";
-                $("studentErr").hidden = true;
-                run("getStudentsPage", cls)
-                  .then(applyStudentsData)
-                  .catch(function (e) { showErr(e, "studentErr"); });
-              }
-
-              function renderStudentTable(list) {
-                const box = $("studentTableBox");
-                if (!list || !list.length) {
-                  box.innerHTML = '<div class="empty">ไม่พบรายชื่อนักเรียนในห้องนี้</div>';
-                  return;
-                }
-                let h = '<table><thead><tr><th>เลขที่</th><th>ชื่อ - นามสกุล</th><th>อีเมล</th></tr></thead><tbody>';
-                list.forEach(function (s) {
-                  h += '<tr class="click" title="กดเพื่อแก้ไข/ลบ" data-a="edit-student" data-email="' + esc(s.email) + '" data-id="' + esc(s.studentId) + '" data-name="' + esc(s.name) + '" data-cls="' + esc(s.cls) + '">' +
-                      '<td class="num"><b>' + esc(s.studentId) + '</b></td><td>' + esc(s.name) + '</td><td>' + esc(s.email) + '</td></tr>';
-                });
-                h += '</tbody></table>';
-                box.innerHTML = h;
-              }
-
-              function filterStudentTable() {
-                const kw = $("studentSearch").value.trim().toLowerCase();
-                const filtered = STUDENTS_DATA.students.filter(function (s) {
-                  return !kw ||
-                    String(s.studentId).toLowerCase().indexOf(kw) >= 0 ||
-                    String(s.name).toLowerCase().indexOf(kw) >= 0 ||
-                    String(s.email).toLowerCase().indexOf(kw) >= 0;
-                });
-                renderStudentTable(filtered);
-              }
-
-              function openStudentModal() {
-                $("insStudentId").value = "";
-                $("insName").value = "";
-                $("insEmail").value = "";
-                $("insClass").value = $("studentClassFilter").value || "";
-                $("modalErr").hidden = true;
-                $("studentModal").hidden = false;
-                $("insStudentId").focus();
-              }
-              function closeStudentModal() { $("studentModal").hidden = true; }
-
-              function saveNewStudent() {
-                const studentId = $("insStudentId").value.trim();
-                const name = $("insName").value.trim();
-                const cls = $("insClass").value.trim();
-                const email = $("insEmail").value.trim();
-
-                if (!studentId || !name || !cls || !email) {
-                  showErr("กรุณากรอกข้อมูลให้ครบทุกช่อง", "modalErr");
-                  return;
-                }
-                $("modalErr").hidden = true;
-                $("btnSaveStudent").disabled = true;
-                run("addStudent", studentId, name, cls, email)
-                  .then(function (res) {
-                    $("btnSaveStudent").disabled = false;
-                    closeStudentModal();
-                    applyStudentsData(res);
-                    alert("เพิ่มรายชื่อนักเรียนเรียบร้อยแล้ว");
-                  })
-                  .catch(function (e) {
-                    $("btnSaveStudent").disabled = false;
-                    showErr(e, "modalErr");
-                  });
-              }
-
-              function openEditStudentModal(dataset) {
-                $("editOldEmail").value = dataset.email;
-                $("editStudentId").value = dataset.id;
-                $("editName").value = dataset.name;
-                $("editClass").value = dataset.cls;
-                $("editEmail").value = dataset.email;
-                $("editModalErr").hidden = true;
-                $("editStudentModal").hidden = false;
-              }
-              function closeEditStudentModal() { $("editStudentModal").hidden = true; }
-
-              function saveUpdateStudent() {
-                const oldEmail = $("editOldEmail").value;
-                const studentId = $("editStudentId").value.trim();
-                const name = $("editName").value.trim();
-                const cls = $("editClass").value.trim();
-                const email = $("editEmail").value.trim();
-
-                if (!studentId || !name || !cls || !email) {
-                  showErr("กรุณากรอกข้อมูลให้ครบทุกช่อง", "editModalErr");
-                  return;
-                }
-                $("editModalErr").hidden = true;
-                $("btnUpdateStudent").disabled = true;
-                run("updateStudent", oldEmail, studentId, name, cls, email)
-                  .then(function (res) {
-                    $("btnUpdateStudent").disabled = false;
-                    closeEditStudentModal();
-                    applyStudentsData(res);
-                    alert("อัปเดตข้อมูลนักเรียนเรียบร้อยแล้ว");
-                  })
-                  .catch(function (e) {
-                    $("btnUpdateStudent").disabled = false;
-                    showErr(e, "editModalErr");
-                  });
-              }
-
-              function removeStudentRecord() {
-                const email = $("editOldEmail").value;
-                // ใช้ห้องที่กำลังเปิดดูอยู่ ไม่ใช่ค่าในช่องแก้ไข (ผู้ใช้อาจพิมพ์ห้องใหม่ค้างไว้)
-                const cls = STUDENTS_DATA.currentClass || "";
-                if (!confirm("ต้องการลบรายชื่อนักเรียนนี้ออกจากระบบใช่หรือไม่?")) return;
-                $("editModalErr").hidden = true;
-                run("deleteStudent", email, cls)
-                  .then(function (res) {
-                    closeEditStudentModal();
-                    applyStudentsData(res);
-                    alert("ลบรายชื่อนักเรียนเรียบร้อยแล้ว");
-                  })
-                  .catch(function (e) { showErr(e, "editModalErr"); });
-              }
-
-              /* ฟังก์ชันอื่นๆ (แดชบอร์ด, ตารางสอน, รายงานผล) คงเดิม */
-              function toMin(t) { const a = t.split(":"); return Number(a[0]) * 60 + Number(a[1]); }
-              function nowMin(d) { return d.getHours() * 60 + d.getMinutes(); }
-              function curIdx(d) {
-                const m = nowMin(d);
-                for (let i = 0; i < PERIODS.length; i++) {
-                  if (m >= toMin(PERIODS[i].s) && m < toMin(PERIODS[i].e)) return i;
-                }
-                return -1;
-              }
-              function slotOf(day, n) {
-                return SCHED.filter(function (x) { return x.day === day && x.period === n; })[0];
-              }
-              function slotInfo(s) {
-                return [s.cls, s.room ? "📍 " + s.room : ""].filter(Boolean).join(" · ");
-              }
-
-              function tick() {
-                const n = new Date();
-                $("dDate").textContent = "วัน" + DOW[n.getDay()] + "ที่ " + n.getDate() + " " + MONTHS[n.getMonth()] + " " + (n.getFullYear() + 543);
-                $("dTime").textContent = pad2(n.getHours()) + ":" + pad2(n.getMinutes()) + ":" + pad2(n.getSeconds());
-                const key = n.getDay() + "|" + curIdx(n);
-                if (key !== LAST_KEY) { LAST_KEY = key; renderToday(); }
-              }
-
-              function renderHello() {
-                const h = new Date().getHours();
-                const greet = h < 12 ? "สวัสดีตอนเช้า" : h < 17 ? "สวัสดีตอนบ่าย" : "สวัสดีตอนเย็น";
-                const name = ME.name || ME.email.split("@")[0];
-                $("dHello").textContent = greet + " " + name;
-              }
-
-              function renderToday() {
-                const box = $("dToday"), btn = $("dTodayBtn"), sub = $("dSub");
-                if (!LOADED) { box.innerHTML = '<div class="empty">กำลังโหลด…</div>'; return; }
-                if (!SCHED.length) {
-                  btn.innerHTML = '<button class="small" data-a="nav" data-v="sched">ตั้งค่าตารางสอน</button>';
-                  box.innerHTML = '<div class="empty">ยังไม่มีข้อมูลตารางสอน กดปุ่ม “ตั้งค่าตารางสอน” เพื่อเริ่มเพิ่มคาบสอนของคุณ</div>';
-                  sub.textContent = ME && !ME.name ? "ยังไม่ได้ตั้งค่าตารางสอน · ผู้ดูแลระบบยังไม่ได้ใส่ชื่อในชีต" : "ยังไม่ได้ตั้งค่าตารางสอน";
-                  return;
-                }
-                btn.innerHTML = '<button class="ghost small" data-a="nav" data-v="sched">ดูตารางทั้งสัปดาห์</button>';
-                const now = new Date(), day = now.getDay(), ci = curIdx(now), m = nowMin(now);
-                if (day < 1 || day > 5) {
-                  box.innerHTML = '<div class="empty">วันนี้เป็นวันหยุดสุดสัปดาห์ ไม่มีคาบเรียน</div>';
-                  sub.textContent = "วันนี้เป็นวันหยุดสุดสัปดาห์";
-                  return;
-                }
-                let cnt = 0, html = "";
-                PERIODS.forEach(function (p, i) {
-                  const time = p.s + "–" + p.e;
-                  const past = toMin(p.e) <= m;
-                  const cls = (past ? " past" : "") + (i === ci ? " now" : "");
-                  if (p.t === "b") {
-                    html += '<div class="tl brk' + cls + '"><span class="tl-time num">' + time + "</span><span>" + esc(p.label) + "</span></div>";
-                    return;
-                  }
-                  const s = slotOf(day, p.n);
-                  if (s) cnt++;
-                  html += '<div class="tl cls' + cls + '"><span class="tl-time num">คาบ ' + p.n + "<br>" + time + "</span>" +
-                    '<div class="tl-main">' + (s ? "<b>" + esc(s.subject) + '</b><span class="hint">' + esc(slotInfo(s)) + "</span>" : '<span class="hint">ว่าง</span>') + "</div>" +
-                    (i === ci ? '<span class="pill">ขณะนี้</span>' : "") + "</div>";
-                });
-                box.innerHTML = html;
-                sub.textContent = cnt ? "วันนี้มีคาบสอน " + cnt + " คาบ" : "วันนี้ไม่มีคาบสอน";
-              }
-
-              function renderSummary() {
-                const s = SUM;
-                if (!s || !s.sessions) {
-                  $("dKpi").innerHTML = '<div class="empty">ยังไม่มีคาบเช็กชื่อที่เสร็จแล้วใน 7 วันล่าสุด</div>';
-                  $("dClass").innerHTML = '<div class="empty">—</div>';
-                  $("dWatch").innerHTML = '<div class="empty">—</div>';
-                  return;
-                }
-                const c = s.counts;
-                $("dKpi").innerHTML = '<div class="kpis">' +
-                  '<div class="kpi"><b>' + pct(rateOf(c)) + '%</b><span>อัตราเข้าเรียนรวม</span></div>' +
-                  '<div class="kpi"><b>' + s.sessions + '</b><span>คาบที่เช็กชื่อแล้ว</span></div>' +
-                  '<div class="kpi"><b style="color:var(--l)">' + c.l + '</b><span>มาสาย (ครั้ง)</span></div>' +
-                  '<div class="kpi"><b style="color:var(--a)">' + c.a + '</b><span>ขาด (ครั้ง)</span></div></div>';
-
-                $("dClass").innerHTML = '<div class="tablewrap"><table><thead><tr><th>ห้อง</th><th class="n">คาบ</th><th class="n">เข้าเรียน</th><th></th></tr></thead><tbody>' +
-                  s.byClass.map(function (r) {
-                    const rate = rateOf(r.c);
-                    return "<tr><td>" + esc(r.cls) + '</td><td class="n num">' + r.sessions + '</td><td class="n num ' + (rate < s.lowRate ? "low" : "") + '">' + pct(rate) + "%</td><td>" + hbar(r.c) + "</td></tr>";
-                  }).join("") + "</tbody></table></div>";
-
-                $("dWatch").innerHTML = s.watch.length
-                  ? '<div class="tablewrap"><table><thead><tr><th>ชื่อ</th><th>ห้อง</th><th class="n">เข้าเรียน</th><th class="n">ขาด</th><th class="n">สาย</th></tr></thead><tbody>' +
-                    s.watch.map(function (r) {
-                      return "<tr><td>" + esc(r.name) + "</td><td>" + esc(r.cls) + '</td><td class="n num low">' + pct(rateOf(r.c)) + '%</td><td class="n num">' + r.c.a + '</td><td class="n num">' + r.c.l + "</td></tr>";
-                    }).join("") + "</tbody></table></div>"
-                  : '<div class="empty">ไม่มีนักเรียนที่ต่ำกว่าเกณฑ์ ✓</div>';
-              }
-
-              function loadDash() {
-                const now = new Date(), from = new Date(now);
-                from.setDate(from.getDate() - 6);
-                $("dErr").hidden = true;
-                return run("getDashboard", ymd(from), ymd(now))
-                  .then(function (d) {
-                    ME = d; SCHED = d.schedule; SUM = d.summary; LOADED = true;
-                    if (d.bridgeUrl) {
-                      const g = $("goTeacher");
-                      g.href = d.bridgeUrl + "?p=t";
-                      g.hidden = false;
+                    /* ---- ตัวช่วยของหน้ารายงาน (ฉบับเดิมไม่มีนิยามชุดนี้ ทำให้รายงานผลพัง) ---- */
+                    function replaceAt(str, i, ch) { return str.substring(0, i) + ch + str.substring(i + 1); }
+                    function sessionById(id) {
+                      return DATA.sessions.filter(function (s) { return s.id === id; })[0];
                     }
-                    renderHello(); renderToday(); renderSummary();
-                    if (VIEW === "sched") renderSched();
-                  })
-                  .catch(function (e) { showErr(e, "dErr"); $("dHello").textContent = "โหลดข้อมูลไม่สำเร็จ"; });
-              }
+                    // จำนวนมา/สาย/ลา/ขาด ของนักเรียนคนที่ i ตลอดทุกคาบในรายงาน
+                    function studentCounts(i) {
+                      const c = emptyCounts();
+                      DATA.sessions.forEach(function (se) { c[se.st[i]]++; });
+                      return c;
+                    }
+                    // รวมคาบที่อยู่วันเดียวกันเป็นกลุ่ม (ใช้ในโหมด "รายวัน")
+                    function groupByDay() {
+                      const map = {}, out = [];
+                      DATA.sessions.forEach(function (se) {
+                        let g = map[se.date];
+                        if (!g) { g = map[se.date] = { date: se.date, sessions: [], c: emptyCounts() }; out.push(g); }
+                        g.sessions.push(se);
+                        addCounts(g.c, sessionCounts(se));
+                      });
+                      return out;
+                    }
+                    function chip(code) {
+                      return '<span class="chip"><span class="dot" style="background:var(--' + code + ')"></span>' + LABEL[code] + "</span>";
+                    }
+                    function hbar(c) {
+                      const t = total(c);
+                      return '<div class="hb" aria-hidden="true">' + KEYS.map(function (k) {
+                        return c[k] ? '<i style="width:' + (c[k] / t) * 100 + "%;background:var(--" + k + ')"></i>' : "";
+                      }).join("") + "</div>";
+                    }
 
-              function renderSched() {
-                const today = new Date().getDay();
-                const days = [1, 2, 3, 4, 5];
-
-                let h = '<table class="tt"><thead><tr><th class="dayh corner">วัน / เวลา</th>';
-                PERIODS.forEach(function (p) {
-                  if (p.t === "b") {
-                    h += '<th class="brkh num" title="' + esc(p.label) + '">' + p.s + "<br>" + p.e + "</th>";
-                  } else {
-                    h += "<th><b>คาบ " + p.n + '</b><span class="hint num">' + p.s + "–" + p.e + "</span></th>";
-                  }
-                });
-                h += "</tr></thead><tbody>";
-
-                days.forEach(function (d, di) {
-                  const isToday = d === today;
-                  h += "<tr" + (isToday ? ' class="todayrow"' : "") + '><th class="dayh' + (isToday ? " today" : "") + '">' + DAY_LABEL[d] + "</th>";
-                  PERIODS.forEach(function (p) {
-                    if (p.t === "b") {
-                      if (di === 0) {
-                        h += '<td class="brkcell" rowspan="' + days.length + '"><span>' + esc(p.label) + "</span></td>";
+                    function donut(c, size, label) {
+                      const t = total(c);
+                      let off = 0, segs = "";
+                      if (!t) {
+                        segs = '<circle cx="18" cy="18" r="15.9155" fill="none" style="stroke:var(--line)" stroke-width="5"/>';
+                      } else {
+                        KEYS.forEach(function (k) {
+                          if (!c[k]) return;
+                          const v = (c[k] / t) * 100;
+                          segs += '<circle cx="18" cy="18" r="15.9155" fill="none" style="stroke:var(--' + k + ')" stroke-width="5" stroke-dasharray="' + v + " " + (100 - v) + '" stroke-dashoffset="' + -off + '" transform="rotate(-90 18 18)"/>';
+                          off += v;
+                        });
                       }
-                      return;
+                      return '<svg viewBox="0 0 36 36" width="' + size + '" height="' + size + '" role="img" aria-label="กราฟวงกลมสถานะการเข้าเรียน">' + segs + '<text x="18" y="19.6" text-anchor="middle" font-size="6.5" font-weight="800" fill="currentColor">' + esc(label) + "</text></svg>";
                     }
-                    const s = slotOf(d, p.n);
-                    h += '<td class="cell' + (s ? " has" : "") + '" data-a="cell" data-day="' + d + '" data-p="' + p.n + '">' +
-                      (s ? "<b>" + esc(s.subject) + '</b><div class="hint">' + esc(slotInfo(s)) + "</div>" : '<span class="plus">+</span>') + "</td>";
-                  });
-                  h += "</tr>";
-                });
-                $("schedBox").innerHTML = h + "</tbody></table>";
 
-                const mobSel = $("mobDaySel");
-                if (mobSel && !MOB_DAY_SET) {
-                  MOB_DAY_SET = true;
-                  if (today >= 1 && today <= 5) mobSel.value = String(today);
-                }
-                renderMobileSched();
-              }
+                    function legend(c) {
+                      const t = total(c);
+                      return '<div class="legend">' + KEYS.map(function (k) {
+                        return '<div><span class="dot" style="background:var(--' + k + ')"></span>' +
+                              LABEL[k] + ' <b class="num">' + fmt(c[k]) + '</b> <span class="hint num">(' +
+                              pct(t ? (c[k] / t) * 100 : 0) + "%)</span></div>";
+                      }).join("") + "</div>";
+                    }
 
-              function renderMobileSched() {
-                const selDay = Number($("mobDaySel").value || 1);
-                let h = '<div style="display:grid; gap:8px;">';
-                PERIODS.forEach(function (p) {
-                  const time = p.s + "–" + p.e;
-                  if (p.t === "b") {
-                    h += '<div style="background:#fafbfe; padding:8px 12px; border-radius:8px; font-size:13px; color:var(--mute); text-align:center;">☕ ' + esc(p.label) + ' (' + time + ')</div>';
-                    return;
-                  }
-                  const s = slotOf(selDay, p.n);
-                  h += '<div class="cell' + (s ? " has" : "") + '" data-a="cell" data-day="' + selDay + '" data-p="' + p.n + '" style="background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">' +
-                    '<div><div class="hint num">คาบ ' + p.n + ' · ' + time + '</div>' +
-                    (s ? '<b style="font-size:15px; display:block; margin-top:2px;">' + esc(s.subject) + '</b><div class="hint" style="margin-top:2px;">' + esc(slotInfo(s)) + '</div>' : '<span style="color:var(--mute)">ยังไม่มีวิชา (แตะเพื่อเพิ่ม)</span>') +
-                    '</div><span style="font-size:18px; color:var(--mute);">›</span></div>';
-                });
-                h += '</div>';
-                $("mobileSchedBox").innerHTML = h;
-              }
+                    const MON_S = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+                    const DOW_S = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
+                    function dateLines(s) {
+                      const d = new Date(s + "T00:00:00");
+                      return "<span>" + DOW_S[d.getDay()] + " " + d.getDate() + "</span><span>" + MON_S[d.getMonth()] +
+                        "</span><span>" + (d.getFullYear() + 543) + "</span>";
+                    }
 
-              function openSlot(day, n) {
-                SLOT = { day: day, p: n };
-                const s = slotOf(day, n) || {};
-                const per = PERIODS.filter(function (x) { return x.n === n; })[0];
-                const opts = PERIODS.filter(function (x) { return x.t === "c" && x.n >= n; }).map(function (x) {
-                  return '<option value="' + x.n + '">คาบ ' + x.n + " (สิ้นสุด " + x.e + ")</option>";
-                }).join("");
-                $("sPanel").innerHTML =
-                  '<div class="top"><h2 style="margin:0; font-size:16px;">วัน' + DAY_LABEL[day] + " · คาบ " + n + ' <span class="hint">(' + per.s + "–" + per.e + ')</span></h2><button class="ghost small" data-a="sclose">ปิด</button></div>' +
-                  '<div class="form">' +
-                  '<div><label for="fSubject">วิชา / กิจกรรม</label><input id="fSubject" maxlength="80" value="' + esc(s.subject || "") + '" placeholder="เช่น เคมี"></div>' +
-                  '<div><label for="fClass">ห้องเรียนของนักเรียน</label><input id="fClass" maxlength="40" list="clsList" value="' + esc(s.cls || "") + '" placeholder="เช่น ม.5/1"><datalist id="clsList">' +
-                  CLASSES.map(function (c) { return '<option value="' + esc(c) + '">'; }).join("") + "</datalist></div>" +
-                  '<div><label for="fRoom">สถานที่สอน (ถ้ามี)</label><input id="fRoom" maxlength="40" value="' + esc(s.room || "") + '" placeholder="เช่น ห้องแลปเคมี 1"></div>' +
-                  '<div><label for="fTo">สอนต่อเนื่องถึง</label><select id="fTo">' + opts + "</select>" +
-                  '<div class="hint" style="margin-top:4px">ช่องที่มีอยู่แล้วในช่วงที่เลือกจะถูกแทนที่</div></div>' +
-                  '<div class="row" style="margin-top:4px; display:flex; gap:8px;"><button data-a="ssave" id="btnSSave" style="flex:1">บันทึก</button>' +
-                  (s.subject ? '<button class="danger" data-a="sdel" id="btnSDel">ลบคาบนี้</button>' : "") +
-                  '<button class="ghost" data-a="sclose">ยกเลิก</button></div>' +
-                  '<div id="sErr" class="err" hidden></div></div>';
-                $("sOverlay").hidden = false;
-                $("fSubject").focus();
-              }
-              function closeSlot() { SLOT = null; $("sOverlay").hidden = true; $("sPanel").innerHTML = ""; }
+                    function vbars(rows) {
+                      return '<div class="bars">' + rows.map(function (r) {
+                        const t = total(r.c);
+                        const tip = r.label + " — " + KEYS.map(function (k) { return LABEL[k] + " " + r.c[k]; }).join(", ");
+                        return '<div class="vb" title="' + esc(tip) + '"><span class="pct num">' + pct(rateOf(r.c)) + "%</span>" +
+                          '<div class="stack">' + KEYS.map(function (k) {
+                            return r.c[k] ? '<i style="height:' + (r.c[k] / t) * 100 + "%;background:var(--" + k + ')"></i>' : "";
+                          }).join("") + '</div><span class="vl">' + dateLines(r.date) + "</span></div>";
+                      }).join("") + "</div>";
+                    }
 
-              function afterSlotChange(r) {
-                SCHED = r.schedule;
-                closeSlot();
-                renderSched();
-                LAST_KEY = ""; renderToday();
-              }
-              function saveSlot() {
-                const subject = $("fSubject").value.trim();
-                if (!subject) { showErr("กรุณาใส่ชื่อวิชา", "sErr"); return; }
-                $("btnSSave").disabled = true;
-                run("saveSchedule", SLOT.day, SLOT.p, Number($("fTo").value), $("fClass").value, subject, $("fRoom").value)
-                  .then(afterSlotChange)
-                  .catch(function (e) { $("btnSSave").disabled = false; showErr(e, "sErr"); });
-              }
-              function deleteSlot() {
-                $("btnSDel").disabled = true;
-                run("deleteSchedule", SLOT.day, SLOT.p)
-                  .then(afterSlotChange)
-                  .catch(function (e) { $("btnSDel").disabled = false; showErr(e, "sErr"); });
-              }
+                    let DATA = null, TAB = "students", MODE = "day", SORT = "id";
+                    let PANEL = null;
+                    let IDX = {};
+                    let VIEW = "dash", INIT_DONE = false, REPORT_LOADED = false;
+                    let CLASSES = [], ME = null, SCHED = [], SUM = null, LOADED = false;
+                    let SLOT = null, LAST_KEY = "", MOB_DAY_SET = false;
+                    let STUDENTS_DATA = { classes: [], currentClass: "", students: [] };
 
-              run("getAdminInit")
-                .then(function (init) {
-                  $("who").textContent = init.email;
-                  CLASSES = init.classes;
-                  init.classes.forEach(function (c) {
-                    const o = document.createElement("option");
-                    o.value = o.textContent = c;
-                    $("cls").appendChild(o);
-                  });
-                  $("btnLoad").disabled = false;
-                  INIT_DONE = true;
-                  ensureReport();
-                })
-                .catch(showErr);
+                    const $ = function (id) { return document.getElementById(id); };
+                    const esc = function (s) {
+                      return String(s || "").replace(/[&<>"']/g, function (c) {
+                        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+                      });
+                    };
+                    function run(fn) {
+                      const args = Array.prototype.slice.call(arguments, 1);
+                      return new Promise(function (res, rej) {
+                        google.script.run.withSuccessHandler(res).withFailureHandler(rej).api(AUTH, fn, args);
+                      });
+                    }
+                    function showErr(e, id) {
+                      const el = $(id || "err");
+                      el.textContent = e && e.message ? e.message.replace(/^Error:\s*/, "") : String(e);
+                      el.hidden = false;
+                    }
+                    function ymd(d) {
+                      return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+                    }
+                    function fmtDate(s) {
+                      return new Date(s + "T00:00:00").toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "2-digit" });
+                    }
+                    function fmtDateDow(s) {
+                      return DOW[new Date(s + "T00:00:00").getDay()] + " " + fmtDate(s);
+                    }
+                    // ใส่ลูกน้ำคั่นหลักพัน เช่น 3981 -> 3,981
+                    function fmt(n) {
+                      return Number(n || 0).toLocaleString("en-US");
+                    }
+                    function pct(x) {
+                      return (Math.round(x * 10) / 10).toString().replace(/\.0$/, "");
+                    }
+                    function pad2(n) { return ("0" + n).slice(-2); }
 
-              function quick(v) {
-                const now = new Date();
-                if (v === "all") {
-                  $("from").value = "";
-                  $("to").value = "";
-                } else {
-                  const from = new Date(now);
-                  if (v !== "today") from.setDate(from.getDate() - Number(v) + 1);
-                  $("from").value = ymd(from);
-                  $("to").value = ymd(now);
-                }
-                load();
-              }
+                    function toggleMenu(open) {
+                      $("sideNav").classList.toggle("open", open);
+                      $("backdrop").classList.toggle("show", open);
+                    }
 
-              function load() {
-                if (!$("cls").value) return;
-                $("err").hidden = true;
-                $("btnLoad").disabled = true;
-                run("getReport", $("cls").value, $("from").value, $("to").value)
-                  .then(function (d) {
-                    DATA = d;
-                    IDX = {};
-                    d.students.forEach(function (s, i) { IDX[s.email] = i; });
-                    $("report").hidden = false;
-                    renderReport();
-                  })
-                  .catch(showErr)
-                  .then(function () { $("btnLoad").disabled = false; });
-              }
+                    function nav(v) {
+                      VIEW = v;
+                      toggleMenu(false);
+                      ["dash", "sched", "students", "report"].forEach(function (k) { $("v-" + k).hidden = k !== v; });
+                      Array.prototype.forEach.call(document.querySelectorAll(".nav"), function (b) {
+                        b.classList.toggle("on", b.getAttribute("data-v") === v);
+                      });
+                      $("pageTitle").textContent = TITLES[v];
+                      if (v === "sched") renderSched();
+                      if (v === "students") loadStudentsData();
+                      ensureReport();
+                      window.scrollTo(0, 0);
+                    }
+                    function ensureReport() {
+                      if (VIEW === "report" && INIT_DONE && !REPORT_LOADED) { REPORT_LOADED = true; quick("30"); }
+                    }
 
-              function sessionCounts(se) {
-                const c = emptyCounts();
-                for (let i = 0; i < se.st.length; i++) c[se.st[i]]++;
-                return c;
-              }
+                    // ฟังก์ชันเพิ่มห้องใหม่เข้าสู่ระบบ, อัปเดต Dropdown หลัก และ Modal ทันที
+                    function addNewClassToSystem(newClass) {
+                      if (!newClass) return;
+                      if (!CLASSES) CLASSES = [];
 
-              function dayRows() {
-                return groupByDay().map(function (g) { return { label: fmtDate(g.date), c: g.c, g: g }; });
-              }
-              function sessionRows() {
-                return DATA.sessions.map(function (se) {
-                  return { label: fmtDate(se.date) + " " + se.time, c: sessionCounts(se), se: se };
-                });
-              }
+                      // ถ้ายังไม่มีห้องนี้ในอาร์เรย์ CLASSES ให้เพิ่มเข้าไป
+                      if (!CLASSES.includes(newClass)) {
+                        CLASSES.push(newClass);
+                        CLASSES.sort(); // เรียงลำดับชื่อห้องให้เรียบร้อย
+                      }
 
-              function renderReport() {
-                const all = emptyCounts();
-                DATA.sessions.forEach(function (se) { addCounts(all, sessionCounts(se)); });
+                      // 1. อัปเดต Dropdown ตัวกรองหน้าหลัก (เช่น studentClassFilter และ cls ถ้ามี)
+                      ['studentClassFilter', 'cls'].forEach(function(id) {
+                        const el = $(id);
+                        if (!el) return;
+                        const currentVal = el.value;
+                        el.innerHTML = '';
+                        CLASSES.forEach(function(c) {
+                          const opt = document.createElement('option');
+                          opt.value = opt.textContent = c;
+                          el.appendChild(opt);
+                        });
+                        if (CLASSES.includes(currentVal)) {
+                          el.value = currentVal;
+                        } else if (CLASSES.includes(newClass)) {
+                          el.value = newClass;
+                        }
+                      });
+                    }
 
-                if (!DATA.sessions.length) {
-                  $("overall").innerHTML = '<div class="empty">ไม่มีคาบเช็กชื่อที่เสร็จแล้วในช่วงที่เลือก</div>';
-                  $("bars").innerHTML = "";
-                  $("barLegend").innerHTML = "";
-                  $("tableBox").innerHTML = "";
-                  return;
-                }
+                    /* ==================== รายชื่อนักเรียน ==================== */
+                    // วาดรายการห้อง + ตารางจากข้อมูลที่เซิร์ฟเวอร์ส่งกลับ (ใช้ร่วมกันทุกปุ่ม: โหลด/เพิ่ม/แก้/ลบ)
+                    function applyStudentsData(res) {
+                      STUDENTS_DATA = res;
+                      const clsSel = $("studentClassFilter");
+                      clsSel.innerHTML = res.classes.map(function (c) {
+                        return '<option value="' + esc(c) + '">ห้อง ' + esc(c) + "</option>";
+                      }).join("");
+                      if (res.currentClass) clsSel.value = res.currentClass;
+                      filterStudentTable();
+                    }
 
-                $("overall").innerHTML = '<div class="sumrow">' + donut(all, 130, pct(rateOf(all)) + "%") + legend(all) +
-                  '</div><p class="hint" style="margin-top:10px; text-align:center;">ช่วงที่เลือกมี ' + DATA.sessions.length + " คาบ · นักเรียน " + DATA.students.length + " คน</p>";
+                    function loadStudentsData() {
+                      const clsSel = $("studentClassFilter");
+                      const cls = clsSel ? clsSel.value : "";
+                      $("studentErr").hidden = true;
+                      run("getStudentsPage", cls)
+                        .then(applyStudentsData)
+                        .catch(function (e) { showErr(e, "studentErr"); });
+                    }
 
-                const rows = (MODE === "day" ? dayRows() : sessionRows()).slice(-40);
-                $("barsTitle").textContent = MODE === "day" ? "แนวโน้มรายวัน" : "แนวโน้มรายคาบ";
-                $("bars").innerHTML = vbars(rows);
-                $("barLegend").innerHTML = KEYS.map(function (k) {
-                  return '<div><span class="dot" style="background:var(--' + k + ')"></span>' + LABEL[k] + "</div>";
-                }).join("");
+                    function renderStudentTable(list) {
+                      const box = $("studentTableBox");
+                      if (!list || !list.length) {
+                        box.innerHTML = '<div class="empty">ไม่พบรายชื่อนักเรียนในห้องนี้</div>';
+                        return;
+                      }
+                      let h = '<table><thead><tr><th>เลขที่</th><th>ชื่อ - นามสกุล</th><th>อีเมล</th></tr></thead><tbody>';
+                      list.forEach(function (s) {
+                        h += '<tr class="click" title="กดเพื่อแก้ไข/ลบ" data-a="edit-student" data-email="' + esc(s.email) + '" data-id="' + esc(s.studentId) + '" data-name="' + esc(s.name) + '" data-cls="' + esc(s.cls) + '">' +
+                            '<td class="num"><b>' + esc(s.studentId) + '</b></td><td>' + esc(s.name) + '</td><td>' + esc(s.email) + '</td></tr>';
+                      });
+                      h += '</tbody></table>';
+                      box.innerHTML = h;
+                    }
 
-                $("tabSessions").classList.toggle("on", TAB === "sessions");
-                $("tabStudents").classList.toggle("on", TAB === "students");
-                $("modeBox").hidden = TAB !== "sessions";
-                $("sortBox").hidden = TAB !== "students";
-                $("csvBtn").hidden = TAB !== "students";
-                $("modeSession").classList.toggle("on", MODE === "session");
-                $("modeDay").classList.toggle("on", MODE === "day");
-                $("tableBox").innerHTML = TAB === "sessions" ? sessionsTable() : studentsTable();
-              }
+                    function filterStudentTable() {
+                      const kw = $("studentSearch").value.trim().toLowerCase();
+                      const filtered = STUDENTS_DATA.students.filter(function (s) {
+                        return !kw ||
+                          String(s.studentId).toLowerCase().indexOf(kw) >= 0 ||
+                          String(s.name).toLowerCase().indexOf(kw) >= 0 ||
+                          String(s.email).toLowerCase().indexOf(kw) >= 0;
+                      });
+                      renderStudentTable(filtered);
+                    }
 
-              function sessionsTable() {
-                const day = MODE === "day";
-                const rows = day ? dayRows() : sessionRows();
-                const head = "<tr><th>วันที่</th>" + (day ? '<th class="n">จำนวนคาบ</th>' : "<th>เวลา</th>") +
-                  KEYS.map(function (k) { return '<th class="n">' + LABEL[k] + "</th>"; }).join("") +
-                  '<th class="n">อัตราเข้าเรียน</th><th></th></tr>';
-                const body = rows.slice().reverse().map(function (r) {
-                  const rate = rateOf(r.c);
-                  const first = day ? r.g.date : r.se.date;
-                  const target = day ? r.g.sessions[0].id : r.se.id;
-                  return '<tr class="click" data-a="sess" data-v="' + esc(target) + '"><td>' + esc(fmtDateDow(first)) + "</td>" +
-                    (day ? '<td class="n">' + r.g.sessions.length + "</td>" : "<td>" + esc(r.se.time) + "</td>") +
-                    KEYS.map(function (k) { return '<td class="n num">' + r.c[k] + "</td>"; }).join("") +
-                    '<td class="n num ' + (rate < LOW_RATE ? "low" : "") + '">' + pct(rate) + "%</td><td>" + hbar(r.c) + "</td></tr>";
-                }).join("");
-                return "<table><thead>" + head + "</thead><tbody>" + body + "</tbody></table>";
-              }
+                    function openStudentModal() {
+                      $("insStudentId").value = "";
+                      $("insName").value = "";
+                      $("insEmail").value = "";
 
-              function studentStats() {
-                return DATA.students.map(function (s, i) {
-                  const c = studentCounts(i);
-                  return { s: s, i: i, c: c, rate: rateOf(c) };
-                });
-              }
+                      // ดึงค่าห้องจากช่องตัวกรองหลัก หรือถ้าไม่มีให้เอาค่าแรกในรายการ CLASSES แทน
+                      const currentClass = $("studentClassFilter").value || (CLASSES && CLASSES[0]) || "";
+                      populateClassDropdowns(currentClass);
 
-        function studentsTable() {
-          let list = studentStats();
-          if (SORT === "rateDesc") list.sort(function (a, b) { return b.rate - a.rate || a.c.a - b.c.a; });
-          else if (SORT === "rateAsc") list.sort(function (a, b) { return a.rate - b.rate; });
-          else if (SORT === "absentDesc") list.sort(function (a, b) { return b.c.a - a.c.a; });
+                      $("modalErr").hidden = true;
+                      $("studentModal").hidden = false;
+                      $("insStudentId").focus();
+                    }
+                    function closeStudentModal() { $("studentModal").hidden = true; }
 
-          // จัดกลุ่มวันที่ทั้งหมดตามเดือน (เช่น "พฤษภาคม 2568")
-          const sessions = DATA.sessions; // แต่ละ session มี .date (YYYY-MM-DD) และเวลา
-          const monthMap = {};
-          const monthOrder = [];
+                    function saveNewStudent() {
+                      const studentId = $("insStudentId").value.trim();
+                      const name = $("insName").value.trim();
+                      const cls = getSelectedClassValue('ins');
+                      const email = $("insEmail").value.trim();
 
-          sessions.forEach(function (se, sIdx) {
-            const d = new Date(se.date + "T00:00:00");
-            const mKey = d.toLocaleDateString("th-TH", { month: "long", year: "numeric" });
-            if (!monthMap[mKey]) {
-              monthMap[mKey] = { name: mKey, sessions: [] };
-              monthOrder.push(mKey);
-            }
-            monthMap[mKey].sessions.push({ session: se, index: sIdx });
+                      if (!studentId || !name || !cls || !email) {
+                        showErr("กรุณากรอกข้อมูลให้ครบทุกช่อง", "modalErr");
+                        return;
+                      }
+                      $("modalErr").hidden = true;
+                      $("btnSaveStudent").disabled = true;
+                      run("addStudent", studentId, name, cls, email)
+                        .then(function (res) {
+                          $("btnSaveStudent").disabled = false;
+                          closeStudentModal();
+                          applyStudentsData(res);
+                          alert("เพิ่มรายชื่อนักเรียนเรียบร้อยแล้ว");
+                          // ตัวอย่างภายในฟังก์ชัน saveNewStudent ตอนบันทึกสำเร็จ:
+                          const selectedClass = getSelectedClassValue('ins');
+                          if (selectedClass) {
+                            addNewClassToSystem(selectedClass);
+                          }
+                        })
+                        .catch(function (e) {
+                          $("btnSaveStudent").disabled = false;
+                          showErr(e, "modalErr");
+                        });
+                    }
+
+                    function openEditStudentModal(dataset) {
+                      $("editOldEmail").value = dataset.email;
+                      $("editStudentId").value = dataset.id;
+                      $("editName").value = dataset.name;
+                      populateClassDropdowns(dataset.cls);
+                      $("editEmail").value = dataset.email;
+                      $("editModalErr").hidden = true;
+                      $("editStudentModal").hidden = false;
+                    }
+                    function closeEditStudentModal() { $("editStudentModal").hidden = true; }
+
+                    function saveUpdateStudent() {
+                      const oldEmail = $("editOldEmail").value;
+                      const studentId = $("editStudentId").value.trim();
+                      const name = $("editName").value.trim();
+                      const cls = getSelectedClassValue('edit');
+                      const email = $("editEmail").value.trim();
+
+                      if (!studentId || !name || !cls || !email) {
+                        showErr("กรุณากรอกข้อมูลให้ครบทุกช่อง", "editModalErr");
+                        return;
+                      }
+                      $("editModalErr").hidden = true;
+                      $("btnUpdateStudent").disabled = true;
+                      run("updateStudent", oldEmail, studentId, name, cls, email)
+                        .then(function (res) {
+                          $("btnUpdateStudent").disabled = false;
+                          closeEditStudentModal();
+                          applyStudentsData(res);
+                          alert("อัปเดตข้อมูลนักเรียนเรียบร้อยแล้ว");
+                        })
+                        .catch(function (e) {
+                          $("btnUpdateStudent").disabled = false;
+                          showErr(e, "editModalErr");
+                        });
+                    }
+
+                    function removeStudentRecord() {
+                      const email = $("editOldEmail").value;
+                      // ใช้ห้องที่กำลังเปิดดูอยู่ ไม่ใช่ค่าในช่องแก้ไข (ผู้ใช้อาจพิมพ์ห้องใหม่ค้างไว้)
+                      const cls = STUDENTS_DATA.currentClass || "";
+                      if (!confirm("ต้องการลบรายชื่อนักเรียนนี้ออกจากระบบใช่หรือไม่?")) return;
+                      $("editModalErr").hidden = true;
+                      run("deleteStudent", email, cls)
+                        .then(function (res) {
+                          closeEditStudentModal();
+                          applyStudentsData(res);
+                          alert("ลบรายชื่อนักเรียนเรียบร้อยแล้ว");
+                        })
+                        .catch(function (e) { showErr(e, "editModalErr"); });
+                    }
+
+                    /* ฟังก์ชันอื่นๆ (แดชบอร์ด, ตารางสอน, รายงานผล) คงเดิม */
+                    function toMin(t) { const a = t.split(":"); return Number(a[0]) * 60 + Number(a[1]); }
+                    function nowMin(d) { return d.getHours() * 60 + d.getMinutes(); }
+                    function curIdx(d) {
+                      const m = nowMin(d);
+                      for (let i = 0; i < PERIODS.length; i++) {
+                        if (m >= toMin(PERIODS[i].s) && m < toMin(PERIODS[i].e)) return i;
+                      }
+                      return -1;
+                    }
+                    function slotOf(day, n) {
+                      return SCHED.filter(function (x) { return x.day === day && x.period === n; })[0];
+                    }
+                    function slotInfo(s) {
+                      return [s.cls, s.room ? "📍 " + s.room : ""].filter(Boolean).join(" · ");
+                    }
+
+                    function tick() {
+                      const n = new Date();
+                      $("dDate").textContent = "วัน" + DOW[n.getDay()] + "ที่ " + n.getDate() + " " + MONTHS[n.getMonth()] + " " + (n.getFullYear() + 543);
+                      $("dTime").textContent = pad2(n.getHours()) + ":" + pad2(n.getMinutes()) + ":" + pad2(n.getSeconds());
+                      const key = n.getDay() + "|" + curIdx(n);
+                      if (key !== LAST_KEY) { LAST_KEY = key; renderToday(); }
+                    }
+
+                    function renderHello() {
+                      const h = new Date().getHours();
+                      const greet = h < 12 ? "สวัสดีตอนเช้า" : h < 17 ? "สวัสดีตอนบ่าย" : "สวัสดีตอนเย็น";
+                      const name = ME.name || ME.email.split("@")[0];
+                      $("dHello").textContent = greet + " " + name;
+                    }
+
+                    function renderToday() {
+                      const box = $("dToday"), btn = $("dTodayBtn"), sub = $("dSub");
+                      if (!LOADED) { box.innerHTML = '<div class="empty">กำลังโหลด…</div>'; return; }
+                      if (!SCHED.length) {
+                        btn.innerHTML = '<button class="small" data-a="nav" data-v="sched">ตั้งค่าตารางสอน</button>';
+                        box.innerHTML = '<div class="empty">ยังไม่มีข้อมูลตารางสอน กดปุ่ม “ตั้งค่าตารางสอน” เพื่อเริ่มเพิ่มคาบสอนของคุณ</div>';
+                        sub.textContent = ME && !ME.name ? "ยังไม่ได้ตั้งค่าตารางสอน · ผู้ดูแลระบบยังไม่ได้ใส่ชื่อในชีต" : "ยังไม่ได้ตั้งค่าตารางสอน";
+                        return;
+                      }
+                      btn.innerHTML = '<button class="ghost small" data-a="nav" data-v="sched">ดูตารางทั้งสัปดาห์</button>';
+                      const now = new Date(), day = now.getDay(), ci = curIdx(now), m = nowMin(now);
+                      if (day < 1 || day > 5) {
+                        box.innerHTML = '<div class="empty">วันนี้เป็นวันหยุดสุดสัปดาห์ ไม่มีคาบเรียน</div>';
+                        sub.textContent = "วันนี้เป็นวันหยุดสุดสัปดาห์";
+                        return;
+                      }
+                      let cnt = 0, html = "";
+                      PERIODS.forEach(function (p, i) {
+                        const time = p.s + "–" + p.e;
+                        const past = toMin(p.e) <= m;
+                        const cls = (past ? " past" : "") + (i === ci ? " now" : "");
+                        if (p.t === "b") {
+                          html += '<div class="tl brk' + cls + '"><span class="tl-time num">' + time + "</span><span>" + esc(p.label) + "</span></div>";
+                          return;
+                        }
+                        const s = slotOf(day, p.n);
+                        if (s) cnt++;
+                        html += '<div class="tl cls' + cls + '"><span class="tl-time num">คาบ ' + p.n + "<br>" + time + "</span>" +
+                          '<div class="tl-main">' + (s ? "<b>" + esc(s.subject) + '</b><span class="hint">' + esc(slotInfo(s)) + "</span>" : '<span class="hint">ว่าง</span>') + "</div>" +
+                          (i === ci ? '<span class="pill">ขณะนี้</span>' : "") + "</div>";
+                      });
+                      box.innerHTML = html;
+                      sub.textContent = cnt ? "วันนี้มีคาบสอน " + cnt + " คาบ" : "วันนี้ไม่มีคาบสอน";
+                    }
+
+                    function renderSummary() {
+                      const s = SUM;
+                      if (!s || !s.sessions) {
+                        $("dKpi").innerHTML = '<div class="empty">ยังไม่มีคาบเช็กชื่อที่เสร็จแล้วใน 7 วันล่าสุด</div>';
+                        $("dClass").innerHTML = '<div class="empty">—</div>';
+                        $("dWatch").innerHTML = '<div class="empty">—</div>';
+                        return;
+                      }
+                      const c = s.counts;
+                      $("dKpi").innerHTML = '<div class="kpis">' +
+                        '<div class="kpi"><b>' + pct(rateOf(c)) + '%</b><span>อัตราเข้าเรียนรวม</span></div>' +
+                        '<div class="kpi"><b>' + s.sessions + '</b><span>คาบที่เช็กชื่อแล้ว</span></div>' +
+                        '<div class="kpi"><b style="color:var(--l)">' + c.l + '</b><span>มาสาย (ครั้ง)</span></div>' +
+                        '<div class="kpi"><b style="color:var(--a)">' + c.a + '</b><span>ขาด (ครั้ง)</span></div></div>';
+
+                      $("dClass").innerHTML = '<div class="tablewrap"><table><thead><tr><th>ห้อง</th><th class="n">คาบ</th><th class="n">เข้าเรียน</th><th></th></tr></thead><tbody>' +
+                        s.byClass.map(function (r) {
+                          const rate = rateOf(r.c);
+                          return "<tr><td>" + esc(r.cls) + '</td><td class="n num">' + r.sessions + '</td><td class="n num ' + (rate < s.lowRate ? "low" : "") + '">' + pct(rate) + "%</td><td>" + hbar(r.c) + "</td></tr>";
+                        }).join("") + "</tbody></table></div>";
+
+                      $("dWatch").innerHTML = s.watch.length
+                        ? '<div class="tablewrap"><table><thead><tr><th>ชื่อ</th><th>ห้อง</th><th class="n">เข้าเรียน</th><th class="n">ขาด</th><th class="n">สาย</th></tr></thead><tbody>' +
+                          s.watch.map(function (r) {
+                            return "<tr><td>" + esc(r.name) + "</td><td>" + esc(r.cls) + '</td><td class="n num low">' + pct(rateOf(r.c)) + '%</td><td class="n num">' + r.c.a + '</td><td class="n num">' + r.c.l + "</td></tr>";
+                          }).join("") + "</tbody></table></div>"
+                        : '<div class="empty">ไม่มีนักเรียนที่ต่ำกว่าเกณฑ์ ✓</div>';
+                    }
+
+                    function loadDash() {
+                      const now = new Date(), from = new Date(now);
+                      from.setDate(from.getDate() - 6);
+                      $("dErr").hidden = true;
+                      return run("getDashboard", ymd(from), ymd(now))
+                        .then(function (d) {
+                          ME = d; SCHED = d.schedule; SUM = d.summary; LOADED = true;
+                          if (d.bridgeUrl) {
+                            const g = $("goTeacher");
+                            g.href = d.bridgeUrl + "?p=t";
+                            g.hidden = false;
+                          }
+                          renderHello(); renderToday(); renderSummary();
+                          if (VIEW === "sched") renderSched();
+                        })
+                        .catch(function (e) { showErr(e, "dErr"); $("dHello").textContent = "โหลดข้อมูลไม่สำเร็จ"; });
+                    }
+
+                    // ฟังก์ชันเติมตัวเลือกห้องเรียนลงใน Dropdown ของ Modal
+      function populateClassDropdowns(selectedClass) {
+        const modes = ['ins', 'edit'];
+        modes.forEach(function(prefix) {
+          const sel = $(prefix + 'ClassSelect');
+          if (!sel) return;
+
+          sel.innerHTML = '';
+
+          // ดึงรายการห้องทั้งหมด และเช็คว่ามีห้องที่ถูกเลือก/ห้องปัจจุบันอยู่ด้วยไหม ถ้ายังไม่มีให้รวมเข้าไปด้วย
+          let classList = [].concat(CLASSES || []);
+          if (selectedClass && !classList.includes(selectedClass)) {
+            classList.unshift(selectedClass); // เติมไว้บนสุดหรือรวมเข้าไป
+          }
+
+          classList.forEach(function(c) {
+            if (!c) return;
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            sel.appendChild(opt);
           });
 
-          // สร้างแถว Header แถวที่ 1: ชื่อเดือน
-          let head1 = '<tr><th rowspan="2">ลำดับ</th><th rowspan="2">เลขที่</th><th rowspan="2" style="min-width:140px">ชื่อ-สกุล</th>';
-          monthOrder.forEach(function (mKey) {
-            const m = monthMap[mKey];
-            head1 += '<th colspan="' + m.sessions.length + '" style="text-align:center">' + m.name + '</th>';
-          });
-          head1 += '<th rowspan="2" class="n">มาเรียน</th><th rowspan="2" class="n">ป่วย/ลา</th><th rowspan="2" class="n">สาย</th><th rowspan="2" class="n">ขาด</th><th rowspan="2" class="n">รวมไม่มา</th><th rowspan="2" class="n">รวมเวลา</th><th rowspan="2" class="n">ร้อยละ</th></tr>';
+          // เพิ่มตัวเลือกพิเศษสำหรับเพิ่มห้องใหม่
+          const addOpt = document.createElement('option');
+          addOpt.value = '__ADD_NEW__';
+          addOpt.textContent = '+ เพิ่มห้องใหม่...';
+          sel.appendChild(addOpt);
 
-          // สร้างแถว Header แถวที่ 2: วันที่และวันในสัปดาห์
-          let head2 = '<tr>';
-          monthOrder.forEach(function (mKey) {
-            const m = monthMap[mKey];
-            m.sessions.forEach(function (item) {
-              const se = item.session;
-              const d = new Date(se.date + "T00:00:00");
-              const dayNum = d.getDate();
-              const dowChar = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."][d.getDay()];
-              head2 += '<th style="text-align:center; min-width:38px;"><span style="display:block">' + dayNum + '</span><span class="hint" style="font-size:10px">' + dowChar + '</span></th>';
-            });
-          });
-          head2 += '</tr>';
-
-          const head = "<thead>" + head1 + head2 + "</thead>";
-
-          // ตัวย่อสัญลักษณ์สถานะตามระบบ (p=มา, l=สาย, v=ลา, a=ขาด)
-          const statusSymbol = { p: "/", l: "ส", v: "ล", a: "ข" }; // ใช้ตัวอักษรย่อตามมาตรฐานระบบเดิม
-
-          let body = "<tbody>";
-          list.forEach(function (r, rIndex) {
-            const s = r.s;
-            const stuIdx = r.i;
-            const c = r.c; // {p, l, v, a}
-            const totalNotCome = c.v + c.a; // รวมไม่มา (ลา + ขาด)
-            const totalTime = total(c); // รวมเวลาทั้งหมดที่เช็กชื่อ
-            const low = r.rate < LOW_RATE;
-
-            body += '<tr class="click" data-a="stu" data-v="' + esc(s.email) + '">';
-            body += '<td class="num">' + (rIndex + 1) + '</td>';
-            body += '<td class="num">' + esc(s.studentId) + '</td>';
-            body += '<td>' + esc(s.name) + '</td>';
-
-            // วนลูปแสดงสถานะในแต่ละคาบตามคอลัมน์วันที่
-            monthOrder.forEach(function (mKey) {
-              const m = monthMap[mKey];
-              m.sessions.forEach(function (item) {
-                const se = item.session;
-                const code = se.st[stuIdx]; // สถานะของนักเรียนในคาบนี้ (p, l, v, a หรือ undefined)
-                let sym = "";
-                let colorStyle = "";
-                if (code === "p") { sym = "/"; colorStyle = "color:var(--p);"; }
-                else if (code === "l") { sym = "ส"; colorStyle = "color:var(--l); font-weight:650;"; }
-                else if (code === "v") { sym = "ล"; colorStyle = "color:var(--v); font-weight:650;"; }
-                else if (code === "a") { sym = "ข"; colorStyle = "color:var(--a); font-weight:650;"; }
-
-                //ห่อด้วยช่อง <td> ที่ใส่ class="click-cell", เก็บ session id และ student email ไว้
-
-                body += '<td style="text-align:center; ' + colorStyle + ' cursor:pointer;" class="click-cell" ' +
-                  'data-sid="' + esc(se.id) + '" ' +
-                  'data-email="' + esc(s.email) + '" ' +
-                  'title="คลิกเพื่อแก้ไขสถานะคาบนี้">' + (sym || "-") + '</td>';
-              });
-            });
-
-            body += '<td class="n num">' + (c.p || "") + '</td>';
-            body += '<td class="n num">' + (c.v || "") + '</td>';
-            body += '<td class="n num">' + (c.l || "") + '</td>';
-            body += '<td class="n num">' + (c.a || "") + '</td>';
-            body += '<td class="n num">' + (totalNotCome || "") + '</td>';
-            body += '<td class="n num">' + totalTime + '</td>';
-            body += '<td class="n num ' + (low ? "low" : "") + '">' + pct(r.rate) + '%</td>';
-            body += '</tr>';
-          });
-          body += "</tbody>";
-
-          return '<table style="white-space:nowrap;">' + head + body + "</table>";
-        }
-
-              function openPanel(p) { PANEL = p; renderPanel(); $("overlay").hidden = false; }
-              function closePanel() { PANEL = null; $("overlay").hidden = true; $("panel").innerHTML = ""; }
-              function renderPanel() {
-                if (!PANEL) return;
-                $("panel").innerHTML = PANEL.type === "session" ? sessionPanel() : studentPanel();
-              }
-
-      function sessionPanel() {
-        const se = sessionById(PANEL.sid);
-        // ค้นหาคาบเรียนทั้งหมดในวันเดียวกัน
-        const sameDay = DATA.sessions.filter(function (s) { return s.date === se.date; });
-        const c = sessionCounts(se);
-
-        // [ปรับปรุงตรงนี้] คำนวณใส่ชื่อคาบที่ 1, คาบที่ 2... อิงตามลำดับเวลาในวันนั้น
-        const chips = sameDay.length > 1
-          ? '<div class="chips">' + sameDay.map(function (s, index) {
-              const periodLabel = "คาบที่ " + (index + 1) + " (" + s.time + ")";
-              return '<button class="ghost small ' + (s.id === se.id ? "on" : "") + '" data-a="sess" data-v="' + esc(s.id) + '">' + periodLabel + "</button>";
-            }).join("") + "</div>"
-          : "";
-
-        const rows = DATA.students.map(function (s, i) {
-          const code = se.st[i];
-          const adjusted = se.ad[i] === "1";
-          return '<tr data-email="' + esc(s.email) + '"><td>' + esc(s.studentId) + "</td><td>" + esc(s.name) + "</td>" +
-            '<td><select data-st="' + esc(s.email) + '" style="width: 90px;">' +
-            KEYS.map(function (k) { return '<option value="' + k + '"' + (k === code ? " selected" : "") + ">" + LABEL[k] + "</option>"; }).join("") +
-            "</select></td>" +
-            '<td><input class="note" data-note="' + esc(s.email) + '" maxlength="200" placeholder="หมายเหตุ" value="' + esc(se.notes[s.email] || "") + '"></td>' +
-            '<td class="st">' + (adjusted ? '<span class="hint">✎ ปรับ</span> <button class="ghost small" data-a="reset" data-email="' + esc(s.email) + '">คืนค่า</button>' : "") +
-            ' <span class="saved"></span></td></tr>';
-        }).join("");
-
-        return '<div class="top"><h2 style="margin:0; font-size:15px;">ห้อง ' + esc(DATA.cls) + " · " + esc(fmtDateDow(se.date)) + " " + esc(se.time) + "</h2>" +
-          '<button class="ghost small" data-a="close">ปิด</button></div>' + chips +
-          '<div class="sumrow" id="panelHead">' + donut(c, 100, pct(rateOf(c)) + "%") + legend(c) + "</div>" +
-          '<div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>เลขที่</th><th>ชื่อ</th><th>สถานะ</th><th>หมายเหตุ</th><th></th></tr></thead><tbody>' + rows + "</tbody></table></div>" +
-          '<div class="void-zone"><button class="voidbtn" data-a="void">ตั้งค่าให้ไม่นับคาบนี้ในรายงาน</button>' +
-          '<span class="hint">⚠ ใช้เฉพาะกรณีเปิดคาบผิด/ทดลองเท่านั้น คาบที่ไม่นับจะหายจากรายงานและแดชบอร์ดทันที และกู้คืนในหน้านี้ไม่ได้</span></div>';
+          // กำหนดค่าเริ่มต้นให้ตรงกับที่เลือก
+          if (selectedClass && classList.includes(selectedClass)) {
+            sel.value = selectedClass;
+            $(prefix + 'CustomClassBox').style.display = 'none';
+            $(prefix + 'CustomClass').value = '';
+          } else if (selectedClass) {
+            sel.value = '__ADD_NEW__';
+            $(prefix + 'CustomClassBox').style.display = 'block';
+            $(prefix + 'CustomClass').value = selectedClass;
+          } else {
+            sel.selectedIndex = 0;
+            $(prefix + 'CustomClassBox').style.display = 'none';
+            $(prefix + 'CustomClass').value = '';
+          }
+        });
       }
 
-              function studentPanel() {
-                const i = IDX[PANEL.email];
-                const s = DATA.students[i];
-                const c = studentCounts(i);
-                const hist = DATA.sessions.slice().reverse().map(function (se) {
-                  return '<div><span class="num" style="min-width:110px">' + esc(fmtDate(se.date)) + " " + esc(se.time) + "</span>" + chip(se.st[i]) +
-                    (se.ad[i] === "1" ? '<span class="hint">✎</span>' : "") +
-                    (se.notes[s.email] ? '<span class="hint">· ' + esc(se.notes[s.email]) + "</span>" : "") + "</div>";
-                }).join("");
-                return '<div class="top"><h2 style="margin:0; font-size:15px;">' + esc(s.name) + ' <span class="hint">(' + esc(s.studentId) + ")</span></h2>" +
-                  '<button class="ghost small" data-a="close">ปิด</button></div>' +
-                  '<div class="sumrow">' + donut(c, 110, pct(rateOf(c)) + "%") + legend(c) + "</div>" +
-                  '<div style="margin-top:10px">' + hbar(c) + '</div><div class="hist">' + hist + "</div>";
-              }
+      // ตรวจสอบเมื่อมีการเปลี่ยนตัวเลือกใน Dropdown ห้องเรียน
+      function handleClassSelectChange(prefix) {
+        const sel = $(prefix + 'ClassSelect');
+        const customBox = $(prefix + 'CustomClassBox');
+        const customInput = $(prefix + 'CustomClass');
 
-              function rowFor(email) {
-                return Array.prototype.slice.call(document.querySelectorAll("#panel tr[data-email]")).filter(function (r) {
-                  return r.getAttribute("data-email") === email;
-                })[0];
-              }
+        if (sel.value === '__ADD_NEW__') {
+          customBox.style.display = 'block';
+          customInput.focus();
+        } else {
+          customBox.style.display = 'none';
+          customInput.value = '';
+        }
+      }
 
-              function saveStatus(email, word, note) {
-                const se = sessionById(PANEL.sid);
-                const row = rowFor(email);
-                const sel = row.querySelector("select");
-                const saved = row.querySelector(".saved");
-                sel.disabled = true;
-                saved.textContent = "กำลังบันทึก…";
-                run("setStatus", se.id, email, word, note)
-                  .then(function (r) {
-                    const i = IDX[email];
-                    se.st = replaceAt(se.st, i, r.code);
-                    se.ad = replaceAt(se.ad, i, r.adjusted ? "1" : "0");
-                    if (note && r.adjusted) se.notes[email] = note;
-                    else delete se.notes[email];
-                    renderReport();
-                    renderPanel();
-                    const again = rowFor(email);
-                    if (again) again.querySelector(".saved").textContent = "บันทึกแล้ว ✓";
-                  })
-                  .catch(function (e) {
-                    sel.disabled = false;
-                    saved.textContent = "";
-                    showErr(e);
-                    alert("บันทึกไม่สำเร็จ: " + ((e && e.message) || e));
-                  });
-              }
+      // ฟังก์ชันดึงค่าห้องเรียนที่ผู้ใช้งานเลือกหรือพิมพ์ขึ้นมาใหม่
+      function getSelectedClassValue(prefix) {
+        const sel = $(prefix + 'ClassSelect');
+        if (sel.value === '__ADD_NEW__') {
+          return ($(prefix + 'CustomClass').value || '').trim();
+        }
+        return sel.value;
+      }
 
-        function exportCsv() {
-          const btn = $("csvBtn");
-          btn.disabled = true;
-          btn.textContent = "กำลังสร้างไฟล์…";
+                    function renderSched() {
+        const slots = (typeof SCHED !== "undefined" ? SCHED : []) || (DATA && DATA.schedule) || [];
+        const days = [1, 2, 3, 4, 5]; // จันทร์ - ศุกร์
+        const today = new Date().getDay();
 
-          run("downloadExcelReport", DATA.cls, $("from").value, $("to").value)
-            .then(function (res) {
-              btn.disabled = false;
-              btn.textContent = "ดาวน์โหลด Excel";
-
-              // แปลง Base64 เป็นไฟล์ดาวน์โหลด
-              const byteCharacters = atob(res.content);
-              const byteNumbers = new Array(byteCharacters.length);
-              for (let i = 0; i < byteCharacters.length; i++) {
-                byteNumbers[i] = byteCharacters.charCodeAt(i);
-              }
-              const byteArray = new Uint8Array(byteNumbers);
-              const blob = new Blob([byteArray], { type: "application/vnd.ms-excel" });
-
-              const a = document.createElement("a");
-              a.href = URL.createObjectURL(blob);
-              a.download = res.filename;
-              document.body.appendChild(a);
-              a.click();
-              setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-            })
-            .catch(function (e) {
-              btn.disabled = false;
-              btn.textContent = "ดาวน์โหลด Excel";
-              showErr(e);
-            });
+        function slotKey(s) {
+          return s ? (String(s.subject || "") + "|" + String(s.cls || "") + "|" + String(s.room || "")) : "";
         }
 
-              document.addEventListener("click", function (e) {
-                if (e.target === $("overlay")) { closePanel(); return; }
-                if (e.target === $("sOverlay")) { closeSlot(); return; }
-                if (e.target === $("studentModal")) { closeStudentModal(); return; }
-                if (e.target === $("editStudentModal")) { closeEditStudentModal(); return; }
+        // 1) หัวตารางปกติ
+        let h = '<table class="tt"><thead><tr><th class="dayh corner">วัน / เวลา</th>';
+        PERIODS.forEach(function (p) {
+          if (p.t === "b") {
+            h += '<th class="brkh">' + p.s + '<br>' + p.e + "</th>";
+          } else {
+            h += '<th>คาบ ' + p.n + '<div class="hint">' + p.s + "-" + p.e + "</div></th>";
+          }
+        });
+        h += "</tr></thead><tbody>";
 
-                const cell = e.target.closest(".click-cell");
-                if (cell) {
-                  const sid = cell.getAttribute("data-sid");
-                    if (sid) {
-                      openPanel({ type: "session", sid: sid });
-                      return;
+        // 2) วนลูปสร้างแถวรายวัน (จันทร์ - ศุกร์)
+        days.forEach(function (dayNum, dIdx) {
+          const isToday = dayNum === today;
+          h += "<tr" + (isToday ? ' class="todayrow"' : "") + '><th class="dayh' + (isToday ? " today" : "") + '">' + (DAY_LABEL[dayNum] || dayNum) + "</th>";
+
+          // ดึงคาบเรียนจริงเฉพาะคาบ (t === "c") โดยใช้ฟังก์ชัน slotOf ดั้งเดิมของระบบ
+          const daySlots = [];
+          PERIODS.forEach(function (p) {
+            if (p.t === "c") {
+              const s = slotOf(dayNum, p.n);
+              daySlots.push({ p: p, s: s });
+            }
+          });
+
+          // คำนวณการรวมช่อง (Merge Cells)
+          const skipMap = {};
+          const slotMap = {};
+
+          let i = 0;
+          while (i < daySlots.length) {
+            const cur = daySlots[i];
+            const curKey = slotKey(cur.s);
+            let span = 1;
+
+            if (cur.s && cur.s.subject) {
+              let j = i + 1;
+              while (j < daySlots.length && slotKey(daySlots[j].s) === curKey && (daySlots[j].p.n === daySlots[j - 1].p.n + 1)) {
+                span++;
+                j++;
+              }
+            }
+
+            cur.span = span;
+            slotMap[cur.p.n] = cur;
+
+            for (let k = 1; k < span; k++) {
+              skipMap[daySlots[i + k].p.n] = true;
+            }
+
+            i += span;
+          }
+
+          // 3) วนวาดเซลล์ตาม PERIODS จริง
+          PERIODS.forEach(function (p) {
+            if (p.t === "b") {
+              // ให้เฉพาะแถวแรก (วันจันทร์) วาดช่องพักแบบ rowspan="5" ลากยาวลงมา
+              if (dIdx === 0) {
+                h += '<td rowspan="5" class="brkcell" style="writing-mode: vertical-lr; text-orientation: mixed; text-align: center; vertical-align: middle; background: #f8fafc; color: #64748b; font-weight: 600; letter-spacing: 1px;">' + p.label + '</td>';
+              }
+            } else {
+              if (skipMap[p.n]) {
+                return; // ข้ามช่องที่ถูกรวม
+              }
+
+              const ds = slotMap[p.n];
+              const s = ds ? ds.s : slotOf(dayNum, p.n);
+              const span = ds ? (ds.span || 1) : 1;
+
+              if (s && s.subject) {
+                if (span > 1) {
+                  h += '<td colspan="' + span + '" class="cell has" data-a="cell" data-day="' + dayNum + '" data-p="' + p.n + '" style="text-align:center; vertical-align:middle;">' +
+                    "<b>" + esc(s.subject) + '</b><div class="hint">' + esc(slotInfo(s)) + "</div></td>";
+                } else {
+                  h += '<td class="cell has" data-a="cell" data-day="' + dayNum + '" data-p="' + p.n + '">' +
+                    "<b>" + esc(s.subject) + '</b><div class="hint">' + esc(slotInfo(s)) + "</div></td>";
+                }
+              } else {
+                h += '<td class="cell" data-a="cell" data-day="' + dayNum + '" data-p="' + p.n + '"><span class="plus">+</span></td>';
+              }
+            }
+          });
+
+          h += "</tr>";
+        });
+
+        $("schedBox").innerHTML = h + "</tbody></table>";
+      }
+
+                    function renderMobileSched() {
+                      const selDay = Number($("mobDaySel").value || 1);
+                      let h = '<div style="display:grid; gap:8px;">';
+                      PERIODS.forEach(function (p) {
+                        const time = p.s + "–" + p.e;
+                        if (p.t === "b") {
+                          h += '<div style="background:#fafbfe; padding:8px 12px; border-radius:8px; font-size:13px; color:var(--mute); text-align:center;">☕ ' + esc(p.label) + ' (' + time + ')</div>';
+                          return;
+                        }
+                        const s = slotOf(selDay, p.n);
+                        h += '<div class="cell' + (s ? " has" : "") + '" data-a="cell" data-day="' + selDay + '" data-p="' + p.n + '" style="background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">' +
+                          '<div><div class="hint num">คาบ ' + p.n + ' · ' + time + '</div>' +
+                          (s ? '<b style="font-size:15px; display:block; margin-top:2px;">' + esc(s.subject) + '</b><div class="hint" style="margin-top:2px;">' + esc(slotInfo(s)) + '</div>' : '<span style="color:var(--mute)">ยังไม่มีวิชา (แตะเพื่อเพิ่ม)</span>') +
+                          '</div><span style="font-size:18px; color:var(--mute);">›</span></div>';
+                      });
+                      h += '</div>';
+                      $("mobileSchedBox").innerHTML = h;
                     }
+
+                    function openSlot(day, n) {
+                      SLOT = { day: day, p: n };
+                      const s = slotOf(day, n) || {};
+                      const per = PERIODS.filter(function (x) { return x.n === n; })[0];
+                      const opts = PERIODS.filter(function (x) { return x.t === "c" && x.n >= n; }).map(function (x) {
+                        return '<option value="' + x.n + '">คาบ ' + x.n + " (สิ้นสุด " + x.e + ")</option>";
+                      }).join("");
+                      $("sPanel").innerHTML =
+                        '<div class="top"><h2 style="margin:0; font-size:16px;">วัน' + DAY_LABEL[day] + " · คาบ " + n + ' <span class="hint">(' + per.s + "–" + per.e + ')</span></h2><button class="ghost small" data-a="sclose">ปิด</button></div>' +
+                        '<div class="form">' +
+                        '<div><label for="fSubject">วิชา / กิจกรรม</label><input id="fSubject" maxlength="80" value="' + esc(s.subject || "") + '" placeholder="เช่น เคมี"></div>' +
+                        '<div><label for="fClass">ห้องเรียนของนักเรียน</label><input id="fClass" maxlength="40" list="clsList" value="' + esc(s.cls || "") + '" placeholder="เช่น ม.5/1"><datalist id="clsList">' +
+                        CLASSES.map(function (c) { return '<option value="' + esc(c) + '">'; }).join("") + "</datalist></div>" +
+                        '<div><label for="fRoom">สถานที่สอน (ถ้ามี)</label><input id="fRoom" maxlength="40" value="' + esc(s.room || "") + '" placeholder="เช่น ห้องแลปเคมี 1"></div>' +
+                        '<div><label for="fTo">สอนต่อเนื่องถึง</label><select id="fTo">' + opts + "</select>" +
+                        '<div class="hint" style="margin-top:4px">ช่องที่มีอยู่แล้วในช่วงที่เลือกจะถูกแทนที่</div></div>' +
+                        '<div class="row" style="margin-top:4px; display:flex; gap:8px;"><button data-a="ssave" id="btnSSave" style="flex:1">บันทึก</button>' +
+                        (s.subject ? '<button class="danger" data-a="sdel" id="btnSDel">ลบคาบนี้</button>' : "") +
+                        '<button class="ghost" data-a="sclose">ยกเลิก</button></div>' +
+                        '<div id="sErr" class="err" hidden></div></div>';
+                      $("sOverlay").hidden = false;
+                      $("fSubject").focus();
+                    }
+                    function closeSlot() { SLOT = null; $("sOverlay").hidden = true; $("sPanel").innerHTML = ""; }
+
+                    function afterSlotChange(r) {
+                      SCHED = r.schedule;
+                      closeSlot();
+                      renderSched();
+                      LAST_KEY = ""; renderToday();
+                    }
+                    function saveSlot() {
+                      const subject = $("fSubject").value.trim();
+                      if (!subject) { showErr("กรุณาใส่ชื่อวิชา", "sErr"); return; }
+                      $("btnSSave").disabled = true;
+                      run("saveSchedule", SLOT.day, SLOT.p, Number($("fTo").value), $("fClass").value, subject, $("fRoom").value)
+                        .then(afterSlotChange)
+                        .catch(function (e) { $("btnSSave").disabled = false; showErr(e, "sErr"); });
+                    }
+                    function deleteSlot() {
+                      $("btnSDel").disabled = true;
+                      run("deleteSchedule", SLOT.day, SLOT.p)
+                        .then(afterSlotChange)
+                        .catch(function (e) { $("btnSDel").disabled = false; showErr(e, "sErr"); });
+                    }
+
+                    // เมื่อผู้ใช้เปลี่ยนวันที่เอง ให้เอาไฮไลต์ปุ่มค้นหาด่วนออก
+                    ["from", "to"].forEach(function (id) {
+                      $(id).addEventListener("change", function () { setQuickActive(null); });
+                    });
+
+                    run("getAdminInit")
+                      .then(function (init) {
+                        $("who").textContent = init.email;
+                        CLASSES = init.classes;
+                        init.classes.forEach(function (c) {
+                          const o = document.createElement("option");
+                          o.value = o.textContent = c;
+                          $("cls").appendChild(o);
+                        });
+                        $("btnLoad").disabled = false;
+                        INIT_DONE = true;
+                        ensureReport();
+                      })
+                      .catch(showErr);
+
+                    // ไฮไลต์ปุ่มค้นหาด่วนที่เลือกอยู่ (ส่ง null เพื่อล้างไฮไลต์)
+                    function setQuickActive(v) {
+                      document.querySelectorAll('.quick-row [data-a="quick"]').forEach(function (b) {
+                        b.classList.toggle("active", b.getAttribute("data-v") === v);
+                      });
+                    }
+
+                    function quick(v) {
+                      const now = new Date();
+                      if (v === "all") {
+                        $("from").value = "";
+                        $("to").value = "";
+                      } else {
+                        const from = new Date(now);
+                        if (v !== "today") from.setDate(from.getDate() - Number(v) + 1);
+                        $("from").value = ymd(from);
+                        $("to").value = ymd(now);
+                      }
+                      setQuickActive(v);
+                      load();
+                    }
+
+                    // ล้างค่าตัวกรอง: กลับไปห้องแรก + ไม่กำหนดช่วงวันที่ (ทั้งหมด) แล้วโหลดใหม่
+                    function clearFilters() {
+                      const sel = $("cls");
+                      if (sel.options.length) sel.selectedIndex = 0;
+                      $("from").value = "";
+                      $("to").value = "";
+                      setQuickActive("all");
+                      load();
+                    }
+
+                    function load() {
+                      if (!$("cls").value) return;
+                      $("err").hidden = true;
+                      $("btnLoad").disabled = true;
+                      run("getReport", $("cls").value, $("from").value, $("to").value)
+                        .then(function (d) {
+                          DATA = d;
+                          IDX = {};
+                          d.students.forEach(function (s, i) { IDX[s.email] = i; });
+                          $("report").hidden = false;
+                          renderReport();
+                        })
+                        .catch(showErr)
+                        .then(function () { $("btnLoad").disabled = false; });
+                    }
+
+                    function sessionCounts(se) {
+                      const c = emptyCounts();
+                      for (let i = 0; i < se.st.length; i++) c[se.st[i]]++;
+                      return c;
+                    }
+
+                    function dayRows() {
+                      return groupByDay().map(function (g) { return { label: fmtDate(g.date), date: g.date, c: g.c, g: g }; });
+                    }
+                    function sessionRows() {
+                      return DATA.sessions.map(function (se) {
+                        return { label: fmtDate(se.date) + " " + se.time, date: se.date, c: sessionCounts(se), se: se };
+                      });
+                    }
+
+                    function renderReport() {
+                      const all = emptyCounts();
+                      DATA.sessions.forEach(function (se) { addCounts(all, sessionCounts(se)); });
+
+                      if (!DATA.sessions.length) {
+                        $("overall").innerHTML = '<div class="empty">ไม่มีคาบเช็กชื่อที่เสร็จแล้วในช่วงที่เลือก</div>';
+                        $("bars").innerHTML = "";
+                        $("barLegend").innerHTML = "";
+                        $("tableBox").innerHTML = "";
+                        return;
+                      }
+
+                      $("overall").innerHTML = '<div class="sumrow">' + donut(all, 130, pct(rateOf(all)) + "%") + legend(all) +
+                        '</div><p class="hint" style="margin-top:10px; text-align:center;">ช่วงที่เลือกมี ' + fmt(DATA.sessions.length) + " คาบ · นักเรียน " +
+                        fmt(DATA.students.length) + " คน</p>";
+
+                      const rows = (MODE === "day" ? dayRows() : sessionRows()).slice(-40);
+                      $("barsTitle").textContent = MODE === "day" ? "แนวโน้มรายวัน" : "แนวโน้มรายคาบ";
+                      $("bars").innerHTML = vbars(rows);
+                      $("barLegend").innerHTML = KEYS.map(function (k) {
+                        return '<div><span class="dot" style="background:var(--' + k + ')"></span>' + LABEL[k] + "</div>";
+                      }).join("");
+
+                      $("tabSessions").classList.toggle("on", TAB === "sessions");
+                      $("tabStudents").classList.toggle("on", TAB === "students");
+                      $("modeBox").hidden = TAB !== "sessions";
+                      $("sortBox").hidden = TAB !== "students";
+                      $("csvBtn").hidden = TAB !== "students";
+                      $("modeSession").classList.toggle("on", MODE === "session");
+                      $("modeDay").classList.toggle("on", MODE === "day");
+                      $("tableBox").innerHTML = TAB === "sessions" ? sessionsTable() : studentsTable();
+                    }
+
+                    function sessionsTable() {
+                      const day = MODE === "day";
+                      const rows = day ? dayRows() : sessionRows();
+                      const head = "<tr><th>วันที่</th>" + (day ? '<th class="n">จำนวนคาบ</th>' : "<th>เวลา</th>") +
+                        KEYS.map(function (k) { return '<th class="n">' + LABEL[k] + "</th>"; }).join("") +
+                        '<th class="n">อัตราเข้าเรียน</th><th></th></tr>';
+                      const body = rows.slice().reverse().map(function (r) {
+                        const rate = rateOf(r.c);
+                        const first = day ? r.g.date : r.se.date;
+                        const target = day ? r.g.sessions[0].id : r.se.id;
+                        return '<tr class="click" data-a="sess" data-v="' + esc(target) + '"><td>' + esc(fmtDateDow(first)) + "</td>" +
+                          (day ? '<td class="n">' + r.g.sessions.length + "</td>" : "<td>" + esc(r.se.time) + "</td>") +
+                          KEYS.map(function (k) { return '<td class="n num">' + r.c[k] + "</td>"; }).join("") +
+                          '<td class="n num ' + (rate < LOW_RATE ? "low" : "") + '">' + pct(rate) + "%</td><td>" + hbar(r.c) + "</td></tr>";
+                      }).join("");
+                      return "<table><thead>" + head + "</thead><tbody>" + body + "</tbody></table>";
+                    }
+
+                    function studentStats() {
+                      return DATA.students.map(function (s, i) {
+                        const c = studentCounts(i);
+                        return { s: s, i: i, c: c, rate: rateOf(c) };
+                      });
+                    }
+
+                    function studentsTable() {
+                    let list = studentStats();
+                    if (SORT === "rateDesc") list.sort(function (a, b) { return b.rate - a.rate || a.c.a - b.c.a; });
+                    else if (SORT === "rateAsc") list.sort(function (a, b) { return a.rate - b.rate; });
+                    else if (SORT === "absentDesc") list.sort(function (a, b) { return b.c.a - a.c.a; });
+
+                    // ---------- จัดกลุ่ม: เดือน -> วัน -> คาบ ----------
+                    const sessions = DATA.sessions;
+                    const monthMap = {};
+                    const monthOrder = [];
+
+                    sessions.forEach(function (se, sIdx) {
+                      const d = new Date(se.date + "T00:00:00");
+                      const mKey = d.toLocaleDateString("th-TH", { month: "long", year: "numeric" });
+                      if (!monthMap[mKey]) {
+                        monthMap[mKey] = { name: mKey, days: {}, dayOrder: [], count: 0 };
+                        monthOrder.push(mKey);
+                      }
+                      const m = monthMap[mKey];
+                      if (!m.days[se.date]) {
+                        m.days[se.date] = { date: se.date, sessions: [] };
+                        m.dayOrder.push(se.date);
+                      }
+                      m.days[se.date].sessions.push({ session: se, index: sIdx });
+                      m.count++;
+                    });
+
+                    // ---------- แตกเป็นลิสต์คอลัมน์แบบแบน (ใช้ร่วมกันทั้ง header และ body) ----------
+                    // cls: "mb" = เส้นคั่นเดือน (เข้ม), "db" = เส้นคั่นวัน (จาง)
+                    const cols = [];
+                    monthOrder.forEach(function (mKey, mIdx) {
+                      const m = monthMap[mKey];
+                      m.dayOrder.forEach(function (dateKey, dIdx) {
+                        m.days[dateKey].sessions.forEach(function (item, sIdx) {
+                          let cls = "";
+                          if (sIdx === 0) {
+                            if (dIdx === 0 && mIdx > 0) cls = "mb";
+                            else if (dIdx > 0) cls = "db";
+                          }
+                          cols.push({ se: item.session, index: item.index, cls: cls });
+                        });
+                      });
+                    });
+
+                    // ---------- แถว Header 1: เดือน ----------
+                    let head1 = '<tr><th rowspan="3" class="sc c1">ลำดับ</th><th rowspan="3" class="sc c2">เลขที่</th><th rowspan="3" class="sc c3">ชื่อ-สกุล</th>';
+                    monthOrder.forEach(function (mKey, mIdx) {
+                      const m = monthMap[mKey];
+                      head1 += '<th colspan="' + m.count + '" class="mh' + (mIdx > 0 ? " mb" : "") + '"><span>' + m.name + '</span></th>';
+                    });
+                    head1 += '<th rowspan="3" class="n sc r7">ทั้งหมด</th><th rowspan="3" class="n sc r6">มา</th><th rowspan="3" class="n sc r5">สาย</th><th rowspan="3" class="n sc r4">ขาด</th><th rowspan="3" class="n sc r3">ลา</th><th rowspan="3" class="n sc r2">รวมไม่มา</th><th rowspan="3" class="n sc r1">ร้อยละ</th></tr>';
+
+                    // ---------- แถว Header 2: วัน (คลุมทุกคาบของวันนั้น) ----------
+                    const dowNames = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
+                    let head2 = "<tr>";
+                    monthOrder.forEach(function (mKey, mIdx) {
+                      const m = monthMap[mKey];
+                      m.dayOrder.forEach(function (dateKey, dIdx) {
+                        const day = m.days[dateKey];
+                        const d = new Date(dateKey + "T00:00:00");
+                        let cls = "";
+                        if (dIdx === 0 && mIdx > 0) cls = "mb";
+                        else if (dIdx > 0) cls = "db";
+                        head2 += '<th colspan="' + day.sessions.length + '"' + (cls ? ' class="' + cls + '"' : "") + '>' +
+                          dowNames[d.getDay()] + " " + d.getDate() + "</th>";
+                      });
+                    });
+                    head2 += "</tr>";
+
+                    // ---------- แถว Header 3: คาบ ----------
+                    let head3 = "<tr>";
+                    cols.forEach(function (col) {
+                      const se = col.se;
+                      const label = se.period ? "คาบ " + se.period : esc(se.time);
+                      head3 += '<th class="' + col.cls + '"title="' + esc(se.time || "") + '">' +
+                        '<span class="hint" style="font-size:11px">' + label + "</span></th>";
+                    });
+                    head3 += "</tr>";
+
+                    const head = "<thead>" + head1 + head2 + head3 + "</thead>";
+
+                    // ---------- Body ----------
+                    let body = "<tbody>";
+                    list.forEach(function (r, rIndex) {
+                      const s = r.s;
+                      const stuIdx = r.i;
+                      const c = r.c; // {p, l, v, a}
+                      const totalNotCome = c.v + c.a;
+                      const totalTime = total(c);
+                      const low = r.rate < LOW_RATE;
+
+                      body += '<tr class="click" data-a="stu" data-v="' + esc(s.email) + '">';
+                      body += '<td class="num sc c1">' + (rIndex + 1) + '</td>';
+                      body += '<td class="num sc c2">' + esc(s.studentId) + '</td>';
+                      body += '<td class="sc c3" title="' + esc(s.name) + '">' + esc(s.name) + '</td>';
+
+                      cols.forEach(function (col) {
+                        const se = col.se;
+                        const code = se.st[stuIdx];
+                        let sym = "";
+                        let colorStyle = "";
+                        if (code === "p") { sym = "/"; colorStyle = "color:var(--p);"; }
+                        else if (code === "l") { sym = "ส"; colorStyle = "color:var(--l); font-weight:650;"; }
+                        else if (code === "v") { sym = "ล"; colorStyle = "color:var(--v); font-weight:650;"; }
+                        else if (code === "a") { sym = "ข"; colorStyle = "color:var(--a); font-weight:650;"; }
+
+                        body += '<td style="text-align:center; ' + colorStyle + ' cursor:pointer;" class="click-cell' + (col.cls ? " " + col.cls : "") + '" ' +
+                          'data-sid="' + esc(se.id) + '" ' +
+                          'data-email="' + esc(s.email) + '" ' +
+                          'title="คลิกเพื่อแก้ไขสถานะคาบนี้">' + (sym || "-") + '</td>';
+                      });
+
+                      body += '<td class="n num sc r7">' + totalTime + '</td>';
+                      body += '<td class="n num sc r6">' + (c.p || "") + '</td>';
+                      body += '<td class="n num sc r5">' + (c.l || "") + '</td>';
+                      body += '<td class="n num sc r4">' + (c.a || "") + '</td>';
+                      body += '<td class="n num sc r3">' + (c.v || "") + '</td>';
+                      body += '<td class="n num sc r2">' + (totalNotCome || "") + '</td>';
+                      body += '<td class="n num sc r1 ' + (low ? "low" : "") + '">' + pct(r.rate) + '%</td>';
+                      body += '</tr>';
+                    });
+                    body += "</tbody>";
+
+                    return '<table class="stt" style="white-space:nowrap;">' + head + body + "</table>";
                   }
 
-                const t = e.target.closest("[data-a]");
-                if (!t) return;
-                const a = t.getAttribute("data-a"), v = t.getAttribute("data-v");
-                if (t.tagName === "A") e.preventDefault();
+                    function openPanel(p) { PANEL = p; renderPanel(); $("overlay").hidden = false; }
+                    function closePanel() { PANEL = null; $("overlay").hidden = true; $("panel").innerHTML = ""; $("panel").classList.remove("sm"); }
+                    function renderPanel() {
+                      if (!PANEL) return;
+                      $("panel").innerHTML = PANEL.type === "session" ? sessionPanel() : PANEL.type === "cell" ? cellPanel() : studentPanel();
+                      $("panel").classList.toggle("sm", PANEL.type === "cell");
+                    }
 
-                if (a === "nav") nav(v);
-                else if (a === "dreload") loadDash();
-                else if (a === "cell") openSlot(Number(t.getAttribute("data-day")), Number(t.getAttribute("data-p")));
-                else if (a === "ssave") saveSlot();
-                else if (a === "sdel") deleteSlot();
-                else if (a === "sclose") closeSlot();
-                else if (a === "open-add-student") openStudentModal();
-                else if (a === "close-student-modal") closeStudentModal();
-                else if (a === "save-student") saveNewStudent();
-                else if (a === "load") load();
-                else if (a === "quick") quick(v);
-                else if (a === "tab") { TAB = v; renderReport(); }
-                else if (a === "mode") { MODE = v; renderReport(); }
-                else if (a === "sess") openPanel({ type: "session", sid: v });
-                else if (a === "stu") openPanel({ type: "student", email: v });
-                else if (a === "close") closePanel();
-                else if (a === "csv") exportCsv();
-                else if (a === "reset") saveStatus(t.getAttribute("data-email"), "auto", "");
-                else if (a === "void") {
-                  if (!confirm("⚠ คำเตือน\n\nคาบนี้จะถูกตัดออกจากรายงานและแดชบอร์ดทันที\nและกู้คืนจากหน้านี้ไม่ได้\n\nใช้เฉพาะกรณีเปิดคาบผิด/ทดลองเท่านั้น\nต้องการดำเนินการต่อหรือไม่?")) return;
-                  const sid = PANEL.sid;
-                  run("voidSession", sid)
-                    .then(function () {
-                      DATA.sessions = DATA.sessions.filter(function (s) { return s.id !== sid; });
-                      closePanel();
-                      renderReport();
-                    })
-                    .catch(showErr);
-                }
-                else if (a === "edit-student") openEditStudentModal(t.dataset);
-                else if (a === "close-edit-student-modal") closeEditStudentModal();
-                else if (a === "update-student") saveUpdateStudent();
-                else if (a === "delete-student") removeStudentRecord();
+            function sessionPanel() {
+              const se = sessionById(PANEL.sid);
+              // ค้นหาคาบเรียนทั้งหมดในวันเดียวกัน
+              const sameDay = DATA.sessions.filter(function (s) { return s.date === se.date; });
+              const c = sessionCounts(se);
 
-              });
+              // [ปรับปรุงตรงนี้] คำนวณใส่ชื่อคาบที่ 1, คาบที่ 2... อิงตามลำดับเวลาในวันนั้น
+              const chips = sameDay.length > 1
+                ? '<div class="chips">' + sameDay.map(function (s, index) {
+                    const periodLabel = "คาบที่ " + (index + 1) + " (" + s.time + ")";
+                    return '<button class="ghost small ' + (s.id === se.id ? "on" : "") + '" data-a="sess" data-v="' + esc(s.id) + '">' + periodLabel + "</button>";
+                  }).join("") + "</div>"
+                : "";
 
-              document.addEventListener("keydown", function (e) {
-                if (e.key === "Escape") {
-                  if (!$("sOverlay").hidden) closeSlot();
-                  else if (!$("studentModal").hidden) closeStudentModal();
-                  else if (!$("editStudentModal").hidden) closeEditStudentModal();
-                  else if (PANEL) closePanel();
-                }
-              });
+              const rows = DATA.students.map(function (s, i) {
+                const code = se.st[i];
+                const adjusted = se.ad[i] === "1";
+                return '<tr data-email="' + esc(s.email) + '"><td>' + esc(s.studentId) + "</td><td>" + esc(s.name) + "</td>" +
+                  '<td><select data-st="' + esc(s.email) + '" style="width: 90px;">' +
+                  KEYS.map(function (k) { return '<option value="' + k + '"' + (k === code ? " selected" : "") + ">" + LABEL[k] + "</option>"; }).join("") +
+                  "</select></td>" +
+                  '<td><input class="note" data-note="' + esc(s.email) + '" maxlength="200" placeholder="หมายเหตุ" value="' + esc(se.notes[s.email] || "") + '"></td>' +
+                  '<td class="st">' + (adjusted ? '<span class="hint">✎ ผู้ดูแลปรับแก้</span> <button class="ghost small" data-a="reset" data-email="' + esc(s.email) + '">คืนค่า</button>' : "") +
+                  ' <span class="saved"></span></td></tr>';
+              }).join("");
 
-              document.addEventListener("change", function (e) {
-                const el = e.target;
-                if (el.id === "sort") { SORT = el.value; renderReport(); return; }
-                if (!PANEL || PANEL.type !== "session") return;
-                const se = sessionById(PANEL.sid);
-                if (el.hasAttribute("data-st")) {
-                  const email = el.getAttribute("data-st");
-                  const row = rowFor(email);
-                  saveStatus(email, WORD[el.value], row.querySelector("input.note").value);
-                } else if (el.hasAttribute("data-note")) {
-                  const email = el.getAttribute("data-note");
-                  const code = se.st[IDX[email]];
-                  saveStatus(email, WORD[code], el.value);
-                }
-              });
+              return '<div class="top"><h2 style="margin:0; font-size:15px;">ห้อง ' + esc(DATA.cls) + " · " + esc(fmtDateDow(se.date)) + " " + esc(se.time) + "</h2>" +
+                '<button class="ghost small" data-a="close">ปิด</button></div>' + chips +
+                '<div class="sumrow" id="panelHead">' + donut(c, 100, pct(rateOf(c)) + "%") + legend(c) + "</div>" +
+                '<div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>เลขที่</th><th>ชื่อ</th><th>สถานะ</th><th>หมายเหตุ</th><th></th></tr></thead><tbody>' + rows + "</tbody></table></div>" +
+                '<div class="void-zone"><button class="voidbtn" data-a="void">ตั้งค่าให้ไม่นับคาบนี้ในรายงาน</button>' +
+                '<span class="hint">⚠ ใช้เฉพาะกรณีเปิดคาบผิด/ทดลองเท่านั้น คาบที่ไม่นับจะหายจากรายงานและแดชบอร์ดทันที และกู้คืนในหน้านี้ไม่ได้</span></div>';
+            }
 
-              setInterval(tick, 1000);
-              tick();
-              loadDash();
+                    /* ---- หน้าต่างแก้สถานะรายคน เฉพาะคาบที่กด ---- */
+                    function periodRange(n) {
+                      const p = PERIODS.filter(function (x) { return x.n === n; })[0];
+                      return p ? p.s + "–" + p.e : "";
+                    }
+                    function cellPanel() {
+                      const se = sessionById(PANEL.sid);
+                      const i = IDX[PANEL.email];
+                      const s = DATA.students[i];
+                      const code = se.st[i];
+                      const adjusted = se.ad[i] === "1";
+                      const d = new Date(se.date + "T00:00:00");
+                      const dateText = "วัน" + DOW[d.getDay()] + "ที่ " + d.getDate() + " " + MONTHS[d.getMonth()] + " " + (d.getFullYear() + 543);
+                      const subject = se.subject || "ไม่พบชื่อวิชาในตารางสอน";
+                      const periodText = se.period
+                        ? "คาบที่ " + se.period + " (" + periodRange(se.period) + " น.)"
+                        : "นอกช่วงคาบเรียน";
+                      const rec = se.ts && se.ts[s.email];
+
+                      let checkin;
+                      if (rec) {
+                        checkin = '<div>🕒 เช็กชื่อเมื่อเวลา <b class="num">' + esc(rec.t) + " น.</b>" +
+                          '<span class="hint"> (' + (rec.m === "qr" ? "สแกน QR" : esc(rec.m || "ระบบ")) + ")</span></div>";
+                      } else if (code === "p" || code === "l") {
+                        checkin = '<div class="hint">ไม่มีบันทึกการเช็กชื่อในระบบ (สถานะนี้ถูกกำหนดโดยผู้ดูแล)</div>';
+                      } else {
+                        checkin = '<div class="hint">ไม่มีบันทึกการเช็กชื่อในคาบนี้</div>';
+                      }
+
+                      const seg = KEYS.map(function (k) {
+                        return '<label class="' + (k === code ? "on" : "") + '" style="--on:var(--' + k + ')">' +
+                          '<input type="radio" name="cellst" value="' + k + '"' + (k === code ? " checked" : "") + '>' +
+                          '<span class="dot" style="background:var(--' + k + ')"></span>' + LABEL[k] + "</label>";
+                      }).join("");
+
+                      return '<div class="top"><h2 style="margin:0; font-size:16px;">แก้ไขสถานะการเข้าเรียน</h2>' +
+                        '<button class="ghost small" data-a="close">ปิด</button></div>' +
+                        '<div class="cellinfo">' +
+                          '<div><b style="font-size:16px">' + esc(subject) + "</b></div>" +
+                          "<div>" + esc(periodText) + " · เริ่มเช็กชื่อ " + esc(se.time) + " น.</div>" +
+                          '<div class="hint">' + esc(dateText) + (se.room ? " · 📍 " + esc(se.room) : "") + "</div>" +
+                        "</div>" +
+                        '<div class="cellbox">' +
+                          '<div><b>' + esc(s.name) + "</b></div>" +
+                          '<div class="hint">ห้อง ' + esc(DATA.cls) + " · เลขที่ " + (i + 1) + "</div>" +
+                          '<div style="margin-top:4px">สถานะตอนนี้: ' + chip(code) + (adjusted ? ' <span class="hint">✎ ผู้ดูแลปรับแก้</span>' : ' <span class="hint">(ตามระบบ)</span>') + "</div>" +
+                          checkin +
+                        "</div>" +
+                        "<label>ปรับสถานะการเข้าเรียน</label>" +
+                        '<div class="seg" id="cellSeg">' + seg + "</div>" +
+                        '<label for="cellNote">หมายเหตุ (ไม่บังคับ)</label>' +
+                        '<textarea id="cellNote" class="cellnote" maxlength="200" placeholder="เช่น ลาป่วย มีใบรับรองแพทย์">' + esc(se.notes[s.email] || "") + "</textarea>" +
+                        '<div class="cellact">' +
+                          '<button id="cellSave" data-a="cellsave">บันทึก</button>' +
+                          (adjusted ? '<button class="ghost" data-a="cellreset">คืนค่าตามระบบ</button>' : "") +
+                          '<button class="ghost" data-a="close">ยกเลิก</button>' +
+                          '<span class="saved" id="cellMsg"></span>' +
+                        "</div>";
+                    }
+                    function saveCell(word, note) {
+                      const se = sessionById(PANEL.sid), email = PANEL.email;
+                      const btn = $("cellSave"), msg = $("cellMsg");
+                      btn.disabled = true;
+                      msg.textContent = "กำลังบันทึก…";
+                      run("setStatus", se.id, email, word, note)
+                        .then(function (r) {
+                          const i = IDX[email];
+                          se.st = replaceAt(se.st, i, r.code);
+                          se.ad = replaceAt(se.ad, i, r.adjusted ? "1" : "0");
+                          if (note && r.adjusted) se.notes[email] = note;
+                          else delete se.notes[email];
+                          closePanel();
+                          renderReport();
+                        })
+                        .catch(function (e) {
+                          btn.disabled = false;
+                          msg.textContent = "";
+                          alert("บันทึกไม่สำเร็จ: " + ((e && e.message) || e));
+                        });
+                    }
+
+                    function studentPanel() {
+                      const i = IDX[PANEL.email];
+                      const s = DATA.students[i];
+                      const c = studentCounts(i);
+                      const hist = DATA.sessions.slice().reverse().map(function (se) {
+                        return '<div><span class="num" style="min-width:110px">' + esc(fmtDate(se.date)) + " " + esc(se.time) + "</span>" + chip(se.st[i]) +
+                          (se.ad[i] === "1" ? '<span class="hint">✎ ผู้ดูแลปรับแก้</span>' : "") +
+                          (se.notes[s.email] ? '<span class="hint">· ' + esc(se.notes[s.email]) + "</span>" : "") + "</div>";
+                      }).join("");
+                      return '<div class="top"><h2 style="margin:0; font-size:15px;">' + esc(s.name) + ' <span class="hint">(' + esc(s.studentId) + ")</span></h2>" +
+                        '<button class="ghost small" data-a="close">ปิด</button></div>' +
+                        '<div class="sumrow">' + donut(c, 110, pct(rateOf(c)) + "%") + legend(c) + "</div>" +
+                        '<div style="margin-top:10px">' + hbar(c) + '</div><div class="hist">' + hist + "</div>";
+                    }
+
+                    function rowFor(email) {
+                      return Array.prototype.slice.call(document.querySelectorAll("#panel tr[data-email]")).filter(function (r) {
+                        return r.getAttribute("data-email") === email;
+                      })[0];
+                    }
+
+                    function saveStatus(email, word, note) {
+                      const se = sessionById(PANEL.sid);
+                      const row = rowFor(email);
+                      const sel = row.querySelector("select");
+                      const saved = row.querySelector(".saved");
+                      sel.disabled = true;
+                      saved.textContent = "กำลังบันทึก…";
+                      run("setStatus", se.id, email, word, note)
+                        .then(function (r) {
+                          const i = IDX[email];
+                          se.st = replaceAt(se.st, i, r.code);
+                          se.ad = replaceAt(se.ad, i, r.adjusted ? "1" : "0");
+                          if (note && r.adjusted) se.notes[email] = note;
+                          else delete se.notes[email];
+                          renderReport();
+                          renderPanel();
+                          const again = rowFor(email);
+                          if (again) again.querySelector(".saved").textContent = "บันทึกแล้ว ✓";
+                        })
+                        .catch(function (e) {
+                          sel.disabled = false;
+                          saved.textContent = "";
+                          showErr(e);
+                          alert("บันทึกไม่สำเร็จ: " + ((e && e.message) || e));
+                        });
+                    }
+
+                    // ---------- โหลดไลบรารี ExcelJS (โหลดครั้งเดียว ตอนกดดาวน์โหลดครั้งแรก) ----------
+      let EXCELJS_PROMISE = null;
+      function loadExcelJs() {
+        if (window.ExcelJS) return Promise.resolve();
+        if (EXCELJS_PROMISE) return EXCELJS_PROMISE;
+        EXCELJS_PROMISE = new Promise(function (resolve, reject) {
+          const s = document.createElement("script");
+          s.src = "https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js";
+          s.onload = resolve;
+          s.onerror = function () {
+            EXCELJS_PROMISE = null;
+            reject(new Error("โหลดไลบรารี Excel ไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่"));
+          };
+          document.head.appendChild(s);
+        });
+        return EXCELJS_PROMISE;
+      }
+
+      function xlColLetter(n) { // n เริ่มที่ 1 -> A, 2 -> B, ...
+        let s = "";
+        while (n > 0) {
+          const m = (n - 1) % 26;
+          s = String.fromCharCode(65 + m) + s;
+          n = Math.floor((n - 1) / 26);
+        }
+        return s;
+      }
+
+      // ---------- สร้างไฟล์ .xlsx จากข้อมูลที่แสดงอยู่บนหน้าจอ ----------
+      function buildExcelBlob() {
+        const THAI_DOW = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
+        const SYMBOL = { p: "/", l: "ส", v: "ล", a: "ข" };
+        const COLOR = { p: "FF16A34A", l: "FFD97706", v: "FF2563EB", a: "FFDC2626" };
+
+        // 1) เรียงนักเรียนเหมือนตารางบนหน้าเว็บ
+        const list = studentStats();
+        if (SORT === "rateDesc") list.sort(function (a, b) { return b.rate - a.rate || a.c.a - b.c.a; });
+        else if (SORT === "rateAsc") list.sort(function (a, b) { return a.rate - b.rate; });
+        else if (SORT === "absentDesc") list.sort(function (a, b) { return b.c.a - a.c.a; });
+
+        // 2) จัดกลุ่ม เดือน -> วัน -> คาบ
+        const monthMap = {};
+        const monthOrder = [];
+        DATA.sessions.forEach(function (se) {
+          const d = new Date(se.date + "T00:00:00");
+          const mKey = d.toLocaleDateString("th-TH", { month: "long", year: "numeric" });
+          if (!monthMap[mKey]) {
+            monthMap[mKey] = { name: mKey, days: {}, dayOrder: [] };
+            monthOrder.push(mKey);
+          }
+          const m = monthMap[mKey];
+          if (!m.days[se.date]) {
+            m.days[se.date] = [];
+            m.dayOrder.push(se.date);
+          }
+          m.days[se.date].push(se);
+        });
+
+        // 3) ลิสต์คอลัมน์แบบแบน + ช่วงของเดือน/วัน (ใช้ index เริ่มที่ 0)
+        const cols = [], months = [], days = [];
+        monthOrder.forEach(function (mKey) {
+          const m = monthMap[mKey];
+          const mS = cols.length;
+          m.dayOrder.forEach(function (dateKey) {
+            const dS = cols.length;
+            m.days[dateKey].forEach(function (se) { cols.push(se); });
+            const d = new Date(dateKey + "T00:00:00");
+            days.push({ label: THAI_DOW[d.getDay()] + " " + d.getDate(), s: dS, e: cols.length - 1 });
+          });
+          months.push({ name: m.name, s: mS, e: cols.length - 1 });
+        });
+
+        const N = cols.length;
+        if (!N) return Promise.reject(new Error("ไม่มีข้อมูลคาบในช่วงที่เลือก"));
+
+        const mStart = [], mEnd = [], dStart = [], dEnd = [];
+        for (let k = 0; k < N; k++) { mStart[k] = mEnd[k] = dStart[k] = dEnd[k] = false; }
+        months.forEach(function (m) { mStart[m.s] = true; mEnd[m.e] = true; });
+        days.forEach(function (d) { dStart[d.s] = true; dEnd[d.e] = true; });
+
+        // 4) ค่าคงที่ของเส้นขอบ
+        const TB = { style: "thin", color: { argb: "FFCBD5E1" } };      // เส้นบน/ล่าง
+        const LIGHT = { style: "thin", color: { argb: "FFE2E8F0" } };   // เส้นคั่นคาบ (จางสุด)
+        const DAYB = { style: "thin", color: { argb: "FF94A3B8" } };    // เส้นคั่นวัน
+        const MONB = { style: "medium", color: { argb: "FF475569" } };  // เส้นคั่นเดือน (เข้มสุด)
+        function leftOf(k) { return mStart[k] ? MONB : (dStart[k] ? DAYB : LIGHT); }
+        function rightOf(k) { return mEnd[k] ? MONB : (dEnd[k] ? DAYB : LIGHT); }
+        function mk(l, r) {
+          const b = { top: TB, bottom: TB };
+          if (l) b.left = l;
+          if (r) b.right = r;
+          return b;
+        }
+        function style(cell, o) {
+          cell.font = { name: "Tahoma", size: o.size || 11, bold: !!o.bold, color: { argb: o.color || "FF0F172A" } };
+          if (o.fill) cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: o.fill } };
+          cell.alignment = { horizontal: o.left ? "left" : "center", vertical: "middle" };
+          cell.border = o.border || mk(TB, TB);
+        }
+
+        // 5) ตำแหน่งคอลัมน์ (เริ่มที่ 1)
+        const FIRST = 4;           // คอลัมน์ D = คาบแรก
+        const LAST = FIRST + N - 1;
+        const SUM = LAST + 1;      // ทั้งหมด, มา, สาย, ขาด, ลา, รวมไม่มา, ร้อยละ
+        const cT = xlColLetter(SUM), cP = xlColLetter(SUM + 1), cL = xlColLetter(SUM + 2),
+              cA = xlColLetter(SUM + 3), cV = xlColLetter(SUM + 4), cN = xlColLetter(SUM + 5),
+              cR = xlColLetter(SUM + 6);
+
+        const wb = new ExcelJS.Workbook();
+        const ws = wb.addWorksheet("เช็กชื่อ", { views: [{ state: "frozen", xSplit: 3, ySplit: 3 }] });
+
+        ws.getColumn(1).width = 7;
+        ws.getColumn(2).width = 9;
+        ws.getColumn(3).width = 30;
+        for (let k = 0; k < N; k++) ws.getColumn(FIRST + k).width = 7;
+        [9, 6, 6, 6, 6, 10, 9].forEach(function (w, i) { ws.getColumn(SUM + i).width = w; });
+
+        const H1 = { fill: "FF1E3A8A", color: "FFFFFFFF", bold: true };
+        const H2 = { fill: "FF2563EB", color: "FFFFFFFF", bold: true };
+        const H3 = { fill: "FFDBEAFE", color: "FF1E3A8A", bold: true, size: 10 };
+
+        // ---------- หัวตารางซ้าย (ลำดับ / เลขที่ / ชื่อ-สกุล) ----------
+        ["ลำดับ", "เลขที่", "ชื่อ-สกุล"].forEach(function (t, i) {
+          ws.getCell(1, i + 1).value = t;
+          ws.mergeCells(1, i + 1, 3, i + 1);
+          for (let r = 1; r <= 3; r++) {
+            style(ws.getCell(r, i + 1), Object.assign({}, H1, { border: mk(TB, i === 2 ? MONB : TB) }));
+          }
+        });
+
+        // ---------- แถว 1: เดือน ----------
+        months.forEach(function (m) {
+          ws.getCell(1, FIRST + m.s).value = m.name;
+          if (m.e > m.s) ws.mergeCells(1, FIRST + m.s, 1, FIRST + m.e);
+          for (let k = m.s; k <= m.e; k++) {
+            style(ws.getCell(1, FIRST + k), Object.assign({}, H1, {
+              border: mk(k === m.s ? MONB : null, k === m.e ? MONB : null)
+            }));
+          }
+        });
+
+        // ---------- แถว 2: วัน (คลุมทุกคาบของวันนั้น) ----------
+        days.forEach(function (d) {
+          ws.getCell(2, FIRST + d.s).value = d.label;
+          if (d.e > d.s) ws.mergeCells(2, FIRST + d.s, 2, FIRST + d.e);
+          for (let k = d.s; k <= d.e; k++) {
+            style(ws.getCell(2, FIRST + k), Object.assign({}, H2, {
+              border: mk(k === d.s ? leftOf(k) : null, k === d.e ? rightOf(k) : null)
+            }));
+          }
+        });
+
+        // ---------- แถว 3: คาบ ----------
+        cols.forEach(function (se, k) {
+          const cell = ws.getCell(3, FIRST + k);
+          cell.value = se.period ? "คาบ " + se.period : String(se.time || "");
+          style(cell, Object.assign({}, H3, { border: mk(leftOf(k), rightOf(k)) }));
+        });
+
+        // ---------- หัวตารางสรุปขวา ----------
+        ["ทั้งหมด", "มา", "สาย", "ขาด", "ลา", "รวมไม่มา", "ร้อยละ"].forEach(function (t, i) {
+          const c = SUM + i;
+          ws.getCell(1, c).value = t;
+          ws.mergeCells(1, c, 3, c);
+          for (let r = 1; r <= 3; r++) {
+            style(ws.getCell(r, c), Object.assign({}, H1, { border: mk(i === 0 ? MONB : TB, TB) }));
+          }
+        });
+
+        // ---------- แถวนักเรียน (เริ่มแถว 4) ----------
+        const ROW0 = 4;
+        list.forEach(function (r, i) {
+          const row = ROW0 + i;
+          const s = r.s, c = r.c;
+
+          ws.getCell(row, 1).value = i + 1;
+          ws.getCell(row, 2).value = s.studentId;
+          ws.getCell(row, 3).value = s.name;
+          style(ws.getCell(row, 1), {});
+          style(ws.getCell(row, 2), {});
+          style(ws.getCell(row, 3), { left: true, border: mk(TB, MONB) });
+
+          cols.forEach(function (se, k) {
+            const code = se.st[r.i];
+            const cell = ws.getCell(row, FIRST + k);
+            if (SYMBOL[code]) cell.value = SYMBOL[code];
+            style(cell, { color: COLOR[code], bold: !!code && code !== "p", border: mk(leftOf(k), rightOf(k)) });
+          });
+
+          const rng = xlColLetter(FIRST) + row + ":" + xlColLetter(LAST) + row;
+          const tot = total(c);
+          const sumCells = [
+            { f: "COUNTA(" + rng + ")", v: tot },
+            { f: 'COUNTIF(' + rng + ',"/")', v: c.p },
+            { f: 'COUNTIF(' + rng + ',"ส")', v: c.l },
+            { f: 'COUNTIF(' + rng + ',"ข")', v: c.a },
+            { f: 'COUNTIF(' + rng + ',"ล")', v: c.v },
+            { f: cV + row + "+" + cA + row, v: c.v + c.a },
+            { f: "IF(" + cT + row + ">0,(" + cP + row + "+" + cL + row + ")/" + cT + row + ",0)", v: r.rate / 100 }
+          ];
+          sumCells.forEach(function (x, j) {
+            const cell = ws.getCell(row, SUM + j);
+            cell.value = { formula: x.f, result: x.v };
+            style(cell, { border: mk(j === 0 ? MONB : TB, TB) });
+            if (j === 6) cell.numFmt = "0.0%";
+          });
+        });
+
+        // ร้อยละต่ำกว่าเกณฑ์ -> ตัวแดง (เหมือนหน้าเว็บ) เป็น conditional format จึงอัปเดตเองเมื่อแก้ข้อมูล
+        if (list.length && typeof LOW_RATE === "number") {
+          ws.addConditionalFormatting({
+            ref: cR + ROW0 + ":" + cR + (ROW0 + list.length - 1),
+            rules: [{
+              type: "cellIs",
+              operator: "lessThan",
+              formulae: [LOW_RATE / 100],
+              style: { font: { bold: true, color: { argb: "FFDC2626" } } }
+            }]
+          });
+        }
+
+        // ตั้งค่าการพิมพ์: แนวนอน พอดี 1 หน้ากว้าง และซ้ำหัวตารางทุกหน้า
+        ws.pageSetup = {
+          paperSize: 9,
+          orientation: "landscape",
+          fitToPage: true,
+          fitToWidth: 1,
+          fitToHeight: 0,
+          printTitlesRow: "1:3"
+        };
+
+        const filename = "attendance_" + String(DATA.cls).replace(/[^\wก-๙.-]+/g, "_") + ".xlsx";
+        return wb.xlsx.writeBuffer().then(function (buf) {
+          return {
+            filename: filename,
+            blob: new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+          };
+        });
+      }
+
+      // ---------- ปุ่มดาวน์โหลด ----------
+      function exportCsv() {
+        const btn = $("csvBtn");
+        function reset() {
+          btn.disabled = false;
+          btn.textContent = "ดาวน์โหลด Excel";
+        }
+        btn.disabled = true;
+        btn.textContent = "กำลังสร้างไฟล์…";
+
+        loadExcelJs()
+          .then(buildExcelBlob)
+          .then(function (out) {
+            reset();
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(out.blob);
+            a.download = out.filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+          })
+          .catch(function (e) {
+            reset();
+            showErr(e);
+          });
+      }
+
+                    document.addEventListener("click", function (e) {
+                      if (e.target === $("overlay")) { closePanel(); return; }
+                      if (e.target === $("sOverlay")) { closeSlot(); return; }
+                      if (e.target === $("studentModal")) { closeStudentModal(); return; }
+                      if (e.target === $("editStudentModal")) { closeEditStudentModal(); return; }
+
+                      const cell = e.target.closest(".click-cell");
+                      if (cell) {
+                        const sid = cell.getAttribute("data-sid");
+                          if (sid) {
+                            openPanel({ type: "cell", sid: sid, email: cell.getAttribute("data-email") });
+                            return;
+                          }
+                        }
+
+                      const t = e.target.closest("[data-a]");
+                      if (!t) return;
+                      const a = t.getAttribute("data-a"), v = t.getAttribute("data-v");
+                      if (t.tagName === "A") e.preventDefault();
+
+                      if (a === "nav") nav(v);
+                      else if (a === "dreload") loadDash();
+                      else if (a === "cell") openSlot(Number(t.getAttribute("data-day")), Number(t.getAttribute("data-p")));
+                      else if (a === "ssave") saveSlot();
+                      else if (a === "sdel") deleteSlot();
+                      else if (a === "sclose") closeSlot();
+                      else if (a === "open-add-student") openStudentModal();
+                      else if (a === "close-student-modal") closeStudentModal();
+                      else if (a === "save-student") saveNewStudent();
+                      else if (a === "load") load();
+                      else if (a === "quick") quick(v);
+                      else if (a === "clear") clearFilters();
+                      else if (a === "tab") { TAB = v; renderReport(); }
+                      else if (a === "mode") { MODE = v; renderReport(); }
+                      else if (a === "sess") openPanel({ type: "session", sid: v });
+                      else if (a === "stu") openPanel({ type: "student", email: v });
+                      else if (a === "close") closePanel();
+                      else if (a === "csv") exportCsv();
+                      else if (a === "cellsave") {
+                        const chosen = document.querySelector('#cellSeg input[name="cellst"]:checked');
+                        saveCell(WORD[chosen ? chosen.value : PANEL.cur], $("cellNote").value.trim());
+                      }
+                      else if (a === "cellreset") saveCell("auto", "");
+                      else if (a === "reset") saveStatus(t.getAttribute("data-email"), "auto", "");
+                      else if (a === "void") {
+                        if (!confirm("⚠ คำเตือน\n\nคาบนี้จะถูกตัดออกจากรายงานและแดชบอร์ดทันที\nและกู้คืนจากหน้านี้ไม่ได้\n\nใช้เฉพาะกรณีเปิดคาบผิด/ทดลองเท่านั้น\nต้องการดำเนินการต่อหรือไม่?")) return;
+                        const sid = PANEL.sid;
+                        run("voidSession", sid)
+                          .then(function () {
+                            DATA.sessions = DATA.sessions.filter(function (s) { return s.id !== sid; });
+                            closePanel();
+                            renderReport();
+                          })
+                          .catch(showErr);
+                      }
+                      else if (a === "edit-student") openEditStudentModal(t.dataset);
+                      else if (a === "close-edit-student-modal") closeEditStudentModal();
+                      else if (a === "update-student") saveUpdateStudent();
+                      else if (a === "delete-student") removeStudentRecord();
+
+                    });
+
+                    ["from", "to"].forEach(function (id) {
+        $(id).addEventListener("change", function () { setQuickActive(null); });
+      });
+
+
+                    document.addEventListener("keydown", function (e) {
+                      if (e.key === "Escape") {
+                        if (!$("sOverlay").hidden) closeSlot();
+                        else if (!$("studentModal").hidden) closeStudentModal();
+                        else if (!$("editStudentModal").hidden) closeEditStudentModal();
+                        else if (PANEL) closePanel();
+                      }
+                    });
+
+                    document.addEventListener("change", function (e) {
+                      const el = e.target;
+                      if (el.name === "cellst") {
+                        Array.prototype.forEach.call(document.querySelectorAll("#cellSeg label"), function (l) {
+                          l.classList.toggle("on", l.querySelector("input").checked);
+                        });
+                        return;
+                      }
+                      if (el.id === "sort") { SORT = el.value; renderReport(); return; }
+                      if (!PANEL || PANEL.type !== "session") return;
+                      const se = sessionById(PANEL.sid);
+                      if (el.hasAttribute("data-st")) {
+                        const email = el.getAttribute("data-st");
+                        const row = rowFor(email);
+                        saveStatus(email, WORD[el.value], row.querySelector("input.note").value);
+                      } else if (el.hasAttribute("data-note")) {
+                        const email = el.getAttribute("data-note");
+                        const code = se.st[IDX[email]];
+                        saveStatus(email, WORD[code], el.value);
+                      }
+                    });
+
+                    setInterval(tick, 1000);
+                    tick();
+                    loadDash();
     </script>
   </body>
 </html>
