@@ -27,6 +27,7 @@ const SHEETS = {
   ADMINS: "Admins",
   ADJUSTMENTS: "Adjustments",
   SCHEDULE: "Schedule",
+  NOTES: "StudentNotes",
 };
 
 const HEADERS = {
@@ -64,6 +65,7 @@ const HEADERS = {
     "room",
     "updatedAt",
   ],
+  StudentNotes: ["email", "note", "updatedAt"],
 };
 
 // รหัสสถานะในรายงาน: p=มาเรียน l=มาสาย v=ลา a=ขาด
@@ -1580,6 +1582,7 @@ function deleteStudent(email, cls) {
 
     if (rowIndex === -1) throw new Error("ไม่พบข้อมูลนักเรียนในระบบ");
     sh.deleteRow(rowIndex);
+    deleteNote_(email);
     clearCache();
   } finally {
     lock.releaseLock();
@@ -1820,4 +1823,91 @@ function escXml_(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function notesSheet_() {
+  const ss = db_();
+  let sh = ss.getSheetByName(SHEETS.NOTES);
+  if (!sh) {
+    sh = ss.insertSheet(SHEETS.NOTES);
+    const head = HEADERS.StudentNotes;
+    sh.getRange(1, 1, 1, head.length).setValues([head]).setFontWeight("bold");
+    sh.setFrozenRows(1);
+    sh.getRange("B:B").setNumberFormat("@"); // เก็บเป็นข้อความล้วน กันข้อความขึ้นต้นด้วย = ถูกตีเป็นสูตร
+  }
+  return sh;
+}
+
+function noteKey_(e) {
+  return String(e || "")
+    .trim()
+    .toLowerCase();
+}
+
+function readNotes_() {
+  const sh = notesSheet_();
+  const last = sh.getLastRow();
+  const map = {};
+  if (last < 2) return map;
+  sh.getRange(2, 1, last - 1, 2)
+    .getValues()
+    .forEach(function (r) {
+      const k = noteKey_(r[0]);
+      if (k && r[1]) map[k] = String(r[1]);
+    });
+  return map;
+}
+
+function getStudentNotes() {
+  requireAdmin_();
+  return readNotes_();
+}
+
+function saveStudentNote(email, note, oldEmail) {
+  requireAdmin_();
+  const key = noteKey_(email);
+  const oldKey = noteKey_(oldEmail) || key;
+  note = String(note || "")
+    .trim()
+    .slice(0, 500);
+  if (!key) throw new Error("ไม่พบอีเมลนักเรียน");
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    const sh = notesSheet_();
+    const last = sh.getLastRow();
+    let row = 0;
+    if (last >= 2) {
+      const emails = sh.getRange(2, 1, last - 1, 1).getValues();
+      for (let i = 0; i < emails.length; i++) {
+        if (noteKey_(emails[i][0]) === oldKey) {
+          row = i + 2;
+          break;
+        }
+      }
+    }
+    if (!note) {
+      if (row) sh.deleteRow(row);
+    } else if (row) {
+      sh.getRange(row, 1, 1, 3).setValues([[key, note, new Date()]]);
+    } else {
+      sh.appendRow([key, note, new Date()]);
+    }
+  } finally {
+    lock.releaseLock();
+  }
+  return readNotes_();
+}
+
+// ใช้ลบหมายเหตุเมื่อลบนักเรียน (เรียกจาก deleteStudent)
+function deleteNote_(email) {
+  const key = noteKey_(email);
+  const sh = notesSheet_();
+  const last = sh.getLastRow();
+  if (last < 2) return;
+  const emails = sh.getRange(2, 1, last - 1, 1).getValues();
+  for (let i = emails.length - 1; i >= 0; i--) {
+    if (noteKey_(emails[i][0]) === key) sh.deleteRow(i + 2);
+  }
 }

@@ -122,6 +122,9 @@ function api(auth, fn, args) {
     addStudent: addStudent,
     updateStudent: updateStudent,
     deleteStudent: deleteStudent,
+    //หมายเหตุนักเรียน
+    getStudentNotes: getStudentNotes,
+    saveStudentNote: saveStudentNote,
     //exportเป็นexcel
     downloadExcelReport: downloadExcelReport,
   };

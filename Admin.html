@@ -1446,6 +1446,25 @@
             <label for="editEmail">อีเมลนักเรียน</label>
             <input id="editEmail" type="email" maxlength="100" />
           </div>
+          <div>
+            <label for="editNote">📝 หมายเหตุ (เห็นเฉพาะแอดมิน)</label>
+            <textarea
+              id="editNote"
+              maxlength="500"
+              rows="3"
+              placeholder="เช่น ชื่อเล่น, พฤติกรรมที่ควรระวัง, ข้อมูลอื่น ๆ"
+              style="
+                width: 100%;
+                padding: 8px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                background: var(--card);
+                color: var(--text);
+                font: inherit;
+                resize: vertical;
+              "
+            ></textarea>
+          </div>
           <div class="row" style="margin-top: 4px; display: flex; gap: 8px">
             <button
               data-a="update-student"
@@ -1586,6 +1605,9 @@
                     let CLASSES = [], ME = null, SCHED = [], SUM = null, LOADED = false;
                     let SLOT = null, LAST_KEY = "", MOB_DAY_SET = false;
                     let STUDENTS_DATA = { classes: [], currentClass: "", students: [] };
+                    let NOTES = {};
+
+                    function noteKey(e) { return String(e || "").trim().toLowerCase(); }
 
                     const $ = function (id) { return document.getElementById(id); };
                     const esc = function (s) {
@@ -1690,8 +1712,11 @@
                       const clsSel = $("studentClassFilter");
                       const cls = clsSel ? clsSel.value : "";
                       $("studentErr").hidden = true;
-                      run("getStudentsPage", cls)
-                        .then(applyStudentsData)
+                      Promise.all([run("getStudentsPage", cls), run("getStudentNotes")])
+                        .then(function (r) {
+                          NOTES = r[1] || {};
+                          applyStudentsData(r[0]);
+                        })
                         .catch(function (e) { showErr(e, "studentErr"); });
                     }
 
@@ -1703,8 +1728,10 @@
                       }
                       let h = '<table><thead><tr><th>เลขที่</th><th>ชื่อ - นามสกุล</th><th>อีเมล</th></tr></thead><tbody>';
                       list.forEach(function (s) {
+                        const note = NOTES[noteKey(s.email)] || "";
+                        const badge = note ? ' <span title="' + esc(note) + '">📝</span>' : '';
                         h += '<tr class="click" title="กดเพื่อแก้ไข/ลบ" data-a="edit-student" data-email="' + esc(s.email) + '" data-id="' + esc(s.studentId) + '" data-name="' + esc(s.name) + '" data-cls="' + esc(s.cls) + '">' +
-                            '<td class="num"><b>' + esc(s.studentId) + '</b></td><td>' + esc(s.name) + '</td><td>' + esc(s.email) + '</td></tr>';
+                          '<td class="num"><b>' + esc(s.studentId) + '</b></td><td>' + esc(s.name) + badge + '</td><td>' + esc(s.email) + '</td></tr>';
                       });
                       h += '</tbody></table>';
                       box.innerHTML = h;
@@ -1713,10 +1740,12 @@
                     function filterStudentTable() {
                       const kw = $("studentSearch").value.trim().toLowerCase();
                       const filtered = STUDENTS_DATA.students.filter(function (s) {
+                        const note = (NOTES[noteKey(s.email)] || "").toLowerCase();
                         return !kw ||
                           String(s.studentId).toLowerCase().indexOf(kw) >= 0 ||
                           String(s.name).toLowerCase().indexOf(kw) >= 0 ||
-                          String(s.email).toLowerCase().indexOf(kw) >= 0;
+                          String(s.email).toLowerCase().indexOf(kw) >= 0 ||
+                          note.indexOf(kw) >= 0;
                       });
                       renderStudentTable(filtered);
                     }
@@ -1772,9 +1801,11 @@
                       $("editName").value = dataset.name;
                       populateClassDropdowns(dataset.cls);
                       $("editEmail").value = dataset.email;
+                      $("editNote").value = NOTES[noteKey(dataset.email)] || "";
                       $("editModalErr").hidden = true;
                       $("editStudentModal").hidden = false;
                     }
+
                     function closeEditStudentModal() { $("editStudentModal").hidden = true; }
 
                     function saveUpdateStudent() {
@@ -1783,6 +1814,7 @@
                       const name = $("editName").value.trim();
                       const cls = getSelectedClassValue('edit');
                       const email = $("editEmail").value.trim();
+                      const note = $("editNote").value.trim();
 
                       if (!studentId || !name || !cls || !email) {
                         showErr("กรุณากรอกข้อมูลให้ครบทุกช่อง", "editModalErr");
@@ -1790,7 +1822,19 @@
                       }
                       $("editModalErr").hidden = true;
                       $("btnUpdateStudent").disabled = true;
+
+                      const oldNote = NOTES[noteKey(oldEmail)] || "";
+                      const emailChanged = noteKey(oldEmail) !== noteKey(email);
+                      const needSaveNote = (note !== oldNote) || (emailChanged && oldNote);
+
                       run("updateStudent", oldEmail, studentId, name, cls, email)
+                        .then(function (res) {
+                          if (!needSaveNote) return res;
+                          return run("saveStudentNote", email, note, oldEmail).then(function (notes) {
+                            NOTES = notes || {};
+                            return res;
+                          });
+                        })
                         .then(function (res) {
                           $("btnUpdateStudent").disabled = false;
                           closeEditStudentModal();
