@@ -11,7 +11,7 @@
 
 const CONFIG = {
   SLOT_SECONDS: 15, // QR เปลี่ยนทุกกี่วินาที
-  GRACE_SLOTS: 2, // ยอมรับโทเค็นของรอบก่อนหน้ากี่รอบ (กันสแกนช้าและเผื่อเวลาระบบทำงาน) => อายุจริง 15-30 วินาที
+  GRACE_SLOTS: 2, // ยอมรับโทเค็นของรอบก่อนหน้ากี่รอบ (กันสแกนช้าและเผื่อเวลาระบบทำงาน) => อายุจริงประมาณ 45 วินาที
   DEFAULT_MINUTES: 5, // เวลาเปิดรับเช็กชื่อ
   MAX_MINUTES: 30,
   TZ: "Asia/Bangkok",
@@ -105,6 +105,7 @@ function setup() {
   ss.getSheetByName(SHEETS.SCHEDULE).getRange("E:G").setNumberFormat("@");
   // รายชื่อนักเรียน: ทุกคอลัมน์เป็นข้อความล้วน (เก็บเลขศูนย์นำหน้า เช่น 0123 ได้)
   ss.getSheetByName(SHEETS.STUDENTS).getRange("A:D").setNumberFormat("@");
+  ss.getSheetByName(SHEETS.ATTENDANCE).getRange("E:E").setNumberFormat("@");
   clearCache();
 }
 
@@ -630,9 +631,10 @@ function startSession(cls, minutes) {
 
 /** คืน URL ของ QR รอบปัจจุบัน + เวลาที่เหลือก่อนต้องเปลี่ยน */
 function getToken(sessionId) {
-  requireTeacher_();
+  const email = requireTeacher_();
   const s = getSession_(sessionId);
   if (!s || !isOpen_(s)) return { closed: true };
+  assertOwner_(s, email);
   const ms = CONFIG.SLOT_SECONDS * 1000;
   const slot = slotNow_();
   return {
@@ -648,9 +650,10 @@ function getToken(sessionId) {
 }
 
 function getStatus(sessionId) {
-  requireTeacher_();
+  const email = requireTeacher_();
   const s = getSession_(sessionId);
   if (!s) throw new Error("ไม่พบรอบเช็กชื่อ");
+  assertOwner_(s, email);
   const roster = students_().filter(function (x) {
     return x.cls === s.cls;
   });
@@ -693,9 +696,10 @@ function getStatus(sessionId) {
 }
 
 function stopSession(sessionId) {
-  requireTeacher_();
+  const email = requireTeacher_();
   const s = getSession_(sessionId);
   if (!s) throw new Error("ไม่พบรอบเช็กชื่อ");
+  assertOwner_(s, email);
   s.status = "closed";
   s.end = Math.min(s.end, Date.now());
   const sh = sheet_(SHEETS.SESSIONS);
@@ -707,9 +711,10 @@ function stopSession(sessionId) {
 
 /** อาจารย์ติ๊กให้เอง (นักเรียนไม่มีมือถือ / เน็ตมีปัญหา) */
 function markManual(sessionId, email) {
-  requireTeacher_();
+  const me = requireTeacher_();
   const s = getSession_(sessionId);
   if (!s) throw new Error("ไม่พบรอบเช็กชื่อ");
+  assertOwner_(s, me);
   const st = students_().filter(function (x) {
     return x.email === String(email).toLowerCase() && x.cls === s.cls;
   })[0];
@@ -732,7 +737,10 @@ function markManual(sessionId, email) {
 
 /** ยกเลิกการเช็กชื่อของนักเรียนคนหนึ่ง (กรณีตรวจพบการเช็กแทน) */
 function removeAttendance(sessionId, email) {
-  requireTeacher_();
+  const me = requireTeacher_();
+  const s0 = getSession_(sessionId);
+  if (!s0) throw new Error("ไม่พบรอบเช็กชื่อ");
+  assertOwner_(s0, me);
   email = String(email).toLowerCase();
   const lock = LockService.getScriptLock();
   lock.waitLock(15000);
@@ -759,6 +767,12 @@ function removeAttendance(sessionId, email) {
     lock.releaseLock();
   }
   return { ok: true };
+}
+
+/** ป้องกันอาจารย์แก้ไขของการเช็กชื่อของอาจารย์ท่านอื่น เว้นแต่เป็นผู้ดูแลระบบที่จะทำได้ */
+function assertOwner_(s, email) {
+  if (String(s.teacher).trim().toLowerCase() !== email && !isAdmin_(email))
+    throw new Error("รอบเช็กชื่อนี้เป็นของอาจารย์ท่านอื่น");
 }
 
 /* ===================== ฝั่งนักเรียน ===================== */
@@ -1238,14 +1252,15 @@ function saveSchedule(day, fromP, toP, cls, subject, room) {
   return { schedule: mySchedule_(email) };
 }
 
-function deleteSchedule(day, period) {
+function deleteSchedule(day, fromP, toP) {
   const email = String(requireAdmin_()).toLowerCase();
   day = Number(day);
-  period = Number(period);
+  fromP = Number(fromP);
+  toP = Number(toP) || fromP;
   const lock = LockService.getScriptLock();
   lock.waitLock(15000);
   try {
-    removeSlots_(email, day, period, period);
+    removeSlots_(email, day, fromP, toP);
   } finally {
     lock.releaseLock();
   }
@@ -1588,241 +1603,6 @@ function deleteStudent(email, cls) {
     lock.releaseLock();
   }
   return getStudentsPage(cls);
-}
-
-function downloadExcelReport(cls, from, to) {
-  requireAdmin_();
-  const report = getReport(cls, from, to);
-  const sessions = report.sessions;
-  const students = report.students;
-
-  const THAI_MONTHS = [
-    "มกราคม",
-    "กุมภาพันธ์",
-    "มีนาคม",
-    "เมษายน",
-    "พฤษภาคม",
-    "มิถุนายน",
-    "กรกฎาคม",
-    "สิงหาคม",
-    "กันยายน",
-    "ตุลาคม",
-    "พฤศจิกายน",
-    "ธันวาคม",
-  ];
-  const DOW = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
-
-  // แยกปี/เดือน/วัน จากข้อความ yyyy-MM-dd โดยตรง (ไม่พึ่ง locale ของเซิร์ฟเวอร์)
-  function parseDate_(str) {
-    const p = String(str).split("-");
-    const y = +p[0],
-      m = +p[1],
-      d = +p[2];
-    return {
-      y: y,
-      m: m,
-      d: d,
-      dow: new Date(Date.UTC(y, m - 1, d)).getUTCDay(),
-    };
-  }
-
-  // ---------- จัดกลุ่ม: เดือน -> วัน -> คาบ (เหมือนหน้าเว็บ) ----------
-  const monthMap = {};
-  const monthOrder = [];
-  sessions.forEach(function (se) {
-    const dt = parseDate_(se.date);
-    const mKey = se.date.substring(0, 7);
-    if (!monthMap[mKey]) {
-      monthMap[mKey] = {
-        name: THAI_MONTHS[dt.m - 1] + " " + (dt.y + 543),
-        days: {},
-        dayOrder: [],
-        count: 0,
-      };
-      monthOrder.push(mKey);
-    }
-    const m = monthMap[mKey];
-    if (!m.days[se.date]) {
-      m.days[se.date] = { dt: dt, sessions: [] };
-      m.dayOrder.push(se.date);
-    }
-    m.days[se.date].sessions.push(se);
-    m.count++;
-  });
-
-  // ---------- ลิสต์คอลัมน์แบบแบน (ใช้ร่วมกันทั้ง header และข้อมูล) ----------
-  // ms/me = ขอบซ้าย/ขวาของเดือน (เข้ม), ds/de = ขอบซ้าย/ขวาของวัน (จางกว่า)
-  const cols = [];
-  monthOrder.forEach(function (mKey) {
-    const m = monthMap[mKey];
-    m.dayOrder.forEach(function (dateKey, dIdx) {
-      const items = m.days[dateKey].sessions;
-      items.forEach(function (se, sIdx) {
-        const b = [];
-        if (sIdx === 0) b.push(dIdx === 0 ? "ms" : "ds");
-        if (sIdx === items.length - 1)
-          b.push(dIdx === m.dayOrder.length - 1 ? "me" : "de");
-        cols.push({ se: se, border: b.join(" ") });
-      });
-    });
-  });
-
-  // ---------- ตำแหน่งคอลัมน์ / แถว ----------
-  function colLetter(colIdx) {
-    let temp,
-      letter = "";
-    while (colIdx >= 0) {
-      temp = colIdx % 26;
-      letter = String.fromCharCode(temp + 65) + letter;
-      colIdx = Math.floor(colIdx / 26) - 1;
-    }
-    return letter;
-  }
-
-  const startRow = 4; // แถว 1-3 = หัวตาราง, นักเรียนเริ่มแถว 4
-  const startColIdx = 3; // คอลัมน์ D
-  const endColIdx = startColIdx + cols.length - 1;
-  const startColLet = colLetter(startColIdx);
-  const endColLet = colLetter(endColIdx);
-
-  // ลำดับคอลัมน์สรุป ตรงกับหน้าเว็บ: ทั้งหมด, มา, สาย, ขาด, ลา, รวมไม่มา, ร้อยละ
-  const totalCol = colLetter(endColIdx + 1);
-  const presentCol = colLetter(endColIdx + 2);
-  const lateCol = colLetter(endColIdx + 3);
-  const absentCol = colLetter(endColIdx + 4);
-  const leaveCol = colLetter(endColIdx + 5);
-  const notComeCol = colLetter(endColIdx + 6);
-
-  // ---------- CSS ----------
-  let html =
-    '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">\n<head>\n<meta http-equiv="content-type" content="text/html; charset=UTF-8">\n<style>\n' +
-    "table { border-collapse: collapse; font-family: sans-serif; font-size: 11pt; }\n" +
-    "th, td { border: 1px solid #cbd5e1; padding: 4px 6px; text-align: center; vertical-align: middle; }\n" +
-    "th { background-color: #2563eb; color: #ffffff; font-weight: bold; }\n" +
-    "th.h1 { background-color: #1e3a8a; }\n" +
-    "th.h3 { background-color: #dbeafe; color: #1e3a8a; font-size: 10pt; }\n" +
-    ".name { text-align: left; }\n" +
-    "td.s { border: 1px solid #eceff7; }\n" +
-    "td.p { color: #16a34a; }\n" +
-    "td.l { color: #d97706; font-weight: bold; }\n" +
-    "td.v { color: #2563eb; font-weight: bold; }\n" +
-    "td.a { color: #dc2626; font-weight: bold; }\n" +
-    "td.ds { border-left: 1px solid #94a3b8; }\n" +
-    "td.de { border-right: 1px solid #94a3b8; }\n" +
-    "td.ms { border-left: 2px solid #475569; }\n" +
-    "td.me { border-right: 2px solid #475569; }\n" +
-    "</style>\n</head>\n<body>\n<table>\n";
-
-  // ความกว้างคอลัมน์
-  html += '<colgroup><col width="40"><col width="60"><col width="200">';
-  cols.forEach(function () {
-    html += '<col width="38">';
-  });
-  html +=
-    '<col width="55"><col width="45"><col width="45"><col width="45"><col width="45"><col width="65"><col width="60"></colgroup>\n';
-
-  // ---------- Header แถว 1: เดือน ----------
-  html +=
-    '<tr>\n<th rowspan="3" class="h1">ลำดับ</th>\n<th rowspan="3" class="h1">เลขที่</th>\n<th rowspan="3" class="h1">ชื่อ-สกุล</th>\n';
-  monthOrder.forEach(function (mKey) {
-    const m = monthMap[mKey];
-    html +=
-      '<th colspan="' + m.count + '" class="h1">' + escXml_(m.name) + "</th>\n";
-  });
-  ["ทั้งหมด", "มา", "สาย", "ขาด", "ลา", "รวมไม่มา", "ร้อยละ"].forEach(
-    function (t) {
-      html += '<th rowspan="3" class="h1">' + t + "</th>\n";
-    },
-  );
-  html += "</tr>\n";
-
-  // ---------- Header แถว 2: วัน (คลุมทุกคาบของวันนั้น) ----------
-  html += "<tr>\n";
-  monthOrder.forEach(function (mKey) {
-    const m = monthMap[mKey];
-    m.dayOrder.forEach(function (dateKey) {
-      const day = m.days[dateKey];
-      html +=
-        '<th colspan="' +
-        day.sessions.length +
-        '">' +
-        DOW[day.dt.dow] +
-        " " +
-        day.dt.d +
-        "</th>\n";
-    });
-  });
-  html += "</tr>\n";
-
-  // ---------- Header แถว 3: คาบ ----------
-  html += "<tr>\n";
-  cols.forEach(function (col) {
-    const se = col.se;
-    const label = se.period ? "คาบ " + se.period : se.time || "";
-    html += '<th class="h3">' + escXml_(String(label)) + "</th>\n";
-  });
-  html += "</tr>\n";
-
-  // ---------- แถวนักเรียน ----------
-  students.forEach(function (s, idx) {
-    const r = startRow + idx;
-    const range = startColLet + r + ":" + endColLet + r;
-
-    html += "<tr>\n";
-    html += "<td>" + (idx + 1) + "</td>\n";
-    html += "<td>" + escXml_(s.studentId) + "</td>\n";
-    html += '<td class="name">' + escXml_(s.name) + "</td>\n";
-
-    cols.forEach(function (col) {
-      const code = col.se.st[idx];
-      let sym = "";
-      if (code === "p") sym = "/";
-      else if (code === "l") sym = "ส";
-      else if (code === "v") sym = "ล";
-      else if (code === "a") sym = "ข";
-      const cssCls =
-        "s" + (sym ? " " + code : "") + (col.border ? " " + col.border : "");
-      html += '<td class="' + cssCls + '">' + sym + "</td>\n";
-    });
-
-    // สูตรสรุปผล (ลำดับตรงกับหน้าเว็บ)
-    html += "<td>=COUNTA(" + range + ")</td>\n"; // ทั้งหมด
-    html += "<td>=COUNTIF(" + range + ',"/")</td>\n'; // มา
-    html += "<td>=COUNTIF(" + range + ',"ส")</td>\n'; // สาย
-    html += "<td>=COUNTIF(" + range + ',"ข")</td>\n'; // ขาด
-    html += "<td>=COUNTIF(" + range + ',"ล")</td>\n'; // ลา
-    html += "<td>=" + leaveCol + r + "+" + absentCol + r + "</td>\n"; // รวมไม่มา = ลา + ขาด
-    html +=
-      "<td>=IF(" +
-      totalCol +
-      r +
-      "&gt;0,ROUND((" +
-      presentCol +
-      r +
-      "+" +
-      lateCol +
-      r +
-      ")/" +
-      totalCol +
-      r +
-      "*100,1),0)</td>\n"; // ร้อยละ
-    html += "</tr>\n";
-  });
-
-  html += "</table>\n</body>\n</html>";
-
-  return {
-    filename: "attendance_" + cls.replace(/[^\wก-๙.-]+/g, "_") + ".xls",
-    content: Utilities.base64Encode(html, Utilities.Charset.UTF_8),
-  };
-}
-
-function escXml_(str) {
-  return String(str || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 function notesSheet_() {

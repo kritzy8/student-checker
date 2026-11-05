@@ -74,6 +74,12 @@
         color: var(--mute);
         font-size: 12px;
       }
+      .row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: end;
+      }
       .nav {
         display: flex;
         gap: 10px;
@@ -365,10 +371,9 @@
 
       .report-filter {
         display: grid;
-        grid-template-columns: minmax(160px, 1.2fr) minmax(140px, 1fr) minmax(
-            140px,
-            1fr
-          ) auto;
+        grid-template-columns:
+          minmax(160px, 1.2fr) minmax(140px, 1fr) minmax(140px, 1fr)
+          auto;
         gap: 12px;
         align-items: end;
         width: 100%;
@@ -952,7 +957,9 @@
         padding: 4px;
       }
       .tt td.brkcell span {
+        display: inline-block;
         writing-mode: vertical-rl;
+        text-orientation: mixed;
         letter-spacing: 0.05em;
       }
       .tt .cell {
@@ -1364,7 +1371,7 @@
                 border: 1px solid var(--line);
                 border-radius: 8px;
                 background: var(--card);
-                color: var(--text);
+                color: var(--ink);
               "
             >
               <!-- ตัวเลือกห้องจะถูกเติมด้วย JavaScript -->
@@ -1428,7 +1435,7 @@
                 border: 1px solid var(--line);
                 border-radius: 8px;
                 background: var(--card);
-                color: var(--text);
+                color: var(--ink);
               "
             >
               <!-- ตัวเลือกห้องจะถูกเติมด้วย JavaScript -->
@@ -1459,7 +1466,7 @@
                 border: 1px solid var(--line);
                 border-radius: 8px;
                 background: var(--card);
-                color: var(--text);
+                color: var(--ink);
                 font: inherit;
                 resize: vertical;
               "
@@ -1685,7 +1692,8 @@
                         el.innerHTML = '';
                         CLASSES.forEach(function(c) {
                           const opt = document.createElement('option');
-                          opt.value = opt.textContent = c;
+                          opt.value = c;
+                          opt.textContent = id === "studentClassFilter" ? "ห้อง " + c : c;
                           el.appendChild(opt);
                         });
                         if (CLASSES.includes(currentVal)) {
@@ -2046,8 +2054,7 @@
         return sel.value;
       }
 
-                    function renderSched() {
-        const slots = (typeof SCHED !== "undefined" ? SCHED : []) || (DATA && DATA.schedule) || [];
+      function renderSched() {
         const days = [1, 2, 3, 4, 5]; // จันทร์ - ศุกร์
         const today = new Date().getDay();
 
@@ -2073,10 +2080,10 @@
 
           // ดึงคาบเรียนจริงเฉพาะคาบ (t === "c") โดยใช้ฟังก์ชัน slotOf ดั้งเดิมของระบบ
           const daySlots = [];
-          PERIODS.forEach(function (p) {
+          PERIODS.forEach(function (p, pi) {
             if (p.t === "c") {
               const s = slotOf(dayNum, p.n);
-              daySlots.push({ p: p, s: s });
+              daySlots.push({ p: p, s: s, pi: pi });
             }
           });
 
@@ -2092,7 +2099,7 @@
 
             if (cur.s && cur.s.subject) {
               let j = i + 1;
-              while (j < daySlots.length && slotKey(daySlots[j].s) === curKey && (daySlots[j].p.n === daySlots[j - 1].p.n + 1)) {
+              while (j < daySlots.length && slotKey(daySlots[j].s) === curKey && (daySlots[j].pi === daySlots[j - 1].pi + 1)) {
                 span++;
                 j++;
               }
@@ -2113,7 +2120,7 @@
             if (p.t === "b") {
               // ให้เฉพาะแถวแรก (วันจันทร์) วาดช่องพักแบบ rowspan="5" ลากยาวลงมา
               if (dIdx === 0) {
-                h += '<td rowspan="5" class="brkcell" style="writing-mode: vertical-lr; text-orientation: mixed; text-align: center; vertical-align: middle; background: #f8fafc; color: #64748b; font-weight: 600; letter-spacing: 1px;">' + p.label + '</td>';
+                h += '<td rowspan="5" class="brkcell" style="background: #f8fafc; color: #64748b; font-weight: 600;"><span>' + p.label + '</span></td>';
               }
             } else {
               if (skipMap[p.n]) {
@@ -2142,6 +2149,13 @@
         });
 
         $("schedBox").innerHTML = h + "</tbody></table>";
+        if (!MOB_DAY_SET) {
+          const dw = new Date().getDay();
+          $("mobDaySel").value = String(dw >= 1 && dw <= 5 ? dw : 1);
+          MOB_DAY_SET = true;
+        }
+        renderMobileSched();
+
       }
 
                     function renderMobileSched() {
@@ -2163,12 +2177,29 @@
                       $("mobileSchedBox").innerHTML = h;
                     }
 
+                    function blockEnd(day, n) {
+                      const s = slotOf(day, n);
+                      if (!s) return n;
+                      const key = function (x) { return [x.subject, x.cls, x.room].join("|"); };
+                      const cs = [];
+                      PERIODS.forEach(function (p, i) { if (p.t === "c") cs.push({ n: p.n, i: i }); });
+                      let k = 0, end = n;
+                      while (k < cs.length && cs[k].n !== n) k++;
+                      for (k = k + 1; k < cs.length; k++) {
+                        const t = slotOf(day, cs[k].n);
+                        if (cs[k].i !== cs[k - 1].i + 1 || !t || key(t) !== key(s)) break;
+                        end = cs[k].n;
+                      }
+                      return end;
+                    }
+
                     function openSlot(day, n) {
                       SLOT = { day: day, p: n };
                       const s = slotOf(day, n) || {};
                       const per = PERIODS.filter(function (x) { return x.n === n; })[0];
+                      const endN = s.subject ? blockEnd(day, n) : n;
                       const opts = PERIODS.filter(function (x) { return x.t === "c" && x.n >= n; }).map(function (x) {
-                        return '<option value="' + x.n + '">คาบ ' + x.n + " (สิ้นสุด " + x.e + ")</option>";
+                        return '<option value="' + x.n + '"' + (x.n === endN ? " selected" : "") + '>คาบ ' + x.n + " (สิ้นสุด " + x.e + ")</option>";
                       }).join("");
                       $("sPanel").innerHTML =
                         '<div class="top"><h2 style="margin:0; font-size:16px;">วัน' + DAY_LABEL[day] + " · คาบ " + n + ' <span class="hint">(' + per.s + "–" + per.e + ')</span></h2><button class="ghost small" data-a="sclose">ปิด</button></div>' +
@@ -2204,7 +2235,7 @@
                     }
                     function deleteSlot() {
                       $("btnSDel").disabled = true;
-                      run("deleteSchedule", SLOT.day, SLOT.p)
+                      run("deleteSchedule", SLOT.day, SLOT.p, blockEnd(SLOT.day, SLOT.p))
                         .then(afterSlotChange)
                         .catch(function (e) { $("btnSDel").disabled = false; showErr(e, "sErr"); });
                     }
@@ -2424,7 +2455,7 @@
                     cols.forEach(function (col) {
                       const se = col.se;
                       const label = se.period ? "คาบ " + se.period : esc(se.time);
-                      head3 += '<th class="' + col.cls + '"title="' + esc(se.time || "") + '">' +
+                      head3 += '<th class="' + col.cls + '" title="' + esc(se.time || "") + '">' +
                         '<span class="hint" style="font-size:11px">' + label + "</span></th>";
                     });
                     head3 += "</tr>";
@@ -2562,7 +2593,7 @@
                         "</div>" +
                         '<div class="cellbox">' +
                           '<div><b>' + esc(s.name) + "</b></div>" +
-                          '<div class="hint">ห้อง ' + esc(DATA.cls) + " · เลขที่ " + (i + 1) + "</div>" +
+                          '<div class="hint">ห้อง ' + esc(DATA.cls) + " · เลขที่ " + esc(s.studentId) + "</div>" +
                           '<div style="margin-top:4px">สถานะตอนนี้: ' + chip(code) + (adjusted ? ' <span class="hint">✎ ผู้ดูแลปรับแก้</span>' : ' <span class="hint">(ตามระบบ)</span>') + "</div>" +
                           checkin +
                         "</div>" +

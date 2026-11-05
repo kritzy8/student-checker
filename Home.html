@@ -259,57 +259,5 @@
       </div>
       <? } ?>
     </main>
-    <script>
-      function getUserProfile() {
-        const email =
-          Session.getActiveUser().getEmail() ||
-          (typeof CURRENT_EMAIL_ !== "undefined" ? CURRENT_EMAIL_ : "");
-        // ใช้ฟังก์ชัน displayName_ ที่มีอยู่เดิมในระบบเพื่อดึงชื่อจาก Google Sheet
-        const name =
-          typeof displayName_ === "function"
-            ? displayName_(email)
-            : email.split("@")[0];
-        return {
-          email: email,
-          name: name,
-        };
-      }
-
-      // ฟังก์ชันยิง Google Apps Script (google.script.run)
-      function run(func, ...args) {
-        return new Promise((resolve, reject) => {
-          google.script.run
-            .withSuccessHandler(resolve)
-            .withFailureHandler(reject)
-            [func](...args);
-        });
-      }
-
-      // โหลดข้อมูลชื่อจาก Google Sheet เมื่อเปิดหน้าเว็บ
-      document.addEventListener("DOMContentLoaded", function () {
-        run("getUserProfile")
-          .then(function (profile) {
-            const h = new Date().getHours();
-            const greet =
-              h < 12
-                ? "สวัสดีตอนเช้า"
-                : h < 17
-                  ? "สวัสดีตอนบ่าย"
-                  : "สวัสดีตอนเย็น";
-
-            const displayName = profile.name ? profile.name : profile.email;
-            const el = document.getElementById("welcomeMsg");
-            if (el) {
-              el.textContent =
-                greet + " " + displayName + " (" + profile.email + ")";
-            }
-          })
-          .catch(function (err) {
-            console.error(err);
-            document.getElementById("welcomeMsg").textContent =
-              "ยินดีต้อนรับ (<?= email ?>)";
-          });
-      });
-    </script>
   </body>
 </html>

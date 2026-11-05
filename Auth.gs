@@ -125,8 +125,6 @@ function api(auth, fn, args) {
     //หมายเหตุนักเรียน
     getStudentNotes: getStudentNotes,
     saveStudentNote: saveStudentNote,
-    //exportเป็นexcel
-    downloadExcelReport: downloadExcelReport,
   };
   if (!Object.prototype.hasOwnProperty.call(FN, fn))
     throw new Error("ไม่อนุญาตให้เรียกฟังก์ชันนี้");

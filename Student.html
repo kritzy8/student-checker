@@ -126,20 +126,26 @@
       if (!SESSION_ID || !TOKEN) {
         set('bad', '!', 'ลิงก์ไม่ถูกต้อง', 'กรุณาสแกน QR Code จากหน้าจอหน้าห้องเรียนอีกครั้ง');
       } else {
-        google.script.run
-          .withSuccessHandler(function (r) {
-            if (r.ok) {
-              set('ok', '✓', r.already ? 'เช็กชื่อไว้แล้ว' : 'เช็กชื่อสำเร็จ',
-                r.name, 'เลขที่ ' + r.studentId + ' · ห้อง ' + r.cls + ' · ' + r.timeText);
-            } else {
-              set('bad', '✕', 'เช็กชื่อไม่สำเร็จ', r.msg);
-            }
-          })
-          .withFailureHandler(function (e) {
-            set('bad', '✕', 'เชื่อมต่อไม่ได้',
-              (e && e.message) ? e.message.replace(/^Error:\s*/, '') : 'ตรวจสอบอินเทอร์เน็ตแล้วสแกน QR Code ใหม่อีกครั้ง');
-          })
-          .api(AUTH, 'checkin', [SESSION_ID, TOKEN, deviceId()]);
+        (function go(attempt) {
+          google.script.run
+            .withSuccessHandler(function (r) {
+              if (r.ok) {
+                set('ok', '✓', r.already ? 'เช็กชื่อไว้แล้ว' : 'เช็กชื่อสำเร็จ',
+                  r.name, 'เลขที่ ' + r.studentId + ' · ห้อง ' + r.cls + ' · ' + r.timeText);
+              } else {
+                set('bad', '✕', 'เช็กชื่อไม่สำเร็จ', r.msg);
+              }
+            })
+            .withFailureHandler(function (e) {
+              const msg = (e && e.message) ? e.message.replace(/^Error:\s*/, '') : '';
+              if (attempt < 2 && /lock|timed out|timeout/i.test(msg)) {
+                setTimeout(function () { go(attempt + 1); }, 1500 + Math.random() * 1500);
+                return;
+              }
+              set('bad', '✕', 'เชื่อมต่อไม่ได้', msg || 'ตรวจสอบอินเทอร์เน็ตแล้วสแกน QR Code ใหม่อีกครั้ง');
+            })
+            .api(AUTH, 'checkin', [SESSION_ID, TOKEN, deviceId()]);
+        })(0);
       }
     </script>
   </body>
