@@ -1071,6 +1071,408 @@
           display: none !important;
         }
       }
+
+      /* ===== หน้าต่างสรุปรายบุคคล ===== */
+      .sp-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .sp-head h2 {
+        margin: 0 0 6px;
+        font-size: 19px;
+      }
+      .idchips {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .idchip {
+        background: var(--brandbg);
+        color: var(--brand);
+        font-size: 12.5px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 99px;
+      }
+      .sp-top {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 22px;
+        align-items: center;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #fafbfe;
+      }
+      .sp-donut {
+        text-align: center;
+      }
+      .sp-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .stat {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-left: 4px solid var(--c);
+        border-radius: 10px;
+        padding: 8px 12px;
+      }
+      .stat b {
+        display: block;
+        font-size: 20px;
+        line-height: 1.1;
+      }
+      .stat span {
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .sp-facts {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .fact {
+        font-size: 12.5px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 99px;
+        padding: 3px 10px;
+        color: var(--mute);
+      }
+      .fact b {
+        color: var(--ink);
+      }
+      .fact.warn {
+        background: var(--badbg);
+        border-color: var(--badbg);
+        color: var(--bad);
+      }
+      .fact.warn b {
+        color: var(--bad);
+      }
+      .sp-note {
+        margin-top: 10px;
+        padding: 8px 12px;
+        border-radius: 10px;
+        background: #fef3c7;
+        color: #b45309;
+        font-size: 13px;
+      }
+      .cal-month {
+        margin-top: 18px;
+      }
+      .cal-mh {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+      }
+      .cal-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+        gap: 8px;
+      }
+      .daycard {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 8px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .dc-head {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        flex-wrap: wrap;
+        line-height: 1.15;
+      }
+      .dc-dow {
+        font-size: 12px;
+        color: var(--mute);
+        font-weight: 600;
+      }
+      .dc-day {
+        font-size: 22px;
+        font-weight: 800;
+      }
+      .dc-my {
+        font-size: 11px;
+        color: var(--mute);
+        width: 100%;
+      }
+      .pchip {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 8px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid transparent;
+      }
+      .pchip:hover {
+        border-color: currentColor;
+      }
+      .pchip.solo {
+        justify-content: center;
+        padding: 9px 8px;
+        font-size: 13px;
+      }
+      .pchip .adj {
+        font-size: 11px;
+        opacity: 0.8;
+      }
+      .st-p {
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .st-l {
+        background: #fef3c7;
+        color: #b45309;
+      }
+      .st-v {
+        background: #dbeafe;
+        color: #1d4ed8;
+      }
+      .st-a {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      @media (max-width: 600px) {
+        .sp-top {
+          grid-template-columns: 1fr;
+          justify-items: center;
+        }
+        .sp-stats {
+          width: 100%;
+        }
+      }
+
+      /* Responsive, touch-friendly attendance chart */
+      .trend-period {
+        margin: 4px 0 14px;
+        color: var(--mute);
+        font-size: 13px;
+      }
+
+      .trend-scroll {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        padding: 6px 4px 10px;
+      }
+
+      .trend-track {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        min-width: 100%;
+      }
+
+      button.trend-bar {
+        display: flex;
+        flex: 1 0 48px;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        min-width: 48px;
+        margin: 0;
+        padding: 5px 4px 8px;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        background: transparent;
+        color: var(--ink);
+        font: inherit;
+        cursor: pointer;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      button.trend-bar.is-selected {
+        background: var(--brandbg);
+        border-color: #c7d7fc;
+      }
+
+      button.trend-bar:focus-visible {
+        outline: 3px solid rgba(37, 99, 235, 0.35);
+        outline-offset: 1px;
+      }
+
+      .trend-pct {
+        color: var(--mute);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.3;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .trend-bar.is-selected .trend-pct {
+        color: var(--brand);
+      }
+
+      .trend-stack {
+        display: flex;
+        flex-direction: column-reverse;
+        width: 100%;
+        max-width: 52px;
+        height: 176px;
+        overflow: hidden;
+        border-radius: 8px;
+        background: var(--line);
+      }
+
+      .trend-stack i {
+        display: block;
+        flex-shrink: 0;
+        width: 100%;
+      }
+
+      .trend-date {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        color: var(--mute);
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.35;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      .trend-date strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .trend-time {
+        font-size: 11px;
+      }
+
+      .trend-scroll-hint,
+      .trend-note,
+      .trend-tap-hint {
+        margin: 8px 0 0;
+        color: var(--mute);
+        font-size: 12px;
+      }
+
+      .trend-scroll-hint {
+        color: var(--brand);
+        text-align: right;
+      }
+
+      .trend-detail {
+        margin-top: 16px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--bg);
+      }
+
+      .trend-detail-heading {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 6px 12px;
+      }
+
+      .trend-detail-heading strong {
+        font-size: 15px;
+      }
+
+      .trend-detail-heading span {
+        color: var(--mute);
+        font-size: 12px;
+      }
+
+      .trend-detail-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .trend-stat {
+        padding: 10px 8px;
+        border-radius: 10px;
+        background: var(--card);
+      }
+
+      .trend-stat-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--mute);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .trend-stat-label i {
+        width: 8px;
+        height: 8px;
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+
+      .trend-stat b {
+        display: block;
+        margin-top: 4px;
+        color: var(--ink);
+        font-size: 21px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .trend-detail-rate {
+        margin: 12px 0 0;
+        color: var(--mute);
+        font-size: 13px;
+      }
+
+      .trend-detail-rate b {
+        color: var(--brand);
+      }
+
+      @media (hover: hover) {
+        button.trend-bar:hover {
+          background: var(--brandbg);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .trend-track {
+          gap: 6px;
+        }
+
+        .trend-stack {
+          height: 150px;
+        }
+
+        .trend-detail-stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      /* Green represents attendance; blue remains reserved for leave. */
+      .trend-detail-rate b {
+        color: var(--p);
+      }
     </style>
   </head>
   <body>
@@ -1129,7 +1531,7 @@
 
               <section class="card">
                 <div class="cardtop">
-                  <h2>สรุปการเข้าเรียน 7 วันล่าสุด</h2>
+                  <h2>สรุปการเข้าเรียน 30 วันล่าสุด</h2>
                   <button class="ghost small" data-a="dreload">รีเฟรช</button>
                 </div>
                 <div id="dKpi"></div>
@@ -1143,8 +1545,8 @@
               <section class="card">
                 <h2>นักเรียนที่ควรติดตาม</h2>
                 <div id="dWatch"></div>
-                <p class="hint">
-                  อัตราเข้าเรียนต่ำกว่าเกณฑ์ (มีข้อมูลอย่างน้อย 3 คาบ)
+                <p class="hint" style="margin-bottom: 0">
+                  มีอัตราเข้าเรียนต่ำกว่า 80% ในช่วง 30 วันย้อนหลัง
                 </p>
               </section>
             </div>
@@ -1329,7 +1731,7 @@
                   </div>
                 </div>
                 <div class="tablewrap" id="tableBox"></div>
-                <p class="hint" style="margin-top: 10px">
+                <p class="hint" style="margin-top: 10px; margin-bottom: 0">
                   อัตราเข้าเรียน = (มาเรียน + มาสาย) ÷ จำนวนทั้งหมด ·
                   การลาไม่นับเป็นเข้าเรียน
                 </p>
@@ -1574,7 +1976,7 @@
                           off += v;
                         });
                       }
-                      return '<svg viewBox="0 0 36 36" width="' + size + '" height="' + size + '" role="img" aria-label="กราฟวงกลมสถานะการเข้าเรียน">' + segs + '<text x="18" y="19.6" text-anchor="middle" font-size="6.5" font-weight="800" fill="currentColor">' + esc(label) + "</text></svg>";
+                      return '<svg viewBox="-1 -1 38 38" width="' + size + '" height="' + size + '" role="img" aria-label="กราฟวงกลมสถานะการเข้าเรียน">' + segs + '<text x="18" y="19.6" text-anchor="middle" font-size="6.5" font-weight="800" fill="currentColor">' + esc(label) + "</text></svg>";
                     }
 
                     function legend(c) {
@@ -1594,16 +1996,234 @@
                         "</span><span>" + (d.getFullYear() + 543) + "</span>";
                     }
 
-                    function vbars(rows) {
-                      return '<div class="bars">' + rows.map(function (r) {
-                        const t = total(r.c);
-                        const tip = r.label + " — " + KEYS.map(function (k) { return LABEL[k] + " " + r.c[k]; }).join(", ");
-                        return '<div class="vb" title="' + esc(tip) + '"><span class="pct num">' + pct(rateOf(r.c)) + "%</span>" +
-                          '<div class="stack">' + KEYS.map(function (k) {
-                            return r.c[k] ? '<i style="height:' + (r.c[k] / t) * 100 + "%;background:var(--" + k + ')"></i>' : "";
-                          }).join("") + '</div><span class="vl">' + dateLines(r.date) + "</span></div>";
-                      }).join("") + "</div>";
+                    let TREND_ROWS = [];
+
+                    function trendDateParts(value) {
+                      const d = new Date(value + "T00:00:00");
+
+                      return {
+                        weekday: DOW_S[d.getDay()],
+                        day: d.getDate(),
+                        month: MON_S[d.getMonth()],
+                        year: d.getFullYear() + 543
+                      };
                     }
+
+                    function trendFullDate(value) {
+                      const d = trendDateParts(value);
+
+                      return d.weekday + " " + d.day + " " + d.month + " " + d.year;
+                    }
+
+                    function trendPeriod(rows) {
+                      const dates = rows.map(function (r) {
+                        return r.date;
+                      }).sort();
+
+                      const first = trendDateParts(dates[0]);
+                      const last = trendDateParts(dates[dates.length - 1]);
+
+                      if (dates[0] === dates[dates.length - 1]) {
+                        return first.day + " " + first.month + " " + first.year;
+                      }
+
+                      if (first.month === last.month && first.year === last.year) {
+                        return first.day + "–" + last.day + " " +
+                          first.month + " " + first.year;
+                      }
+
+                      if (first.year === last.year) {
+                        return first.day + " " + first.month + " – " +
+                          last.day + " " + last.month + " " + last.year;
+                      }
+
+                      return first.day + " " + first.month + " " + first.year +
+                        " – " + last.day + " " + last.month + " " + last.year;
+                    }
+
+                    function trendSessionLabel(session) {
+                      if (!session || !session.time) return "";
+
+                      const time = String(session.time).trim();
+                      const match = time.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+
+                      if (!match) return time;
+
+                      const hours = Number(match[1]);
+                      const minutes = Number(match[2]);
+
+                      if (hours > 23 || minutes > 59) return time;
+
+                      const minuteOfDay = hours * 60 + minutes;
+
+                      const period = PERIODS.find(function (p) {
+                        return p.t === "c" &&
+                          minuteOfDay >= toMin(p.s) &&
+                          minuteOfDay < toMin(p.e);
+                      });
+
+                      return period ? "คาบ " + period.n : time;
+                    }
+
+                    function vbars(rows) {
+                      TREND_ROWS = rows;
+
+                      if (!rows.length) return "";
+
+                      const daily = !!rows[0].g;
+
+                      const barsHTML = rows.map(function (r, index) {
+                        const t = total(r.c);
+                        const percentage = t ? Math.round(rateOf(r.c)) + "%" : "—";
+                        const d = trendDateParts(r.date);
+
+                        const sessionLabel = trendSessionLabel(r.se);
+
+                        const time = sessionLabel
+                          ? '<span class="trend-time">' + esc(sessionLabel) + '</span>'
+                          : "";
+
+                        const accessibleLabel = trendFullDate(r.date) +
+                          (sessionLabel ? " " + sessionLabel : "") +
+                          " อัตราเข้าเรียน " + percentage +
+                          " กดเพื่อดูรายละเอียด";
+
+                        return (
+                          '<button type="button" class="trend-bar"' +
+                            ' data-trend-index="' + index + '"' +
+                            ' aria-pressed="false"' +
+                            ' aria-controls="trendDetail"' +
+                            ' aria-label="' + esc(accessibleLabel) + '">' +
+
+                            '<span class="trend-pct">' + percentage + '</span>' +
+
+                            '<span class="trend-stack" aria-hidden="true">' +
+                              KEYS.map(function (k) {
+                                return t && r.c[k]
+                                  ? '<i style="height:' + (r.c[k] / t * 100) +
+                                      '%;background:var(--' + k + ')"></i>'
+                                  : "";
+                              }).join("") +
+                            '</span>' +
+
+                            '<span class="trend-date">' +
+                              '<strong>' + esc(d.weekday + " " + d.day) + '</strong>' +
+                              '<span>' + esc(d.month) + '</span>' +
+                              time +
+                            '</span>' +
+
+                          '</button>'
+                        );
+                      }).join("");
+
+                      // Measure after the new chart has been inserted into the page.
+                      requestAnimationFrame(updateTrendScrollHint);
+
+                      return (
+                        '<p class="trend-period">' +
+                          esc(trendPeriod(rows)) +
+                          ' · ' + rows.length + (daily ? ' วัน' : ' คาบ') +
+                        '</p>' +
+
+                        '<div id="trendScroll" class="trend-scroll"' +
+                          ' role="region" aria-label="กราฟการเข้าเรียน เลื่อนดูข้อมูลเพิ่มเติม">' +
+                          '<div class="trend-track">' + barsHTML + '</div>' +
+                        '</div>' +
+
+                        '<p id="trendScrollHint" class="trend-scroll-hint" hidden>' +
+                          'เลื่อนดูข้อมูลเพิ่มเติม ↔' +
+                        '</p>' +
+
+                        '<p class="trend-note">' +
+                          (daily ? 'รวมทุกคาบของแต่ละวัน · ' : '') +
+                          'อัตราเข้าเรียน = (มาเรียน + มาสาย) ÷ จำนวนทั้งหมด' +
+                        '</p>' +
+
+                        '<p id="trendTapHint" class="trend-tap-hint">' +
+                          'แตะหรือคลิกแท่งกราฟเพื่อดูรายละเอียด' +
+                        '</p>' +
+
+                        '<div id="trendDetail" class="trend-detail"' +
+                          ' role="status" aria-live="polite" hidden></div>'
+                      );
+                    }
+
+                    function updateTrendScrollHint() {
+                      const scroll = $("trendScroll");
+                      const hint = $("trendScrollHint");
+
+                      if (!scroll || !hint) return;
+
+                      hint.hidden = scroll.scrollWidth <= scroll.clientWidth + 2;
+                    }
+
+                    function selectTrendBar(index) {
+                      const r = TREND_ROWS[index];
+                      const detail = $("trendDetail");
+
+                      if (!r || !detail) return;
+
+                      document.querySelectorAll("#bars button[data-trend-index]")
+                        .forEach(function (button) {
+                          const selected = Number(button.dataset.trendIndex) === index;
+
+                          button.classList.toggle("is-selected", selected);
+                          button.setAttribute("aria-pressed", String(selected));
+                        });
+
+                      const sessionCount = r.g ? r.g.sessions.length : 1;
+                      const sessionLabel = trendSessionLabel(r.se);
+
+                      const heading = trendFullDate(r.date) +
+                        (sessionLabel ? " · " + sessionLabel : "") +
+                        (sessionLabel.startsWith("คาบ ") ? " · " + r.se.time : "");
+
+                      const t = total(r.c);
+
+                      detail.innerHTML =
+                        '<div class="trend-detail-heading">' +
+                          '<strong>' + esc(heading) + '</strong>' +
+                          '<span>' + sessionCount + ' คาบ</span>' +
+                        '</div>' +
+
+                        '<div class="trend-detail-stats">' +
+                          KEYS.map(function (k) {
+                            return (
+                              '<div class="trend-stat">' +
+                                '<span class="trend-stat-label">' +
+                                  '<i style="background:var(--' + k + ')"></i>' +
+                                  esc(LABEL[k]) +
+                                '</span>' +
+                                '<b>' + esc(fmt(r.c[k])) + '</b>' +
+                              '</div>'
+                            );
+                          }).join("") +
+                        '</div>' +
+
+                        '<p class="trend-detail-rate">' +
+                          'อัตราเข้าเรียน <b>' +
+                            (t ? esc(pct(rateOf(r.c))) + "%" : "—") +
+                          '</b>' +
+                          (r.g
+                            ? ' · จำนวนสถานะรวมจากทุกคาบในวันนั้น ๆ'
+                            : '') +
+                        '</p>';
+
+                      detail.hidden = false;
+                      $("trendTapHint").hidden = true;
+                    }
+
+                    document.addEventListener("click", function (event) {
+                      const button = event.target.closest(
+                        "#bars button[data-trend-index]"
+                      );
+
+                      if (!button) return;
+
+                      selectTrendBar(Number(button.dataset.trendIndex));
+                    });
+
+                    window.addEventListener("resize", updateTrendScrollHint);
 
                     let DATA = null, TAB = "students", MODE = "day", SORT = "id";
                     let PANEL = null;
@@ -1613,6 +2233,8 @@
                     let SLOT = null, LAST_KEY = "", MOB_DAY_SET = false;
                     let STUDENTS_DATA = { classes: [], currentClass: "", students: [] };
                     let NOTES = {};
+                    let STU_SCROLL = 0;
+                    let DASH_BACKUP = null, DASH_DIRTY = false, DASH_REQ = 0;
 
                     function noteKey(e) { return String(e || "").trim().toLowerCase(); }
 
@@ -1897,7 +2519,20 @@
 
                     function renderHello() {
                       const h = new Date().getHours();
-                      const greet = h < 12 ? "สวัสดีตอนเช้า" : h < 17 ? "สวัสดีตอนบ่าย" : "สวัสดีตอนเย็น";
+                      let greet;
+
+                      if (h < 5 || h >= 20) {
+                        greet = "สวัสดีตอนค่ำ";
+                      } else if (h < 12) {
+                        greet = "สวัสดีตอนเช้า";
+                      } else if (h === 12) {
+                        greet = "สวัสดีตอนเที่ยง";
+                      } else if (h < 17) {
+                        greet = "สวัสดีตอนบ่าย";
+                      } else {
+                        greet = "สวัสดีตอนเย็น";
+                      }
+
                       const name = ME.name || ME.email.split("@")[0];
                       $("dHello").textContent = greet + " " + name;
                     }
@@ -1914,7 +2549,7 @@
                       btn.innerHTML = '<button class="ghost small" data-a="nav" data-v="sched">ดูตารางทั้งสัปดาห์</button>';
                       const now = new Date(), day = now.getDay(), ci = curIdx(now), m = nowMin(now);
                       if (day < 1 || day > 5) {
-                        box.innerHTML = '<div class="empty">วันนี้เป็นวันหยุดสุดสัปดาห์ ไม่มีคาบเรียน</div>';
+                        box.innerHTML = '<div class="empty">วันนี้เป็นวันหยุดสุดสัปดาห์ ไม่มีคาบสอน ได้เวลาพักผ่อน</div>';
                         sub.textContent = "วันนี้เป็นวันหยุดสุดสัปดาห์";
                         return;
                       }
@@ -1940,7 +2575,7 @@
                     function renderSummary() {
                       const s = SUM;
                       if (!s || !s.sessions) {
-                        $("dKpi").innerHTML = '<div class="empty">ยังไม่มีคาบเช็กชื่อที่เสร็จแล้วใน 7 วันล่าสุด</div>';
+                        $("dKpi").innerHTML = '<div class="empty">ยังไม่มีคาบเช็กชื่อที่เสร็จแล้วใน 30 วันล่าสุด</div>';
                         $("dClass").innerHTML = '<div class="empty">—</div>';
                         $("dWatch").innerHTML = '<div class="empty">—</div>';
                         return;
@@ -1961,14 +2596,14 @@
                       $("dWatch").innerHTML = s.watch.length
                         ? '<div class="tablewrap"><table><thead><tr><th>ชื่อ</th><th>ห้อง</th><th class="n">เข้าเรียน</th><th class="n">ขาด</th><th class="n">สาย</th></tr></thead><tbody>' +
                           s.watch.map(function (r) {
-                            return "<tr><td>" + esc(r.name) + "</td><td>" + esc(r.cls) + '</td><td class="n num low">' + pct(rateOf(r.c)) + '%</td><td class="n num">' + r.c.a + '</td><td class="n num">' + r.c.l + "</td></tr>";
+                            return '<tr class="click" title="กดเพื่อดูรายละเอียด" data-a="dstu" data-email="' + esc(r.email) + '" data-cls="' + esc(r.cls) + '"><td>' + esc(r.name) + "</td><td>" + esc(r.cls) + '</td><td class="n num low">' + pct(rateOf(r.c)) + '%</td><td class="n num">' + r.c.a + '</td><td class="n num">' + r.c.l + "</td></tr>";
                           }).join("") + "</tbody></table></div>"
                         : '<div class="empty">ไม่มีนักเรียนที่ต่ำกว่าเกณฑ์ ✓</div>';
                     }
 
                     function loadDash() {
                       const now = new Date(), from = new Date(now);
-                      from.setDate(from.getDate() - 6);
+                      from.setDate(from.getDate() - 29);
                       $("dErr").hidden = true;
                       return run("getDashboard", ymd(from), ymd(now))
                         .then(function (d) {
@@ -2296,6 +2931,7 @@
                       if (!$("cls").value) return;
                       $("err").hidden = true;
                       $("btnLoad").disabled = true;
+                      run("getStudentNotes").then(function (n) { NOTES = n || {}; }).catch(function () {});
                       run("getReport", $("cls").value, $("from").value, $("to").value)
                         .then(function (d) {
                           DATA = d;
@@ -2339,8 +2975,9 @@
                         '</div><p class="hint" style="margin-top:10px; text-align:center;">ช่วงที่เลือกมี ' + fmt(DATA.sessions.length) + " คาบ · นักเรียน " +
                         fmt(DATA.students.length) + " คน</p>";
 
-                      const rows = (MODE === "day" ? dayRows() : sessionRows()).slice(-40);
-                      $("barsTitle").textContent = MODE === "day" ? "แนวโน้มรายวัน" : "แนวโน้มรายคาบ";
+                      const rows = MODE === "day" ? dayRows() : sessionRows();
+                      $("barsTitle").textContent =
+                        MODE === "day" ? "การเข้าเรียนรายวัน" : "การเข้าเรียนรายคาบ";
                       $("bars").innerHTML = vbars(rows);
                       $("barLegend").innerHTML = KEYS.map(function (k) {
                         return '<div><span class="dot" style="background:var(--' + k + ')"></span>' + LABEL[k] + "</div>";
@@ -2508,11 +3145,60 @@
                   }
 
                     function openPanel(p) { PANEL = p; renderPanel(); $("overlay").hidden = false; }
-                    function closePanel() { PANEL = null; $("overlay").hidden = true; $("panel").innerHTML = ""; $("panel").classList.remove("sm"); }
+                    function closePanel() {
+                      DASH_REQ++;
+                      PANEL = null;
+                      $("overlay").hidden = true;
+                      $("panel").innerHTML = "";
+                      $("panel").classList.remove("sm");
+                      if (DASH_BACKUP) {
+                        DATA = DASH_BACKUP.DATA;
+                        IDX = DASH_BACKUP.IDX;
+                        DASH_BACKUP = null;
+                        if (DASH_DIRTY) { DASH_DIRTY = false; loadDash(); }
+                      }
+                    }
+
+                    function openStudentFromDash(email, cls) {
+                      const req = ++DASH_REQ;
+                      const now = new Date(), from = new Date(now);
+                      from.setDate(from.getDate() - 29);
+                      $("panel").classList.remove("sm");
+                      $("panel").innerHTML = '<div class="empty">กำลังโหลด…</div>';
+                      $("overlay").hidden = false;
+                      Promise.all([run("getReport", cls, ymd(from), ymd(now)), run("getStudentNotes")])
+                        .then(function (r) {
+                          if (req !== DASH_REQ || $("overlay").hidden) return;
+                          const d = r[0];
+                          NOTES = r[1] || NOTES;
+                          const idx = {};
+                          d.students.forEach(function (s, i) { idx[s.email] = i; });
+                          if (idx[email] === undefined) {
+                            closePanel();
+                            showErr("ไม่พบนักเรียนในรายงาน", "dErr");
+                            return;
+                          }
+                          if (!DASH_BACKUP) DASH_BACKUP = { DATA: DATA, IDX: IDX };
+                          DATA = d;
+                          IDX = idx;
+                          PANEL = { type: "student", email: email };
+                          renderPanel();
+                        })
+                        .catch(function (e) { closePanel(); showErr(e, "dErr"); });
+                    }
                     function renderPanel() {
                       if (!PANEL) return;
                       $("panel").innerHTML = PANEL.type === "session" ? sessionPanel() : PANEL.type === "cell" ? cellPanel() : studentPanel();
                       $("panel").classList.toggle("sm", PANEL.type === "cell");
+                      if (PANEL.type === "student") { $("panel").scrollTop = STU_SCROLL; STU_SCROLL = 0; }
+                    }
+                    function backOrClose() {
+                      if (PANEL && PANEL.type === "cell" && PANEL.from) {
+                        PANEL = { type: "student", email: PANEL.email };
+                        renderPanel();
+                        return;
+                      }
+                      closePanel();
                     }
 
             function sessionPanel() {
@@ -2585,7 +3271,7 @@
                       }).join("");
 
                       return '<div class="top"><h2 style="margin:0; font-size:16px;">แก้ไขสถานะการเข้าเรียน</h2>' +
-                        '<button class="ghost small" data-a="close">ปิด</button></div>' +
+                        '<button class="ghost small" data-a="close">' + (PANEL.from ? "← กลับ" : "ปิด") + '</button></div>' +
                         '<div class="cellinfo">' +
                           '<div><b style="font-size:16px">' + esc(subject) + "</b></div>" +
                           "<div>" + esc(periodText) + " · เริ่มเช็กชื่อ " + esc(se.time) + " น.</div>" +
@@ -2620,8 +3306,9 @@
                           se.ad = replaceAt(se.ad, i, r.adjusted ? "1" : "0");
                           if (note && r.adjusted) se.notes[email] = note;
                           else delete se.notes[email];
-                          closePanel();
-                          renderReport();
+                          const back = PANEL && PANEL.from;
+                          if (back) { PANEL = { type: "student", email: email }; renderPanel(); } else closePanel();
+                          if (DASH_BACKUP) DASH_DIRTY = true; else renderReport();
                         })
                         .catch(function (e) {
                           btn.disabled = false;
@@ -2630,19 +3317,77 @@
                         });
                     }
 
+                    function dayCard(dateStr, list, i, email) {
+                      const d = new Date(dateStr + "T00:00:00");
+                      const multi = list.length > 1;
+                      const SHORT = { p: "มา", l: "สาย", v: "ลา", a: "ขาด" };
+                      const head = '<div class="dc-head"><span class="dc-dow">' + DOW_S[d.getDay()] + '</span><b class="dc-day num">' + d.getDate() +
+                        '</b><span class="dc-my">' + MON_S[d.getMonth()] + " " + (d.getFullYear() + 543) + "</span></div>";
+                      const body = list.map(function (se) {
+                        const code = se.st[i];
+                        const adj = se.ad[i] === "1";
+                        const label = multi ? "คาบ " + (se.period || se.time) : LABEL[code];
+                        const tip = fmtDateDow(se.date) + " " + se.time + " · " + LABEL[code] + (adj ? " (ผู้ดูแลปรับแก้)" : "");
+                        return '<div class="pchip st-' + code + (multi ? "" : " solo") + ' click-cell" data-sid="' + esc(se.id) + '" data-email="' + esc(email) + '" title="' + esc(tip) + '">' +
+                          "<span>" + esc(label) + (adj && !multi ? ' <span class="adj">✎</span>' : "") + "</span>" +
+                          (multi ? "<span>" + SHORT[code] + (adj ? ' <span class="adj">✎</span>' : "") + "</span>" : "") + "</div>";
+                      }).join("");
+                      return '<div class="daycard">' + head + body + "</div>";
+                    }
+
                     function studentPanel() {
                       const i = IDX[PANEL.email];
                       const s = DATA.students[i];
                       const c = studentCounts(i);
-                      const hist = DATA.sessions.slice().reverse().map(function (se) {
-                        return '<div><span class="num" style="min-width:110px">' + esc(fmtDate(se.date)) + " " + esc(se.time) + "</span>" + chip(se.st[i]) +
-                          (se.ad[i] === "1" ? '<span class="hint">✎ ผู้ดูแลปรับแก้</span>' : "") +
-                          (se.notes[s.email] ? '<span class="hint">· ' + esc(se.notes[s.email]) + "</span>" : "") + "</div>";
+                      const t = total(c);
+                      const rate = rateOf(c);
+
+                      let run = 0, longestAbs = 0, adjusted = 0;
+                      DATA.sessions.forEach(function (se) {
+                        if (se.st[i] === "a") { run++; if (run > longestAbs) longestAbs = run; } else run = 0;
+                        if (se.ad[i] === "1") adjusted++;
+                      });
+
+                      const stats = KEYS.map(function (k) {
+                        return '<div class="stat" style="--c:var(--' + k + ')"><div><b class="num">' + c[k] + "</b><span>" + LABEL[k] +
+                          " · " + pct(t ? (c[k] / t) * 100 : 0) + "%</span></div></div>";
                       }).join("");
-                      return '<div class="top"><h2 style="margin:0; font-size:15px;">' + esc(s.name) + ' <span class="hint">(' + esc(s.studentId) + ")</span></h2>" +
-                        '<button class="ghost small" data-a="close">ปิด</button></div>' +
-                        '<div class="sumrow">' + donut(c, 110, pct(rateOf(c)) + "%") + legend(c) + "</div>" +
-                        '<div style="margin-top:10px">' + hbar(c) + '</div><div class="hist">' + hist + "</div>";
+
+                      const facts =
+                        '<span class="fact">คาบทั้งหมด <b class="num">' + t + "</b></span>" +
+                        '<span class="fact">ขาดติดต่อกันสูงสุด <b class="num">' + longestAbs + "</b> คาบ</span>" +
+                        '<span class="fact">ผู้ดูแลปรับแก้ <b class="num">' + adjusted + "</b> คาบ</span>" +
+                        (t && rate < LOW_RATE ? '<span class="fact warn">⚠ ต่ำกว่าเกณฑ์ <b>' + LOW_RATE + "%</b></span>" : "");
+
+                      const note = NOTES[noteKey(s.email)] || "";
+                      const noteHtml = note ? '<div class="sp-note">📝 ' + esc(note) + "</div>" : "";
+
+                      const byDate = {}, dates = [];
+                      DATA.sessions.forEach(function (se) {
+                        if (!byDate[se.date]) { byDate[se.date] = []; dates.push(se.date); }
+                        byDate[se.date].push(se);
+                      });
+                      const months = {}, mOrder = [];
+                      dates.forEach(function (d) {
+                        const k = d.substring(0, 7);
+                        if (!months[k]) { months[k] = []; mOrder.push(k); }
+                        months[k].push(d);
+                      });
+                      const cal = mOrder.slice().reverse().map(function (k) {
+                        const ds = months[k].slice().reverse();
+                        const mc = emptyCounts();
+                        ds.forEach(function (d) { byDate[d].forEach(function (se) { mc[se.st[i]]++; }); });
+                        const y = Number(k.substring(0, 4)), m = Number(k.substring(5, 7)) - 1;
+                        return '<div class="cal-month"><div class="cal-mh"><b>' + MONTHS[m] + " " + (y + 543) + '</b><span class="hint num">เข้าเรียน ' +
+                          (mc.p + mc.l) + "/" + total(mc) + " คาบ · " + pct(rateOf(mc)) + "%</span></div>" +
+                          '<div class="cal-grid">' + ds.map(function (d) { return dayCard(d, byDate[d], i, s.email); }).join("") + "</div></div>";
+                      }).join("");
+
+                      return '<div class="sp-head"><div><h2>' + esc(s.name) + '</h2><div class="idchips"><span class="idchip">ห้อง ' + esc(DATA.cls) +
+                        '</span><span class="idchip">เลขที่ ' + esc(s.studentId) + '</span></div></div><button class="ghost small" data-a="close">ปิด</button></div>' +
+                        '<div class="sp-top"><div class="sp-donut">' + donut(c, 150, pct(rate) + "%") + '</div><div><div class="sp-stats">' + stats +
+                        '</div><div class="sp-facts">' + facts + "</div></div></div>" + noteHtml +
+                        '<div class="hint" style="margin-top:14px">คลิกที่คาบเพื่อแก้ไขสถานะการเข้าเรียน</div>' + cal;
                     }
 
                     function rowFor(email) {
@@ -2952,10 +3697,12 @@
                       if (e.target === $("editStudentModal")) { closeEditStudentModal(); return; }
 
                       const cell = e.target.closest(".click-cell");
-                      if (cell) {
-                        const sid = cell.getAttribute("data-sid");
+                        if (cell) {
+                          const sid = cell.getAttribute("data-sid");
                           if (sid) {
-                            openPanel({ type: "cell", sid: sid, email: cell.getAttribute("data-email") });
+                            const from = PANEL && PANEL.type === "student" ? "student" : "";
+                            if (from) STU_SCROLL = $("panel").scrollTop;
+                            openPanel({ type: "cell", sid: sid, email: cell.getAttribute("data-email"), from: from });
                             return;
                           }
                         }
@@ -2981,7 +3728,8 @@
                       else if (a === "mode") { MODE = v; renderReport(); }
                       else if (a === "sess") openPanel({ type: "session", sid: v });
                       else if (a === "stu") openPanel({ type: "student", email: v });
-                      else if (a === "close") closePanel();
+                      else if (a === "dstu") openStudentFromDash(t.getAttribute("data-email"), t.getAttribute("data-cls"));
+                      else if (a === "close") backOrClose();
                       else if (a === "csv") exportCsv();
                       else if (a === "cellsave") {
                         const chosen = document.querySelector('#cellSeg input[name="cellst"]:checked');
@@ -3017,7 +3765,7 @@
                         if (!$("sOverlay").hidden) closeSlot();
                         else if (!$("studentModal").hidden) closeStudentModal();
                         else if (!$("editStudentModal").hidden) closeEditStudentModal();
-                        else if (PANEL) closePanel();
+                        else if (PANEL) backOrClose();
                       }
                     });
 

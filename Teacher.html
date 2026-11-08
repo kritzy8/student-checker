@@ -2,14 +2,14 @@
 <html lang="th">
   <head>
     <base target="_top" />
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>เช็กชื่อด้วย QR Code</title>
+
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;800&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <style>
       :root {
         --bg: #f4f6fb;
@@ -18,610 +18,2018 @@
         --mute: #64708a;
         --line: #e3e8f2;
         --brand: #2563eb;
+        --brandbg: #e8effd;
         --ok: #15803d;
         --okbg: #dcfce7;
         --warn: #b45309;
         --warnbg: #fef3c7;
         --bad: #b91c1c;
         --badbg: #fee2e2;
+        --shadow: 0 6px 30px rgba(20, 33, 61, 0.06);
       }
+
       * {
         box-sizing: border-box;
       }
+
       [hidden] {
         display: none !important;
       }
+
       body {
         margin: 0;
-        font-family: "Noto Sans Thai", system-ui, sans-serif;
         background: var(--bg);
         color: var(--ink);
+        font-family: "Noto Sans Thai", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-text-size-adjust: 100%;
       }
-      header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 14px 24px;
-        background: var(--card);
-        border-bottom: 1px solid var(--line);
+
+      button,
+      input,
+      select {
+        font: inherit;
       }
-      header h1 {
-        font-size: 18px;
+
+      button,
+      a,
+      input,
+      select {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      button,
+      select,
+      input[type="range"] {
+        touch-action: manipulation;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+      }
+
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 3px solid rgba(37, 99, 235, 0.35);
+        outline-offset: 4px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
         margin: 0;
       }
-      #who {
-        color: var(--mute);
-        font-size: 14px;
-      }
-      main {
-        max-width: 1180px;
+
+      .shell {
+        width: min(1200px, 100%);
         margin: 0 auto;
-        padding: 20px;
+        padding: 24px 28px 40px;
       }
-      .card {
-        background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 20px;
-      }
-      .row {
+
+      .header {
         display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        align-items: end;
-      }
-      label {
-        display: block;
-        font-size: 13px;
-        color: var(--mute);
-        margin-bottom: 4px;
-      }
-      select,
-      input {
-        font: inherit;
-        padding: 10px 12px;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        background: #fff;
-        min-width: 140px;
-      }
-      button {
-        font: inherit;
-        font-weight: 600;
-        border: 0;
-        border-radius: 10px;
-        padding: 10px 18px;
-        cursor: pointer;
-        background: var(--brand);
-        color: #fff;
-      }
-      button:disabled {
-        opacity: 0.5;
-        cursor: default;
-      }
-      button.ghost {
-        background: #eef2fb;
-        color: var(--ink);
-      }
-      button.danger {
-        background: var(--bad);
-      }
-      button.small {
-        padding: 5px 10px;
-        font-size: 13px;
-      }
-      .err {
-        margin-top: 12px;
-        padding: 10px 14px;
-        border-radius: 10px;
-        background: var(--badbg);
-        color: var(--bad);
-      }
-      .live {
-        display: grid;
-        grid-template-columns: minmax(320px, 420px) 1fr;
+        align-items: center;
+        justify-content: space-between;
         gap: 20px;
-        align-items: start;
+        padding-bottom: 24px;
       }
-      @media (max-width: 820px) {
-        .live {
-          grid-template-columns: 1fr;
-        }
-      }
-      .qrwrap {
-        position: relative;
-        text-align: center;
-      }
-      #qr {
-        display: flex;
-        justify-content: center;
-        padding: 14px;
-        background: #fff;
-        border-radius: 12px;
-      }
-      #qr img,
-      #qr canvas {
-        max-width: 100%;
-        height: auto;
-      }
-      .bar {
-        height: 8px;
-        background: var(--line);
-        border-radius: 99px;
-        overflow: hidden;
-        margin: 14px 0 8px;
-      }
-      .bar > i {
-        display: block;
-        height: 100%;
-        width: 100%;
-        background: var(--brand);
-      }
-      .hint {
-        font-size: 13px;
-        color: var(--mute);
-      }
-      .closed #qr {
-        opacity: 0.08;
-        filter: blur(3px);
-      }
-      .overlay {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 26px;
-        font-weight: 800;
-        color: var(--bad);
-      }
-      .counter {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        flex-wrap: wrap;
-      }
-      .big {
-        font-size: 84px;
-        font-weight: 800;
-        line-height: 1;
-      }
-      .big small {
-        font-size: 34px;
-        color: var(--mute);
-        font-weight: 600;
-      }
-      .meta {
-        text-align: right;
-      }
-      .meta b {
-        font-size: 34px;
-        font-variant-numeric: tabular-nums;
-      }
-      .warnbox {
-        margin-top: 14px;
-        padding: 10px 14px;
-        border-radius: 10px;
-        background: var(--warnbg);
-        color: var(--warn);
-        font-size: 14px;
-      }
-      .lists {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        margin-top: 16px;
-      }
-      @media (max-width: 1000px) {
-        .lists {
-          grid-template-columns: 1fr;
-        }
-      }
-      .lists h3 {
-        margin: 0 0 10px;
-        font-size: 15px;
-      }
-      .list {
-        max-height: 46vh;
-        overflow: auto;
-      }
-      .item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 0;
-        border-top: 1px solid var(--line);
-        font-size: 14px;
-      }
-      .item:first-child {
-        border-top: 0;
-      }
-      .item .sub {
-        color: var(--mute);
-        font-size: 12px;
-      }
-      .tag {
-        display: inline-block;
-        font-size: 11px;
-        padding: 2px 8px;
-        border-radius: 99px;
-        margin-left: 6px;
-        background: var(--warnbg);
-        color: var(--warn);
-      }
-      .tag.m {
-        background: #e0e7ff;
-        color: #3730a3;
-      }
-      .empty {
-        color: var(--mute);
-        font-size: 14px;
-        padding: 6px 0;
-      }
-      .hright {
+
+      .identity {
         display: flex;
         align-items: center;
         gap: 14px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
+        min-width: 0;
       }
-      a.backlnk {
+
+      .logo {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: var(--brandbg);
+        color: var(--brand);
+        flex-shrink: 0;
+      }
+
+      .logo svg {
+        width: 27px;
+        height: 27px;
+      }
+
+      h1 {
+        font-size: 21px;
+        font-weight: 800;
+        line-height: 1.4;
+      }
+
+      .subtitle,
+      .hint {
+        color: var(--mute);
+        font-size: 14px;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .account {
+        color: var(--mute);
+        font-size: 13px;
+        overflow-wrap: anywhere;
+      }
+
+      .back-link {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 7px 14px;
-        border-radius: 10px;
-        background: #eef2fb;
-        color: var(--ink, #14213d);
-        font-weight: 600;
-        font-size: 14px;
+        justify-content: center;
+        min-height: 44px;
+        padding: 8px 14px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--card);
+        color: var(--ink);
         text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 48px;
+        padding: 10px 18px;
+        border: 1px solid transparent;
+        border-radius: 14px;
+        font-weight: 600;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+      }
+
+      .primary {
+        background: var(--brand);
+        color: #fff;
+      }
+
+      .secondary {
+        background: var(--brandbg);
+        color: var(--brand);
+        border-color: #d5e1fc;
+      }
+
+      .danger {
+        background: var(--badbg);
+        color: var(--bad);
+        border-color: #fecaca;
+      }
+
+      .alert {
+        padding: 14px 18px;
+        border-radius: 14px;
+        font-size: 14px;
+      }
+
+      .error {
+        margin-bottom: 20px;
+        background: var(--badbg);
+        color: var(--bad);
+        overflow-wrap: anywhere;
+      }
+
+      .warning {
+        background: var(--warnbg);
+        color: var(--warn);
+      }
+
+      .success {
+        background: var(--okbg);
+        color: var(--ok);
+      }
+
+      /* Setup */
+
+      .setup-stage {
+        display: grid;
+        place-items: center;
+        min-height: calc(100vh - 160px);
+        min-height: calc(100dvh - 160px);
+        padding: 12px 0 36px;
+      }
+
+      .setup-card {
+        width: min(560px, 100%);
+        padding: 36px;
+      }
+
+      .setup-heading {
+        margin-bottom: 28px;
+        text-align: center;
+      }
+
+      .setup-symbol {
+        display: grid;
+        place-items: center;
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 16px;
+        border-radius: 20px;
+        background: var(--brandbg);
+        color: var(--brand);
+        font-size: 29px;
+      }
+
+      .setup-heading h2 {
+        font-size: 27px;
+        font-weight: 800;
+        margin-bottom: 6px;
+      }
+
+      .field-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .select-wrap {
+        position: relative;
+      }
+
+      .select-wrap::after {
+        content: "⌄";
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-60%);
+        color: var(--mute);
+        font-size: 24px;
+        pointer-events: none;
+      }
+
+      select {
+        width: 100%;
+        min-height: 60px;
+        padding: 14px 48px 14px 18px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--bg);
+        color: var(--ink);
+        appearance: none;
+        -webkit-appearance: none;
+      }
+
+      .duration-field {
+        margin-top: 28px;
+      }
+
+      .duration-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .duration-heading .field-label {
+        margin-bottom: 0;
+      }
+
+      .duration-heading .hint {
+        font-size: 12px;
+      }
+
+      .duration-control {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        margin: 20px 0 8px;
+      }
+
+      .step-button {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        padding: 0;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--bg);
+        color: var(--brand);
+        font-size: 28px;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+
+      .duration-value {
+        min-width: 100px;
+        text-align: center;
+      }
+
+      .duration-value output {
+        display: block;
+        color: var(--brand);
+        font-size: 52px;
+        font-weight: 800;
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .duration-value span {
+        color: var(--mute);
+        font-size: 14px;
+      }
+
+      input[type="range"] {
+        --fill: 13.793%;
+        display: block;
+        width: 100%;
+        height: 48px;
+        margin: 0;
+        background: transparent;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+
+      input[type="range"]::-webkit-slider-runnable-track {
+        height: 8px;
+        border-radius: 99px;
+        background: linear-gradient(
+          to right,
+          var(--brand) 0%,
+          var(--brand) var(--fill),
+          var(--line) var(--fill),
+          var(--line) 100%
+        );
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        width: 30px;
+        height: 30px;
+        margin-top: -11px;
+        border: 4px solid #fff;
+        border-radius: 50%;
+        background: var(--brand);
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+        appearance: none;
+        -webkit-appearance: none;
+      }
+
+      input[type="range"]::-moz-range-track {
+        height: 8px;
+        border-radius: 99px;
+        background: var(--line);
+      }
+
+      input[type="range"]::-moz-range-progress {
+        height: 8px;
+        border-radius: 99px;
+        background: var(--brand);
+      }
+
+      input[type="range"]::-moz-range-thumb {
+        width: 22px;
+        height: 22px;
+        border: 4px solid #fff;
+        border-radius: 50%;
+        background: var(--brand);
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+      }
+
+      .range-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: -2px;
+        color: var(--mute);
+        font-size: 12px;
+      }
+
+      .presets {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .preset {
+        min-height: 46px;
+        padding: 8px 4px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        color: var(--mute);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .preset.active {
+        border-color: var(--brand);
+        background: var(--brandbg);
+        color: var(--brand);
+      }
+
+      .setup-note {
+        display: flex;
+        gap: 10px;
+        margin-top: 26px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: var(--bg);
+        color: var(--mute);
+        font-size: 13px;
+      }
+
+      .setup-note strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .start-button {
+        width: 100%;
+        min-height: 60px;
+        margin-top: 24px;
+        font-size: 18px;
+      }
+
+      .setup-message {
+        margin-top: 14px;
+        text-align: center;
+      }
+
+      .retry-button {
+        margin: 12px auto 0;
+      }
+
+      /* Live session */
+
+      .live-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .live-heading h2 {
+        font-size: 26px;
+        font-weight: 800;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 99px;
+        background: var(--okbg);
+        color: var(--ok);
+        font-size: 14px;
+        font-weight: 600;
         white-space: nowrap;
       }
-      a.backlnk:hover {
-        background: #e1e8f8;
+
+      .status::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .status.closed {
+        background: var(--brandbg);
+        color: var(--brand);
+      }
+
+      .live-grid {
+        display: grid;
+        grid-template-columns: minmax(340px, 440px) minmax(0, 1fr);
+        gap: 20px;
+        align-items: start;
+      }
+
+      .qr-card {
+        padding: 26px;
+        text-align: center;
+      }
+
+      .qr-card h3 {
+        margin-bottom: 4px;
+        font-size: 20px;
+      }
+
+      .qr-frame {
+        display: grid;
+        place-items: center;
+        position: relative;
+        width: 100%;
+        max-width: 388px;
+        aspect-ratio: 1;
+        margin: 20px auto 18px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: #fff;
+        overflow: hidden;
+      }
+
+      #qr {
+        width: 100%;
+        max-width: 360px;
+      }
+
+      #qr img,
+      #qr canvas {
+        max-width: 100%;
+        height: auto !important;
+        margin: 0 auto;
+      }
+
+      #qr.loading {
+        color: var(--mute);
+        font-size: 14px;
+      }
+
+      .qr-frame.closed #qr {
+        visibility: hidden;
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: 12px;
+        padding: 20px;
+        background: #fff;
+        text-align: center;
+      }
+
+      .closed-symbol {
+        display: grid;
+        place-items: center;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: var(--brandbg);
+        color: var(--brand);
+        font-size: 30px;
+      }
+
+      .overlay strong {
+        font-size: 20px;
+      }
+
+      .qr-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        color: var(--mute);
+        font-size: 12px;
+      }
+
+      .bar {
+        height: 6px;
+        margin: 8px 0 14px;
+        border-radius: 99px;
+        background: var(--line);
+        overflow: hidden;
+      }
+
+      .bar i {
+        display: block;
+        width: 0;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--brand);
+      }
+
+      .qr-note {
+        font-size: 13px;
+        color: var(--mute);
+      }
+
+      .qr-card .alert {
+        margin-top: 14px;
+        text-align: left;
+      }
+
+      .session-card {
+        padding: 28px;
+      }
+
+      .section-kicker {
+        margin-bottom: 10px;
+        color: var(--mute);
+        font-size: 14px;
+      }
+
+      .attendance-count {
+        font-size: 58px;
+        font-weight: 800;
+        line-height: 1.2;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .attendance-count small {
+        color: var(--mute);
+        font-size: 24px;
+        font-weight: 400;
+      }
+
+      .attendance-progress {
+        height: 10px;
+        margin: 18px 0 10px;
+        border-radius: 99px;
+        background: var(--line);
+        overflow: hidden;
+      }
+
+      .attendance-progress span {
+        display: block;
+        width: 0;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--brand);
+        transition: width 0.25s;
+      }
+
+      .progress-caption {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        color: var(--mute);
+        font-size: 14px;
+      }
+
+      .time-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 24px 0 20px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--bg);
+      }
+
+      .time-box strong {
+        font-size: 32px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.2;
+      }
+
+      .time-box.ending {
+        background: var(--warnbg);
+        border-color: #fde68a;
+        color: var(--warn);
+      }
+
+      .time-box.ending .hint {
+        color: var(--warn);
+      }
+
+      .stop-button {
+        width: 100%;
+      }
+
+      .session-card .alert {
+        margin-top: 16px;
+      }
+
+      .summary-title {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+
+      .again-button {
+        width: 100%;
+        margin-top: 14px;
+      }
+
+      .sync-line {
+        margin-top: 16px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--mute);
+      }
+
+      .sync-line.problem {
+        color: var(--warn);
+      }
+
+      /* Student lists */
+
+      .roster {
+        margin-top: 28px;
+      }
+
+      .roster-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 16px;
+      }
+
+      .roster-heading h3 {
+        font-size: 20px;
+      }
+
+      .search {
+        width: min(340px, 100%);
+        min-height: 48px;
+        padding: 12px 16px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #fff;
+        color: var(--ink);
+      }
+
+      .lists {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .list-card {
+        overflow: hidden;
+      }
+
+      .list-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .list-header h3 {
+        font-size: 17px;
+      }
+
+      .count-badge {
+        display: inline-grid;
+        place-items: center;
+        min-width: 34px;
+        min-height: 30px;
+        padding: 2px 8px;
+        border-radius: 99px;
+        background: var(--bg);
+        color: var(--mute);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .count-badge.checked {
+        background: var(--okbg);
+        color: var(--ok);
+      }
+
+      .list {
+        max-height: 480px;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        min-height: 86px;
+        padding: 16px 22px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .item:last-child {
+        border-bottom: 0;
+      }
+
+      .student-info {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .student-name {
+        font-weight: 600;
+        font-size: 15px;
+      }
+
+      .student-sub {
+        margin-top: 3px;
+        color: var(--mute);
+        font-size: 12px;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 5px;
+      }
+
+      .tag {
+        padding: 2px 7px;
+        border-radius: 6px;
+        background: var(--warnbg);
+        color: var(--warn);
+        font-size: 11px;
+      }
+
+      .tag.manual {
+        background: var(--brandbg);
+        color: var(--brand);
+      }
+
+      .row-button {
+        min-width: 82px;
+        min-height: 46px;
+        padding: 8px 12px;
+        border: 1px solid #d5e1fc;
+        border-radius: 12px;
+        background: var(--brandbg);
+        color: var(--brand);
+        font-size: 14px;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+
+      .row-button.remove {
+        border-color: var(--line);
+        background: #fff;
+        color: var(--mute);
+      }
+
+      .empty {
+        padding: 38px 22px;
+        text-align: center;
+        color: var(--mute);
+        font-size: 14px;
+      }
+
+      @media (hover: hover) {
+        .primary:hover:not(:disabled) {
+          background: #1d4ed8;
+        }
+
+        .step-button:hover:not(:disabled),
+        .preset:hover:not(:disabled),
+        .back-link:hover,
+        .row-button:hover:not(:disabled) {
+          border-color: var(--brand);
+        }
+      }
+
+      @media (min-width: 1100px) {
+        .qr-card {
+          position: sticky;
+          top: 20px;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .shell {
+          padding: 20px 22px 32px;
+        }
+
+        .header {
+          align-items: flex-start;
+        }
+
+        .header-right {
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 6px;
+        }
+
+        .live-grid {
+          grid-template-columns: minmax(300px, 1fr) minmax(0, 1fr);
+          gap: 16px;
+        }
+
+        .qr-card,
+        .session-card {
+          padding: 22px;
+        }
+
+        .lists {
+          gap: 16px;
+        }
+
+        .item {
+          padding: 14px 16px;
+        }
+      }
+
+      @media (max-width: 740px) {
+        .shell {
+          padding: 16px 16px 28px;
+        }
+
+        .header {
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .header-right {
+          width: 100%;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        h1 {
+          font-size: 19px;
+        }
+
+        .setup-stage {
+          min-height: auto;
+          padding-top: 12px;
+        }
+
+        .setup-card {
+          padding: 28px 24px;
+        }
+
+        .setup-heading h2 {
+          font-size: 24px;
+        }
+
+        .live-grid,
+        .lists {
+          grid-template-columns: 1fr;
+        }
+
+        .qr-frame {
+          max-width: 388px;
+        }
+
+        .roster-heading {
+          align-items: stretch;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .search {
+          width: 100%;
+        }
+
+        .live-heading h2 {
+          font-size: 23px;
+        }
+
+        .status {
+          font-size: 12px;
+          padding: 7px 10px;
+        }
+
+        .list {
+          max-height: 420px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
       }
     </style>
   </head>
+
   <body>
-    <header>
-      <h1>ระบบเช็กชื่อด้วย QR Code</h1>
-      <div class="hright">
-        <? if (canAdmin) { ?>
-        <a class="backlnk" href="<?= bridgeUrl ?>?p=admin" target="_top"
-          >⬅️ กลับหน้าแอดมิน</a
-        >
-        <? } ?>
-        <span id="who"></span>
-      </div>
-    </header>
+    <div class="shell">
+      <header class="header">
+        <div class="identity">
+          <div class="logo" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="3" width="6" height="6" rx="1"></rect>
+              <rect x="15" y="3" width="6" height="6" rx="1"></rect>
+              <rect x="3" y="15" width="6" height="6" rx="1"></rect>
+              <path
+                d="M15 15h3v3h3M15 21v-3M21 15v-3M12 3v3M3 12h3M12 12h3"
+              ></path>
+            </svg>
+          </div>
 
-    <main>
-      <section id="setup" class="card">
-        <div class="row">
           <div>
-            <label for="cls">เลือกห้องเรียน</label
-            ><select id="cls"></select>
-          </div>
-          <div>
-            <label for="mins">เปิดรับกี่นาที</label
-            ><input
-              id="mins"
-              type="number"
-              min="1"
-              max="30"
-              value="5"
-              style="min-width: 90px"
-            />
-          </div>
-          <button id="start" disabled>เริ่มเช็กชื่อ</button>
-        </div>
-        <div id="err" class="err" hidden></div>
-      </section>
-
-      <section id="live" class="live" hidden>
-        <div class="card qrwrap" id="qrbox">
-          <div id="qr"></div>
-          <div class="overlay" id="overlay" hidden>ปิดรับเช็กชื่อแล้ว</div>
-          <div class="bar"><i id="barfill"></i></div>
-          <div class="hint">
-            QR Code จะเปลี่ยนทุก 15 วินาที — ภาพที่ถ่ายส่งต่อจะใช้ไม่ได้
-          </div>
-          <div class="hint" id="net" style="color: var(--bad)" hidden>
-            การเชื่อมต่อไม่เสถียร QR Code อาจเลยเวลาหมดอายุ
+            <h1>ระบบเช็กชื่อด้วย QR Code</h1>
+            <p class="subtitle">สำหรับอาจารย์</p>
           </div>
         </div>
 
-        <div>
-          <div class="card">
-            <div class="counter">
-              <div>
-                <div class="hint">ห้อง <b id="clsName"></b> · เช็กชื่อแล้ว</div>
-                <div class="big">
-                  <span id="checked">0</span>
-                  <small>/ <span id="total">0</span></small>
-                </div>
+        <div class="header-right">
+          <? if (canAdmin) { ?>
+          <a class="back-link" href="<?= bridgeUrl ?>?p=admin" target="_top"
+            >⬅️ กลับหน้าแอดมิน</a
+          >
+          <? } ?>
+
+          <span id="who" class="account"></span>
+        </div>
+      </header>
+
+      <!-- Outside setup so errors remain visible during a session. -->
+      <div id="err" class="alert error" role="alert" hidden></div>
+
+      <main>
+        <section id="setup" class="setup-stage">
+          <form id="setupForm" class="card setup-card">
+            <div class="setup-heading">
+              <div class="setup-symbol" aria-hidden="true">✔️</div>
+              <h2>เริ่มเช็กชื่อ</h2>
+              <p class="hint">เลือกห้องเรียนและเวลาที่ต้องการเปิดรับ</p>
+            </div>
+
+            <label class="field-label" for="cls">ห้องเรียน</label>
+
+            <div class="select-wrap">
+              <select id="cls" disabled required>
+                <option value="">กำลังโหลดห้องเรียน…</option>
+              </select>
+            </div>
+
+            <div class="duration-field">
+              <div class="duration-heading">
+                <label class="field-label" for="mins">เปิดรับกี่นาที</label>
+                <span class="hint">ปรับได้ 1–30 นาที</span>
               </div>
-              <div class="meta">
-                <div class="hint">เวลาที่เหลือ</div>
-                <b id="remain">--:--</b>
-                <div style="margin-top: 8px">
-                  <button id="stop" class="danger">ปิดรับเช็กชื่อ</button>
+
+              <div class="duration-control">
+                <button
+                  id="minus"
+                  class="step-button"
+                  type="button"
+                  aria-label="ลดเวลา 1 นาที"
+                >
+                  −
+                </button>
+
+                <div class="duration-value">
+                  <output id="minuteValue" for="mins">5</output>
+                  <span>นาที</span>
                 </div>
+
+                <button
+                  id="plus"
+                  class="step-button"
+                  type="button"
+                  aria-label="เพิ่มเวลา 1 นาที"
+                >
+                  +
+                </button>
+              </div>
+
+              <input
+                id="mins"
+                type="range"
+                min="1"
+                max="30"
+                step="1"
+                value="5"
+                aria-valuetext="5 นาที"
+              />
+
+              <div class="range-labels" aria-hidden="true">
+                <span>1 นาที</span>
+                <span>30 นาที</span>
+              </div>
+
+              <div class="presets" role="group" aria-label="เลือกเวลาแบบด่วน">
+                <button
+                  class="preset active"
+                  type="button"
+                  data-minutes="5"
+                  aria-pressed="true"
+                >
+                  5 นาที
+                </button>
+                <button
+                  class="preset"
+                  type="button"
+                  data-minutes="10"
+                  aria-pressed="false"
+                >
+                  10 นาที
+                </button>
+                <button
+                  class="preset"
+                  type="button"
+                  data-minutes="15"
+                  aria-pressed="false"
+                >
+                  15 นาที
+                </button>
+                <button
+                  class="preset"
+                  type="button"
+                  data-minutes="30"
+                  aria-pressed="false"
+                >
+                  30 นาที
+                </button>
               </div>
             </div>
-            <div id="warn" class="warnbox" hidden></div>
-            <div
-              id="done"
-              class="warnbox"
-              style="background: var(--okbg); color: var(--ok)"
+
+            <div class="setup-note">
+              <span aria-hidden="true">ℹ️</span>
+              <div>
+                <strong>พร้อมแล้วกดเริ่มเช็กชื่อ</strong><br />
+                ระบบจะแสดง QR Code สำหรับนักเรียน และปิดรับอัตโนมัติเมื่อครบเวลา
+              </div>
+            </div>
+
+            <button
+              id="start"
+              class="button primary start-button"
+              type="submit"
+              disabled
+            >
+              เริ่มเช็กชื่อ
+            </button>
+
+            <p id="setupMessage" class="hint setup-message" role="status">
+              กำลังโหลดข้อมูล…
+            </p>
+
+            <button
+              id="retryInit"
+              class="button secondary retry-button"
+              type="button"
               hidden
             >
-              สรุป: เช็กแล้ว <span id="sumC"></span> คน ขาด
-              <span id="sumA"></span> คน (บันทึกในชีต Attendance แล้ว)
-              <button id="again" class="ghost small" style="margin-left: 8px">
-                เริ่มรอบใหม่
-              </button>
+              ลองโหลดอีกครั้ง
+            </button>
+          </form>
+        </section>
+
+        <section id="live" hidden>
+          <div class="live-heading">
+            <div>
+              <p class="hint">รอบเช็กชื่อ</p>
+              <h2>ห้อง <span id="clsName"></span></h2>
             </div>
+
+            <span id="sessionStatus" class="status" role="status">
+              เปิดรับเช็กชื่อ
+            </span>
           </div>
 
-          <div class="lists">
-            <div class="card">
-              <h3>ยังไม่เช็ก (<span id="nAbs">0</span>)</h3>
-              <div class="list" id="absList"></div>
-            </div>
-            <div class="card">
-              <h3>เช็กแล้ว (<span id="nChk">0</span>)</h3>
-              <div class="list" id="chkList"></div>
-            </div>
+          <div class="live-grid">
+            <section class="card qr-card">
+              <h3>สแกนเพื่อเช็กชื่อ</h3>
+              <p class="hint">ให้นักเรียนสแกน QR Code ด้านล่าง</p>
+
+              <div id="qrFrame" class="qr-frame">
+                <div id="qr" class="loading">กำลังสร้าง QR Code…</div>
+
+                <div id="overlay" class="overlay" hidden>
+                  <div class="closed-symbol" aria-hidden="true">✓</div>
+                  <strong id="overlayTitle">ปิดรับเช็กชื่อแล้ว</strong>
+                  <p id="overlayHint" class="hint">
+                    ตรวจสอบรายชื่อและสรุปผลได้ด้านข้าง
+                  </p>
+                </div>
+              </div>
+
+              <div id="qrRotation">
+                <div class="qr-meta">
+                  <span>QR Code เปลี่ยนอัตโนมัติ</span>
+                  <span id="qrNext">กำลังโหลด…</span>
+                </div>
+
+                <div class="bar" aria-hidden="true">
+                  <i id="barfill"></i>
+                </div>
+
+                <p class="qr-note">
+                  กรุณาสแกน QR Code ที่แสดงอยู่ในขณะนี้ ภาพที่ส่งต่ออาจหมดอายุ
+                </p>
+              </div>
+
+              <div id="net" class="alert warning" role="status" hidden>
+                การเชื่อมต่อไม่เสถียร QR Code อาจหมดอายุ
+                ระบบกำลังลองเชื่อมต่ออีกครั้ง
+              </div>
+            </section>
+
+            <section class="card session-card">
+              <p class="section-kicker">เช็กชื่อแล้ว</p>
+
+              <div class="attendance-count">
+                <span id="checked">0</span>
+                <small>/ <span id="total">0</span> คน</small>
+              </div>
+
+              <div
+                id="attendanceProgress"
+                class="attendance-progress"
+                role="progressbar"
+                aria-label="สัดส่วนผู้เช็กชื่อแล้ว"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+                <span id="attendanceFill"></span>
+              </div>
+
+              <div class="progress-caption">
+                <span>ยังไม่เช็ก <b id="remainingCount">0</b> คน</span>
+                <span id="percentage">0%</span>
+              </div>
+
+              <div id="timeBox" class="time-box">
+                <div>
+                  <p id="timeLabel" class="hint">เวลาที่เหลือ</p>
+                  <p class="hint">ปิดรับอัตโนมัติเมื่อครบเวลา</p>
+                </div>
+                <strong id="remain">--:--</strong>
+              </div>
+
+              <button id="stop" class="button danger stop-button" type="button">
+                ปิดรับเช็กชื่อ
+              </button>
+
+              <div id="warn" class="alert warning" role="status" hidden></div>
+
+              <div id="done" class="alert success" hidden>
+                <span class="summary-title">บันทึกรอบเช็กชื่อแล้ว</span>
+                เช็กชื่อแล้ว <b id="sumC">0</b> คน · ยังไม่เช็ก
+                <b id="sumA">0</b> คน
+                <p>อาจารย์ยังสามารถปรับรายการด้านล่างได้</p>
+              </div>
+
+              <button
+                id="again"
+                class="button primary again-button"
+                type="button"
+                hidden
+              >
+                เริ่มรอบใหม่ →
+              </button>
+
+              <p id="sync" class="sync-line" role="status">กำลังโหลดรายชื่อ…</p>
+            </section>
           </div>
-        </div>
-      </section>
-    </main>
+
+          <section class="roster">
+            <div class="roster-heading">
+              <div>
+                <h3>รายชื่อนักเรียน</h3>
+                <p class="hint">ตรวจสอบรายชื่อ หรือติ๊กเช็กชื่อให้นักเรียน</p>
+              </div>
+
+              <input
+                id="search"
+                class="search"
+                type="search"
+                placeholder="ค้นหาชื่อหรือเลขที่"
+                aria-label="ค้นหาชื่อหรือเลขที่"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="lists">
+              <section class="card list-card">
+                <div class="list-header">
+                  <h3>ยังไม่เช็กชื่อ</h3>
+                  <span id="nAbs" class="count-badge">0</span>
+                </div>
+
+                <div id="absList" class="list">
+                  <div class="empty">กำลังโหลดรายชื่อ…</div>
+                </div>
+              </section>
+
+              <section class="card list-card">
+                <div class="list-header">
+                  <h3>เช็กชื่อแล้ว</h3>
+                  <span id="nChk" class="count-badge checked">0</span>
+                </div>
+
+                <div id="chkList" class="list">
+                  <div class="empty">กำลังโหลดรายชื่อ…</div>
+                </div>
+              </section>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <script>
       const AUTH = <?!= JSON.stringify(auth) ?>;
-      let sessionId = null,
-        qr = null,
-        tokenTimer = null,
-        pollTimer = null,
-        uiTimer = null;
-      let nextAt = 0,
-        slotMs = 15000,
-        endAt = 0,
-        polling = false,
-        closedShown = false;
 
-      const $ = function (id) {
-        return document.getElementById(id);
-      };
-      const esc = function (s) {
-        return String(s).replace(/[&<>"']/g, function (c) {
-          return {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;",
-          }[c];
-        });
-      };
-      function run(fn) {
-        const args = Array.prototype.slice.call(arguments, 1);
-        return new Promise(function (res, rej) {
+      const $ = id => document.getElementById(id);
+
+      let sessionId = null;
+      let qr = null;
+      let tokenTimer = null;
+      let pollTimer = null;
+      let uiTimer = null;
+
+      let nextAt = 0;
+      let slotMs = 15000;
+      let endAt = 0;
+
+      let closedShown = false;
+      let starting = false;
+      let stopping = false;
+      let loadingInit = false;
+      let tokenBusy = false;
+      let statusPromise = null;
+      let latestStatus = null;
+      let dataVersion = 0;
+      let lastListKey = "";
+
+      const pendingStudents = new Set();
+
+      function esc(value) {
+        return String(value ?? "").replace(/[&<>"']/g, c => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[c]));
+      }
+
+      function run(fn, ...args) {
+        return new Promise((resolve, reject) => {
           google.script.run
-            .withSuccessHandler(res)
-            .withFailureHandler(rej)
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject)
             .api(AUTH, fn, args);
         });
       }
-      function showErr(e) {
-        const box = $("err");
-        box.textContent =
-          e && e.message ? e.message.replace(/^Error:\s*/, "") : String(e);
-        box.hidden = false;
+
+      function showErr(error) {
+        $("err").textContent = error && error.message
+          ? error.message.replace(/^Error:\s*/, "")
+          : String(error);
+
+        $("err").hidden = false;
       }
 
-      run("getInit")
-        .then(function (init) {
-          $("who").textContent = init.email;
-          init.classes.forEach(function (c) {
-            const o = document.createElement("option");
-            o.value = o.textContent = c;
-            $("cls").appendChild(o);
-          });
-          $("start").disabled = false;
-        })
-        .catch(showErr);
-
-      $("start").onclick = function () {
-        $("start").disabled = true;
+      function clearErr() {
         $("err").hidden = true;
-        run("startSession", $("cls").value, Number($("mins").value))
-          .then(function (s) {
-            sessionId = s.id;
-            closedShown = false;
-            $("setup").hidden = true;
-            $("live").hidden = false;
-            $("clsName").textContent = s.cls;
-            $("qr").innerHTML = "";
+        $("err").textContent = "";
+      }
+
+      function setDuration(value) {
+        const minutes = Math.max(1, Math.min(30, Math.round(Number(value) || 5)));
+
+        $("mins").value = minutes;
+        $("mins").style.setProperty("--fill", ((minutes - 1) / 29 * 100) + "%");
+        $("mins").setAttribute("aria-valuetext", minutes + " นาที");
+        $("minuteValue").textContent = minutes;
+
+        $("minus").disabled = starting || minutes <= 1;
+        $("plus").disabled = starting || minutes >= 30;
+
+        document.querySelectorAll("[data-minutes]").forEach(button => {
+          const active = Number(button.dataset.minutes) === minutes;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+      }
+
+      function setStarting(busy) {
+        starting = busy;
+
+        $("start").disabled = busy || !$("cls").value;
+        $("start").textContent = busy
+          ? "กำลังเปิดรอบเช็กชื่อ…"
+          : "เริ่มเช็กชื่อ →";
+
+        $("cls").disabled = busy;
+        $("mins").disabled = busy;
+
+        document.querySelectorAll("[data-minutes]").forEach(button => {
+          button.disabled = busy;
+        });
+
+        setDuration($("mins").value);
+      }
+
+      async function loadInit() {
+        if (loadingInit) return;
+        loadingInit = true;
+
+        clearErr();
+        $("retryInit").hidden = true;
+        $("retryInit").disabled = true;
+        $("start").disabled = true;
+        $("cls").disabled = true;
+        $("setupMessage").textContent = "กำลังโหลดข้อมูล…";
+
+        try {
+          const init = await run("getInit");
+
+          $("who").textContent = init.email || "";
+          $("cls").replaceChildren();
+
+          const classes = Array.isArray(init.classes) ? init.classes : [];
+
+          if (!classes.length) {
+            $("cls").add(new Option("ไม่พบห้องเรียน", ""));
+            $("setupMessage").textContent =
+              "ยังไม่มีห้องเรียนที่พร้อมใช้งาน กรุณาติดต่อผู้ดูแลระบบ";
+            $("retryInit").hidden = false;
+            return;
+          }
+
+          classes.forEach(cls => {
+            $("cls").add(new Option(cls, cls));
+          });
+
+          $("cls").disabled = false;
+          $("start").disabled = false;
+          $("setupMessage").textContent =
+            "ระบบจะเริ่มนับเวลาหลังเปิดรอบเช็กชื่อ";
+        } catch (error) {
+          showErr(error);
+          $("setupMessage").textContent = "โหลดข้อมูลไม่สำเร็จ";
+          $("retryInit").hidden = false;
+        } finally {
+          loadingInit = false;
+          $("retryInit").disabled = false;
+        }
+      }
+
+      $("mins").addEventListener("input", event => {
+        setDuration(event.target.value);
+      });
+
+      $("minus").addEventListener("click", () => {
+        setDuration(Number($("mins").value) - 1);
+      });
+
+      $("plus").addEventListener("click", () => {
+        setDuration(Number($("mins").value) + 1);
+      });
+
+      document.querySelectorAll("[data-minutes]").forEach(button => {
+        button.addEventListener("click", () => {
+          setDuration(button.dataset.minutes);
+        });
+      });
+
+      $("retryInit").addEventListener("click", loadInit);
+
+      $("setupForm").addEventListener("submit", async event => {
+        event.preventDefault();
+
+        if (starting || sessionId || !$("cls").value) return;
+
+        clearErr();
+
+        // Do not create a session if the QR library failed to load.
+        if (typeof QRCode === "undefined") {
+          showErr(new Error(
+            "โหลดส่วนแสดง QR Code ไม่สำเร็จ กรุณารีเฟรชหน้าแล้วลองอีกครั้ง"
+          ));
+          return;
+        }
+
+        setStarting(true);
+
+        let session;
+
+        try {
+          session = await run(
+            "startSession",
+            $("cls").value,
+            Number($("mins").value)
+          );
+        } catch (error) {
+          showErr(error);
+          setStarting(false);
+          return;
+        }
+
+        // Once created, keep the active session visible even if a later
+        // QR/status request fails. Do not offer another start accidentally.
+        sessionId = session.id;
+        closedShown = false;
+        $("clsName").textContent = session.cls;
+        $("setup").hidden = true;
+        $("live").hidden = false;
+
+        refreshToken();
+        poll();
+
+        uiTimer = setInterval(tick, 200);
+
+        $("stop").focus({ preventScroll: true });
+      });
+
+      function scheduleToken(delay) {
+        clearTimeout(tokenTimer);
+
+        if (sessionId && !closedShown) {
+          tokenTimer = setTimeout(refreshToken, delay);
+        }
+      }
+
+      async function refreshToken() {
+        if (!sessionId || closedShown || tokenBusy) return;
+
+        clearTimeout(tokenTimer);
+        tokenBusy = true;
+
+        try {
+          const token = await run("getToken", sessionId);
+
+          if (closedShown) return;
+
+          if (token.closed) {
+            hideQR("ปิดรับเช็กชื่อแล้ว", "กำลังอัปเดตสรุปผล…");
+            await poll();
+
+            // Retry status if the session closed but status could not load.
+            if (!closedShown) scheduleToken(2000);
+            return;
+          }
+
+          if (!qr) {
+            $("qr").replaceChildren();
+            $("qr").classList.remove("loading");
+
             qr = new QRCode($("qr"), {
-              text: "wait",
+              text: token.url,
               width: 360,
               height: 360,
-              correctLevel: QRCode.CorrectLevel.M,
+              correctLevel: QRCode.CorrectLevel.M
             });
-            refreshToken();
-            poll();
-            pollTimer = setInterval(poll, 3000);
-            uiTimer = setInterval(tick, 200);
-          })
-          .catch(function (e) {
-            showErr(e);
-            $("start").disabled = false;
-          });
-      };
+          } else {
+            qr.makeCode(token.url);
+          }
 
-      $("stop").onclick = function () {
-        if (!confirm("ปิดรับเช็กชื่อตอนนี้?")) return;
-        run("stopSession", sessionId).then(poll).catch(showErr);
-      };
-      $("again").onclick = function () {
-        location.reload();
-      };
+          slotMs = Number(token.slotMs) || 15000;
+          nextAt = Date.now() + Math.max(0, Number(token.msToNext) || 0);
 
-      function refreshToken() {
-        clearTimeout(tokenTimer);
-        if (closedShown) return;
-        run("getToken", sessionId)
-          .then(function (r) {
-            if (r.closed) {
-              poll();
-              return;
-            }
-            qr.makeCode(r.url);
-            $("net").hidden = true;
-            slotMs = r.slotMs;
-            nextAt = Date.now() + r.msToNext;
-            tokenTimer = setTimeout(
-              refreshToken,
-              Math.max(500, r.msToNext + 150),
-            );
-          })
-          .catch(function () {
-            $("net").hidden = false;
-            tokenTimer = setTimeout(refreshToken, 2000);
-          });
+          $("net").hidden = true;
+
+          if (!endAt || Date.now() < endAt) {
+            $("qrFrame").classList.remove("closed");
+            $("overlay").hidden = true;
+          }
+
+          scheduleToken(Math.max(500, Number(token.msToNext) + 150));
+          tick();
+        } catch (error) {
+          $("net").hidden = false;
+          scheduleToken(2000);
+        } finally {
+          tokenBusy = false;
+        }
+      }
+
+      function schedulePoll() {
+        clearTimeout(pollTimer);
+
+        if (sessionId) {
+          pollTimer = setTimeout(poll, closedShown ? 5000 : 3000);
+        }
       }
 
       function poll() {
-        if (polling || !sessionId) return;
-        polling = true;
-        run("getStatus", sessionId)
-          .then(render)
-          .catch(function () {})
-          .then(function () {
-            polling = false;
-          });
+        if (!sessionId) return Promise.resolve();
+
+        // Share an in-flight request rather than running overlapping polls.
+        if (statusPromise) return statusPromise;
+
+        clearTimeout(pollTimer);
+
+        // Ignore a response started before a manual attendance change.
+        const requestVersion = dataVersion;
+
+        statusPromise = (async () => {
+          try {
+            const status = await run("getStatus", sessionId);
+
+            if (requestVersion !== dataVersion) return;
+
+            render(status);
+
+            $("sync").textContent = "อัปเดตรายชื่ออัตโนมัติ";
+            $("sync").classList.remove("problem");
+          } catch (error) {
+            $("sync").textContent =
+              "อัปเดตรายชื่อไม่สำเร็จ ระบบกำลังลองอีกครั้ง";
+            $("sync").classList.add("problem");
+          }
+        })().finally(() => {
+          statusPromise = null;
+          schedulePoll();
+        });
+
+        return statusPromise;
+      }
+
+      function hideQR(title, hint) {
+        $("qrFrame").classList.add("closed");
+        $("overlayTitle").textContent = title;
+        $("overlayHint").textContent = hint;
+        $("overlay").hidden = false;
       }
 
       function tick() {
-        if (!closedShown) {
+        if (!closedShown && nextAt) {
           const left = Math.max(0, nextAt - Date.now());
-          $("barfill").style.width = Math.min(100, (left / slotMs) * 100) + "%";
+
+          $("barfill").style.width =
+            Math.min(100, left / slotMs * 100) + "%";
+
+          $("qrNext").textContent =
+            left > 0
+              ? "เปลี่ยนใน " + Math.ceil(left / 1000) + " วินาที"
+              : "กำลังเปลี่ยน QR Code…";
         }
-        const rem = closedShown ? 0 : Math.max(0, endAt - Date.now());
-        const s = Math.ceil(rem / 1000);
+
+        if (!endAt && !closedShown) {
+          $("remain").textContent = "--:--";
+          return;
+        }
+
+        const remaining = closedShown ? 0 : Math.max(0, endAt - Date.now());
+        const seconds = Math.ceil(remaining / 1000);
+
         $("remain").textContent =
-          ("0" + Math.floor(s / 60)).slice(-2) +
-          ":" +
-          ("0" + (s % 60)).slice(-2);
+          String(Math.floor(seconds / 60)).padStart(2, "0") + ":" +
+          String(seconds % 60).padStart(2, "0");
+
+        $("timeBox").classList.toggle(
+          "ending",
+          !closedShown && remaining > 0 && remaining <= 60000
+        );
+
+        // Do not leave a QR visible while waiting for server confirmation
+        // after the displayed session time runs out.
+        if (!closedShown && remaining === 0) {
+          hideQR("ครบเวลาเปิดรับแล้ว", "กำลังตรวจสอบสถานะและสรุปผล…");
+        }
       }
 
-      function fmtTime(ms) {
-        return new Date(ms).toLocaleTimeString("th-TH", { hour12: false });
+      function fmtTime(value) {
+        return new Date(value).toLocaleTimeString("th-TH", {
+          hour12: false,
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        });
       }
 
-      function render(st) {
-        endAt = Date.now() + st.remainingMs;
-        $("checked").textContent = st.checked;
-        $("total").textContent = st.total;
-        $("nChk").textContent = st.checkedList.length;
-        $("nAbs").textContent = st.absentList.length;
+      function matchesSearch(student, query) {
+        return !query || [
+          student.name || "",
+          student.studentId || ""
+        ].join(" ").toLocaleLowerCase().includes(query);
+      }
 
-        $("absList").innerHTML = st.absentList.length
-          ? st.absentList
-              .map(function (a) {
-                return (
-                  '<div class="item"><div>' +
-                  esc(a.name) +
-                  '<div class="sub">' +
-                  esc(a.studentId) +
-                  "</div></div>" +
-                  '<button class="ghost small" data-act="mark" data-email="' +
-                  esc(a.email) +
-                  '">ติ๊กให้</button></div>'
-                );
-              })
-              .join("")
-          : '<div class="empty">เช็กชื่อครบทุกคนแล้ว 🎉</div>';
+      function updateList(id, html) {
+        const list = $(id);
+        const scrollTop = list.scrollTop;
 
-        let shared = 0;
-        $("chkList").innerHTML = st.checkedList.length
-          ? st.checkedList
-              .map(function (a) {
-                if (a.shared) shared++;
-                return (
-                  '<div class="item"><div>' +
-                  esc(a.name) +
-                  (a.shared ? '<span class="tag">⚠ อุปกรณ์ซ้ำ</span>' : "") +
-                  (a.method === "manual"
-                    ? '<span class="tag m">อาจารย์ติ๊ก</span>'
-                    : "") +
-                  '<div class="sub">' +
-                  esc(a.studentId) +
-                  " · " +
-                  fmtTime(a.time) +
-                  "</div></div>" +
-                  '<button class="ghost small" data-act="remove" data-email="' +
-                  esc(a.email) +
-                  '">ยกเลิก</button></div>'
-                );
-              })
-              .join("")
-          : '<div class="empty">ยังไม่มีใครเช็กชื่อ</div>';
+        // Preserve the focused student's action when a list updates.
+        const focused = list.contains(document.activeElement)
+          ? document.activeElement
+          : null;
 
-        const w = $("warn");
-        if (shared > 0) {
-          w.hidden = false;
-          w.textContent =
-            "พบ " +
-            shared +
-            " รายการที่ใช้อุปกรณ์เดียวกันเช็กหลายบัญชี ตรวจดูรายการที่มี ⚠ และเทียบกับจำนวนคนที่นั่งอยู่จริง";
-        } else {
-          w.hidden = true;
+        const email = focused ? focused.getAttribute("data-email") : null;
+        const action = focused ? focused.getAttribute("data-act") : null;
+
+        list.innerHTML = html;
+        list.scrollTop = scrollTop;
+
+        if (email && action) {
+          const replacement = Array.from(
+            list.querySelectorAll("button[data-email]")
+          ).find(button =>
+            button.dataset.email === email &&
+            button.dataset.act === action
+          );
+
+          if (replacement && !replacement.disabled) {
+            replacement.focus({ preventScroll: true });
+          }
+        }
+      }
+
+      function renderLists() {
+        if (!latestStatus) return;
+
+        const query = $("search").value.trim().toLocaleLowerCase();
+
+        const key = JSON.stringify([
+          latestStatus.absentList,
+          latestStatus.checkedList,
+          query,
+          Array.from(pendingStudents).sort()
+        ]);
+
+        // Avoid rebuilding rows on every poll when nothing changed.
+        if (key === lastListKey) return;
+        lastListKey = key;
+
+        const absent = latestStatus.absentList.filter(student =>
+          matchesSearch(student, query)
+        );
+
+        const checked = latestStatus.checkedList.filter(student =>
+          matchesSearch(student, query)
+        );
+
+        const absentHTML = absent.length
+          ? absent.map(student => {
+              const busy = pendingStudents.has(student.email);
+
+              return `
+                <div class="item">
+                  <div class="student-info">
+                    <div class="student-name">${esc(student.name)}</div>
+                    <div class="student-sub">${esc(student.studentId)}</div>
+                  </div>
+                  <button
+                    class="row-button"
+                    type="button"
+                    data-act="mark"
+                    data-email="${esc(student.email)}"
+                    aria-label="${esc("ติ๊กเช็กชื่อให้ " + student.name)}"
+                    ${busy ? "disabled" : ""}
+                  >${busy ? "รอสักครู่…" : "ติ๊กให้"}</button>
+                </div>
+              `;
+            }).join("")
+          : `<div class="empty">${
+              query
+                ? "ไม่พบรายชื่อที่ตรงกับการค้นหา"
+                : "เช็กชื่อครบทุกคนแล้ว"
+            }</div>`;
+
+        const checkedHTML = checked.length
+          ? checked.map(student => {
+              const busy = pendingStudents.has(student.email);
+
+              const tags = [
+                student.shared
+                  ? '<span class="tag">⚠ อุปกรณ์ซ้ำ</span>'
+                  : "",
+                student.method === "manual"
+                  ? '<span class="tag manual">อาจารย์ติ๊กให้</span>'
+                  : ""
+              ].join("");
+
+              return `
+                <div class="item">
+                  <div class="student-info">
+                    <div class="student-name">${esc(student.name)}</div>
+                    <div class="student-sub">
+                      ${esc(student.studentId)} · ${esc(fmtTime(student.time))}
+                    </div>
+                    ${tags ? '<div class="tags">' + tags + '</div>' : ""}
+                  </div>
+                  <button
+                    class="row-button remove"
+                    type="button"
+                    data-act="remove"
+                    data-email="${esc(student.email)}"
+                    aria-label="${esc("ยกเลิกการเช็กชื่อของ " + student.name)}"
+                    ${busy ? "disabled" : ""}
+                  >${busy ? "รอสักครู่…" : "ยกเลิก"}</button>
+                </div>
+              `;
+            }).join("")
+          : `<div class="empty">${
+              query
+                ? "ไม่พบรายชื่อที่ตรงกับการค้นหา"
+                : "ยังไม่มีนักเรียนเช็กชื่อ"
+            }</div>`;
+
+        updateList("absList", absentHTML);
+        updateList("chkList", checkedHTML);
+      }
+
+      function render(status) {
+        latestStatus = status;
+        endAt = Date.now() + Math.max(0, Number(status.remainingMs) || 0);
+
+        $("checked").textContent = status.checked;
+        $("total").textContent = status.total;
+        $("nChk").textContent = status.checkedList.length;
+        $("nAbs").textContent = status.absentList.length;
+        $("remainingCount").textContent = status.absentList.length;
+
+        const percentage = status.total
+          ? Math.min(100, Math.round(status.checked / status.total * 100))
+          : 0;
+
+        $("percentage").textContent = percentage + "%";
+        $("attendanceFill").style.width = percentage + "%";
+        $("attendanceProgress").setAttribute("aria-valuenow", percentage);
+
+        const shared = status.checkedList.filter(student => student.shared).length;
+
+        $("warn").hidden = shared === 0;
+
+        if (shared) {
+          $("warn").textContent =
+            "พบ " + shared +
+            " รายการที่ใช้อุปกรณ์เดียวกัน กรุณาตรวจสอบรายการที่มีป้าย " +
+            "“อุปกรณ์ซ้ำ” และเทียบกับนักเรียนในห้อง";
         }
 
-        if (!st.open && !closedShown) {
+        if (!status.open && !closedShown) {
           closedShown = true;
+
           clearTimeout(tokenTimer);
-          clearInterval(pollTimer);
-          $("qrbox").classList.add("closed");
-          $("overlay").hidden = false;
+
+          hideQR(
+            "ปิดรับเช็กชื่อแล้ว",
+            "ตรวจสอบรายชื่อและสรุปผลได้ในหน้านี้"
+          );
+
+          $("sessionStatus").textContent = "ปิดรับแล้ว";
+          $("sessionStatus").classList.add("closed");
+          $("timeLabel").textContent = "ปิดรับเช็กชื่อแล้ว";
+          $("qrRotation").hidden = true;
+          $("net").hidden = true;
           $("stop").hidden = true;
-          $("sumC").textContent = st.checked;
-          $("sumA").textContent = st.absentList.length;
           $("done").hidden = false;
-          // ปิดรับแล้ว: อัปเดตรายการสุดท้ายหลังติ๊ก/ยกเลิกยังทำได้ ให้ poll ต่อแบบช้า ๆ
-          pollTimer = setInterval(poll, 5000);
+          $("again").hidden = false;
         }
+
         if (closedShown) {
-          $("sumC").textContent = st.checked;
-          $("sumA").textContent = st.absentList.length;
+          $("sumC").textContent = status.checked;
+          $("sumA").textContent = status.absentList.length;
+        } else if (status.remainingMs > 0 && qr) {
+          $("qrFrame").classList.remove("closed");
+          $("overlay").hidden = true;
         }
+
+        renderLists();
+        tick();
       }
 
-      document.addEventListener("click", function (e) {
-        const b = e.target.closest("button[data-act]");
-        if (!b) return;
-        const email = b.getAttribute("data-email");
-        b.disabled = true;
-        const fn =
-          b.getAttribute("data-act") === "mark"
-            ? "markManual"
-            : "removeAttendance";
-        run(fn, sessionId, email)
-          .then(function () {
-            polling = false;
-            poll();
-          })
-          .catch(function (err) {
-            showErr(err);
-            b.disabled = false;
-          });
+      $("search").addEventListener("input", renderLists);
+
+      $("stop").addEventListener("click", async () => {
+        if (!sessionId || closedShown || stopping) return;
+
+        if (!confirm(
+          "ปิดรับเช็กชื่อตอนนี้หรือไม่?\n" +
+          "นักเรียนจะสแกนเพิ่มไม่ได้ แต่อาจารย์ยังปรับรายชื่อได้"
+        )) return;
+
+        stopping = true;
+        $("stop").disabled = true;
+        $("stop").textContent = "กำลังปิดรับ…";
+        clearErr();
+
+        try {
+          await run("stopSession", sessionId);
+
+          // Wait for any older poll, then get a fresh confirmed status.
+          if (statusPromise) await statusPromise;
+          await poll();
+        } catch (error) {
+          showErr(error);
+        } finally {
+          stopping = false;
+          $("stop").disabled = false;
+          $("stop").textContent = "ปิดรับเช็กชื่อ";
+        }
       });
+
+      $("again").addEventListener("click", () => {
+        if (pendingStudents.size) {
+          showErr(new Error(
+            "กำลังบันทึกการแก้ไขรายชื่อ กรุณารอสักครู่ก่อนเริ่มรอบใหม่"
+          ));
+          return;
+        }
+
+        location.reload();
+      });
+
+      document.addEventListener("click", async event => {
+        const button = event.target.closest("button[data-act]");
+        if (!button || !sessionId || button.disabled) return;
+
+        const email = button.dataset.email;
+        if (pendingStudents.has(email)) return;
+
+        const fn = button.dataset.act === "mark"
+          ? "markManual"
+          : "removeAttendance";
+
+        clearErr();
+        pendingStudents.add(email);
+        renderLists();
+
+        try {
+          await run(fn, sessionId, email);
+
+          // An earlier poll might contain pre-edit data.
+          dataVersion++;
+
+          if (statusPromise) await statusPromise;
+          await poll();
+        } catch (error) {
+          showErr(error);
+        } finally {
+          pendingStudents.delete(email);
+          renderLists();
+        }
+      });
+
+      // Refresh immediately when returning to Safari after switching apps.
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden || !sessionId) return;
+
+        tick();
+        poll();
+
+        if (!closedShown) refreshToken();
+      });
+
+      window.addEventListener("online", () => {
+        if (!sessionId) return;
+
+        poll();
+        if (!closedShown) refreshToken();
+      });
+
+      window.addEventListener("offline", () => {
+        if (!sessionId) return;
+
+        $("sync").textContent =
+          "ไม่มีการเชื่อมต่ออินเทอร์เน็ต ข้อมูลอาจยังไม่อัปเดต";
+        $("sync").classList.add("problem");
+
+        if (!closedShown) $("net").hidden = false;
+      });
+
+      window.addEventListener("pagehide", () => {
+        clearTimeout(tokenTimer);
+        clearTimeout(pollTimer);
+        clearInterval(uiTimer);
+      });
+
+      // Restore timers if Safari restores this page from its back-forward cache.
+      window.addEventListener("pageshow", event => {
+        if (!event.persisted || !sessionId) return;
+
+        clearInterval(uiTimer);
+        uiTimer = setInterval(tick, 200);
+
+        poll();
+        if (!closedShown) refreshToken();
+      });
+
+      setDuration(5);
+      loadInit();
     </script>
   </body>
 </html>

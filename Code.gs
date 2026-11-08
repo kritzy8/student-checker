@@ -10,8 +10,8 @@
  */
 
 const CONFIG = {
-  SLOT_SECONDS: 15, // QR เปลี่ยนทุกกี่วินาที
-  GRACE_SLOTS: 2, // ยอมรับโทเค็นของรอบก่อนหน้ากี่รอบ (กันสแกนช้าและเผื่อเวลาระบบทำงาน) => อายุจริงประมาณ 45 วินาที
+  SLOT_SECONDS: 10, // QR เปลี่ยนทุกกี่วินาที
+  GRACE_SLOTS: 2, // ยอมรับโทเค็นของรอบก่อนหน้ากี่รอบ (กันสแกนช้าและเผื่อเวลาระบบทำงาน) => อายุจริงประมาณ 30 วินาที
   DEFAULT_MINUTES: 5, // เวลาเปิดรับเช็กชื่อ
   MAX_MINUTES: 30,
   TZ: "Asia/Bangkok",
@@ -1340,6 +1340,7 @@ function summary_(from, to) {
       const key = cls + "|" + em;
       const st = (byStu[key] = byStu[key] || {
         cls: cls,
+        email: em,
         studentId: x.studentId,
         name: x.name,
         c: zero(),
