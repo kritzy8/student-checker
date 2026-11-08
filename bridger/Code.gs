@@ -2,7 +2,7 @@
 
 // ใส่ URL /exec ของแอปหลัก
 const MAIN_URL =
-  "https://script.google.com/macros/s/AKfycbzuIgaG0izNrNIzpAEmhiK7GFX_65f8AvYELq1lc9J0dnGdfUERFtMBjj0mTTjpU5_YKg/exec";
+  "https://script.google.com/macros/s/AKfycbyftTVG7lUWAHO6SFUOpqYDKoM_HBTPrrmGxpRsKo0lAcvUO3X1rT6We1ZthJt7mhblTg/exec";
 
 function doGet(e) {
   const p = (e && e.parameter) || {};
