@@ -473,9 +473,31 @@
         font-size: 18px;
       }
 
+      /* Start button stays grey until a classroom has been chosen. */
+      .start-button.not-ready,
+      .start-button.not-ready:disabled {
+        background: #cbd5e1;
+        color: #64748b;
+        border-color: transparent;
+        opacity: 1;
+      }
+
+      select:invalid {
+        color: var(--mute);
+      }
+
+      select option {
+        color: var(--ink);
+      }
+
       .setup-message {
         margin-top: 14px;
         text-align: center;
+      }
+
+      /* Only shown for loading / error messages. */
+      .setup-message:empty {
+        display: none;
       }
 
       .retry-button {
@@ -1172,14 +1194,16 @@
             <div class="setup-note">
               <span aria-hidden="true">ℹ️</span>
               <div>
-                <strong>พร้อมแล้วกดเริ่มเช็กชื่อ</strong><br />
-                ระบบจะแสดง QR Code สำหรับนักเรียน และปิดรับอัตโนมัติเมื่อครบเวลา
+                <strong>กรุณาเลือกห้องเรียน แล้วจึงกดเริ่มเช็กชื่อ</strong
+                ><br />
+                ระบบจะแสดง QR Code สำหรับนักเรียน
+                และปิดรับอัตโนมัติเมื่อครบตามเวลาที่กำหนด
               </div>
             </div>
 
             <button
               id="start"
-              class="button primary start-button"
+              class="button primary start-button not-ready"
               type="submit"
               disabled
             >
@@ -1438,6 +1462,7 @@
         starting = busy;
 
         $("start").disabled = busy || !$("cls").value;
+        $("start").classList.toggle("not-ready", !busy && !$("cls").value);
         $("start").textContent = busy
           ? "กำลังเปิดรอบเช็กชื่อ…"
           : "เริ่มเช็กชื่อ →";
@@ -1479,14 +1504,19 @@
             return;
           }
 
+          // Placeholder first, so no classroom is preselected.
+          const placeholder = new Option("กรุณาเลือกห้องเรียน", "", true, true);
+          placeholder.disabled = true;
+          $("cls").add(placeholder);
+
           classes.forEach(cls => {
             $("cls").add(new Option(cls, cls));
           });
 
+          $("cls").value = "";
           $("cls").disabled = false;
-          $("start").disabled = false;
-          $("setupMessage").textContent =
-            "ระบบจะเริ่มนับเวลาหลังเปิดรอบเช็กชื่อ";
+          $("setupMessage").textContent = "";
+          updateStartState();
         } catch (error) {
           showErr(error);
           $("setupMessage").textContent = "โหลดข้อมูลไม่สำเร็จ";
@@ -1496,6 +1526,16 @@
           $("retryInit").disabled = false;
         }
       }
+
+      function updateStartState() {
+        const chosen = !!$("cls").value;
+
+        $("start").disabled = starting || !chosen;
+        $("start").classList.toggle("not-ready", !starting && !chosen);
+        $("cls").required = true;
+      }
+
+      $("cls").addEventListener("change", updateStartState);
 
       $("mins").addEventListener("input", event => {
         setDuration(event.target.value);
