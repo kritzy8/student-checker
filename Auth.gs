@@ -105,6 +105,7 @@ function api(auth, fn, args) {
     startSession: startSession,
     getToken: getToken,
     getStatus: getStatus,
+    markAllPresent: markAllPresent,
     stopSession: stopSession,
     markManual: markManual,
     removeAttendance: removeAttendance,
