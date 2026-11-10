@@ -599,6 +599,22 @@ function startSession(cls, minutes) {
   const lock = LockService.getScriptLock();
   lock.waitLock(15000);
   try {
+    // Reuse or block if this class already has an open session
+    const open = rows_(SHEETS.SESSIONS).filter(function (r) {
+      return (
+        String(r["class"]) === cls &&
+        String(r.status) === "open" &&
+        Date.now() < new Date(r.end).getTime()
+      );
+    })[0];
+    if (open) {
+      if (String(open.teacher).trim().toLowerCase() === email) {
+        return { id: String(open.sessionId), cls: cls, resumed: true };
+      }
+      throw new Error(
+        "ห้อง " + cls + " มีรอบเช็กชื่อที่เปิดอยู่แล้วโดยอาจารย์ท่านอื่น",
+      );
+    }
     const now = Date.now();
     const s = {
       id: Utilities.getUuid().replace(/-/g, "").substring(0, 10),
@@ -1126,6 +1142,89 @@ function setStatus(sessionId, email, status, note) {
   }
 }
 
+/**
+ * ตั้งค่าให้นักเรียนทุกคนในรอบเช็กชื่อนั้นมีสถานะเป็น "มาเรียน" (present)
+ * - คนที่มีบันทึกเช็กชื่อใน Attendance อยู่แล้ว: ลบรายการปรับแก้เดิม (ถ้ามี) เพื่อให้ใช้สถานะมาเรียนตามระบบพร้อมเวลาสแกนเดิม
+ * - คนที่ไม่มีบันทึกเช็กชื่อใน Attendance: บันทึกการปรับแก้เป็น "present" ในชีต Adjustments
+ */
+function markAllPresent(sessionId) {
+  const admin = requireAdmin_();
+  const s = getSession_(sessionId);
+  if (!s) throw new Error("ไม่พบรอบเช็กชื่อ");
+
+  const roster = students_().filter(function (x) {
+    return x.cls === s.cls;
+  });
+  if (!roster.length) throw new Error("ไม่พบรายชื่อนักเรียนในห้องนี้");
+
+  const attMap = {};
+  getAttendance_(sessionId).forEach(function (r) {
+    attMap[String(r.email).toLowerCase()] = true;
+  });
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    const sh = sheet_(SHEETS.ADJUSTMENTS);
+    const n = sh.getLastRow();
+    const existingRows = {}; // email -> row number (1-based)
+    const existingNotes = {}; // email -> note เดิม
+
+    if (n >= 2) {
+      const vals = sh.getRange(2, 1, n - 1, 4).getValues(); // sessionId, email, status, note
+      for (let i = 0; i < vals.length; i++) {
+        if (String(vals[i][0]) === String(sessionId)) {
+          const em = String(vals[i][1]).trim().toLowerCase();
+          existingRows[em] = i + 2;
+          existingNotes[em] = String(vals[i][3] || "");
+        }
+      }
+    }
+
+    const now = new Date();
+    const toDelete = [];
+    const toAppend = [];
+
+    roster.forEach(function (stu) {
+      const em = stu.email;
+      const hadAtt = !!attMap[em];
+      const rowNum = existingRows[em];
+
+      if (hadAtt) {
+        // มีเวลาเช็กชื่อในระบบอยู่แล้ว ถ้าเคยถูกปรับเป็น สาย/ลา/ขาด ให้ลบแถวปรับแก้ออกเพื่อกลับเป็น "มาเรียน" ตามระบบ
+        if (rowNum) toDelete.push(rowNum);
+      } else {
+        // ไม่ได้สแกนเช็กชื่อ ให้ตั้งสถานะปรับแก้เป็น "present"
+        const note = existingNotes[em] || "";
+        const rec = [sessionId, em, "present", note, admin, now];
+        if (rowNum) {
+          sh.getRange(rowNum, 1, 1, 6).setValues([rec]);
+        } else {
+          toAppend.push(rec);
+        }
+      }
+    });
+
+    // ลบแถวจากล่างขึ้นบนเพื่อไม่ให้เลขแถวเลื่อน
+    toDelete.sort(function (a, b) {
+      return b - a;
+    });
+    toDelete.forEach(function (r) {
+      sh.deleteRow(r);
+    });
+
+    if (toAppend.length) {
+      sh.getRange(sh.getLastRow() + 1, 1, toAppend.length, 6).setValues(
+        toAppend,
+      );
+    }
+
+    return { ok: true };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
 /** ยกเลิกรอบเช็กชื่อ (เช่น อาจารย์กดเริ่มผิด) รอบนี้จะไม่ถูกนับในรายงาน ข้อมูลยังอยู่ในชีต */
 function voidSession(sessionId) {
   requireAdmin_();
@@ -1280,7 +1379,20 @@ function summary_(from, to) {
     return { p: 0, l: 0, v: 0, a: 0 };
   };
 
-  const sess = rows_(SHEETS.SESSIONS).filter(function (r) {
+  const allSessRows = rows_(SHEETS.SESSIONS);
+  const openSessions = allSessRows
+    .filter(function (r) {
+      return String(r.status) === "open" && now < new Date(r.end).getTime();
+    })
+    .map(function (r) {
+      return {
+        cls: String(r["class"]),
+        start: Utilities.formatDate(new Date(r.start), CONFIG.TZ, "HH:mm"),
+        end: Utilities.formatDate(new Date(r.end), CONFIG.TZ, "HH:mm"),
+      };
+    });
+
+  const sess = allSessRows.filter(function (r) {
     const status = String(r.status);
     if (status === "void") return false;
     if (status === "open" && now < new Date(r.end).getTime()) return false;
@@ -1371,6 +1483,7 @@ function summary_(from, to) {
     sessions: sess.length,
     counts: all,
     lowRate: SCHEDULE_CFG.LOW_RATE,
+    openSessions: openSessions,
     byClass: Object.keys(byClass)
       .sort()
       .map(function (k) {
