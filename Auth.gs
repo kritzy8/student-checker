@@ -5,6 +5,15 @@ const BRIDGE_URL =
   "https://script.google.com/macros/s/AKfycbzySE16f8Z_ixAxwzwbpap_wU5UbBXizqgqubyJzjlf3S_ydKRFC5zl-Gxtj_UCVgmtAA/exec";
 
 let CURRENT_EMAIL_ = "";
+let CURRENT_AUTH_ = "";
+
+// URL of the MAIN app (this project's /exec link). Paste yours here.
+const MAIN_URL =
+  "https://script.google.com/macros/s/AKfycbyftTVG7lUWAHO6SFUOpqYDKoM_HBTPrrmGxpRsKo0lAcvUO3X1rT6We1ZthJt7mhblTg/exec";
+
+function appUrl_(page, auth) {
+  return MAIN_URL + "?p=" + page + "&auth=" + encodeURIComponent(auth || "");
+}
 
 function currentEmail_() {
   return CURRENT_EMAIL_;
@@ -104,14 +113,10 @@ function goTopPage_(url, message, buttonText) {
       "var u=" +
       JSON.stringify(url) +
       ";" +
-      "function go(){" +
-      '  try{var a=document.getElementById("goLink");if(a)a.click();}catch(e){}' +
-      "  try{window.top.location.replace(u);}catch(e){}" +
-      '  try{window.open(u,"_top");}catch(e){}' +
-      "}" +
+      "function go(){try{window.top.location.replace(u);}catch(e){}}" +
       "go();" +
-      "setTimeout(go,150);" +
-      'document.addEventListener("touchstart",function(){var a=document.getElementById("goLink");if(a)a.click();},{once:true});' +
+      'document.addEventListener("click",go);' +
+      'document.addEventListener("touchend",go);' +
       "</script></body></html>",
   )
     .setTitle("กำลังพาไปยังหน้าเว็บ...")
@@ -163,5 +168,6 @@ function api(auth, fn, args) {
   if (!Object.prototype.hasOwnProperty.call(FN, fn))
     throw new Error("ไม่อนุญาตให้เรียกฟังก์ชันนี้");
   CURRENT_EMAIL_ = email;
+  CURRENT_AUTH_ = auth;
   return FN[fn].apply(null, Array.isArray(args) ? args : []);
 }

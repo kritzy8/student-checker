@@ -3682,7 +3682,7 @@
                               sub.textContent = "วันนี้เป็นวันหยุดสุดสัปดาห์";
                               return;
                             }
-                            const goUrl = ME && ME.bridgeUrl ? ME.bridgeUrl + "?p=t" : "";
+                            const goUrl = ME && ME.teacherUrl ? ME.teacherUrl : "";
                             let cnt = 0, html = "";
                             PERIODS.forEach(function (p, i) {
                               const time = p.s + "–" + p.e;
@@ -3724,7 +3724,7 @@
                                 const listText = s.openSessions.map(function (o) {
                                   return "<b>ห้อง " + esc(o.cls) + "</b> (" + esc(o.start) + "–" + esc(o.end) + " น.)";
                                 }).join(", ");
-                                const tUrl = ME && ME.bridgeUrl ? ME.bridgeUrl + "?p=t" : "";
+                                const tUrl = ME && ME.teacherUrl ? ME.teacherUrl : "";
                                 banner.innerHTML =
                                   '<div>🟢 ขณะนี้กำลังเปิดเช็กชื่ออยู่: ' + listText + '</div>' +
                                   (tUrl ? '<a class="tl-go" style="border-color:#86efac;color:#15803d;" href="' + esc(tUrl) + '" target="_top">ไปหน้าเช็กชื่อ ›</a>' : '');
@@ -3801,9 +3801,9 @@
                             return run("getDashboard", ymd(from), ymd(now))
                               .then(function (d) {
                                 ME = d; SCHED = d.schedule; SUM = d.summary; LOADED = true;
-                                if (d.bridgeUrl) {
+                                if (d.teacherUrl) {
                                   const g = $("goTeacher");
-                                  g.href = d.bridgeUrl + "?p=t";
+                                  g.href = d.teacherUrl;
                                   g.hidden = false;
                                 }
                                 renderHello(); renderToday(); renderSummary();

@@ -408,8 +408,9 @@ function doGet(e) {
   if (p.p === "t") {
     const tt = HtmlService.createTemplateFromFile("Teacher");
     tt.auth = p.auth;
-    tt.bridgeUrl = BRIDGE_URL; // ใหม่
-    tt.canAdmin = isAdmin_(email); // ใหม่
+    tt.bridgeUrl = BRIDGE_URL;
+    tt.canAdmin = isAdmin_(email);
+    tt.adminUrl = appUrl_("admin", p.auth);
     return tt
       .evaluate()
       .setTitle("เช็กชื่อด้วย QR")
@@ -420,6 +421,8 @@ function doGet(e) {
   const th = HtmlService.createTemplateFromFile("Home");
   th.email = email;
   th.bridgeUrl = BRIDGE_URL;
+  th.teacherUrl = appUrl_("t", p.auth);
+  th.adminUrl = appUrl_("admin", p.auth);
   th.canTeach = isTeacher_(email);
   th.canAdmin = isAdmin_(email);
   th.fullName = displayName_(email);
@@ -1543,7 +1546,7 @@ function getDashboard(from, to) {
     name: displayName_(email),
     schedule: mySchedule_(email),
     summary: summary_(from, to),
-    bridgeUrl: BRIDGE_URL, // ใหม่
+    teacherUrl: appUrl_("t", CURRENT_AUTH_),
   };
 }
 
