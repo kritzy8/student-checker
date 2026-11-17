@@ -460,10 +460,13 @@ function verifyToken_(session, token) {
 
 /* ===================== ตัวช่วยข้อมูล ===================== */
 
+let _SS = null;
 function db_() {
+  if (_SS) return _SS;
   const id = PropertiesService.getScriptProperties().getProperty("SS_ID");
   if (!id) throw new Error("ยังไม่ได้รัน setup()");
-  return SpreadsheetApp.openById(id);
+  _SS = SpreadsheetApp.openById(id);
+  return _SS;
 }
 
 function sheet_(name) {
@@ -800,9 +803,24 @@ function checkin(sessionId, token, deviceId) {
   }
   const s = getSession_(sessionId);
   if (!s) return fail_("NO_SESSION", "ไม่พบรอบเช็กชื่อนี้");
+
+  // 1) Fast-path: ถ้ามีชื่อใน Cache ว่าเช็กไปแล้ว ให้ตอบกลับทันทีโดยไม่ต้องเข้าคิวแย่ง Lock
+  const cachedList = cacheGetJson_("att_" + s.id);
+  if (cachedList) {
+    const cachedDone = cachedList.filter(function (r) {
+      return r.email === email;
+    })[0];
+    if (cachedDone) {
+      const st0 = students_().filter(function (x) {
+        return x.email === email;
+      })[0];
+      if (st0) return okResult_(st0, cachedDone.time, true);
+    }
+  }
+
   if (!isOpen_(s)) return fail_("CLOSED", "ปิดรับเช็กชื่อแล้ว");
   if (!verifyToken_(s, token))
-    return fail_("EXPIRED", "QR หมดอายุ กรุณาสแกนใหม่จากหน้าจอหน้าห้อง");
+    return fail_("EXPIRED", "QR Code หมดอายุ กรุณาสแกนใหม่จากหน้าจอหน้าห้อง");
   const st = students_().filter(function (x) {
     return x.email === email;
   })[0];
@@ -815,8 +833,14 @@ function checkin(sessionId, token, deviceId) {
     return fail_("WRONG_CLASS", "บัญชีนี้ไม่ได้อยู่ในห้อง " + s.cls);
 
   deviceId = String(deviceId || "").substring(0, 64);
+
+  // 2) ขยายเวลารอคิวเป็น 28 วินาที (รองรับกรณีสแกนพร้อมกัน 35-45 คนในเสี้ยววินาทีเดียว)
   const lock = LockService.getScriptLock();
-  lock.waitLock(20000);
+  if (!lock.tryLock(28000)) {
+    throw new Error(
+      "ขณะนี้มีผู้สแกนพร้อมกันจำนวนมาก ระบบกำลังจัดคิวให้ใหม่...",
+    );
+  }
   try {
     const list = getAttendance_(s.id);
     const done = list.filter(function (r) {
@@ -929,13 +953,21 @@ function getAdminInit() {
  */
 function getReport(cls, from, to) {
   requireAdmin_();
-  const roster = students_()
+  const isAll = cls === "__ALL__";
+  const allStudents = students_()
     .filter(function (x) {
-      return x.cls === cls;
+      return isAll || x.cls === cls;
     })
     .sort(function (a, b) {
+      if (a.cls !== b.cls) return a.cls < b.cls ? -1 : 1;
       return cmpId_(a.studentId, b.studentId);
     });
+
+  const rosterByClass = {};
+  allStudents.forEach(function (x) {
+    (rosterByClass[x.cls] = rosterByClass[x.cls] || []).push(x);
+  });
+
   const now = Date.now();
   const fmt = function (ms, f) {
     return Utilities.formatDate(new Date(ms), CONFIG.TZ, f);
@@ -943,7 +975,8 @@ function getReport(cls, from, to) {
 
   const sess = rows_(SHEETS.SESSIONS)
     .filter(function (r) {
-      if (String(r["class"]) !== cls) return false;
+      const rCls = String(r["class"]);
+      if (!isAll && rCls !== cls) return false;
       const status = String(r.status);
       if (status === "void") return false;
       if (status === "open" && now < new Date(r.end).getTime()) return false;
@@ -987,33 +1020,42 @@ function getReport(cls, from, to) {
   });
 
   // ตารางสอน: ใช้หาชื่อวิชา/คาบที่ ของแต่ละรอบ (จับคู่ด้วย อาจารย์ + ห้อง + วัน + เวลาเริ่ม)
-  const sched = rows_(SHEETS.SCHEDULE)
+  const schedByClass = {};
+  rows_(SHEETS.SCHEDULE)
     .filter(function (r) {
-      return String(r["class"]) === cls;
+      return isAll || String(r["class"]) === cls;
     })
-    .map(function (r) {
-      return {
+    .forEach(function (r) {
+      const c = String(r["class"]);
+      (schedByClass[c] = schedByClass[c] || []).push({
         teacher: String(r.teacher).trim().toLowerCase(),
         day: Number(r.day),
         period: Number(r.period),
         subject: String(r.subject || ""),
         room: String(r.room || ""),
-      };
+      });
     });
 
   return {
     cls: cls,
-    students: roster.map(function (x) {
-      return { email: x.email, studentId: x.studentId, name: x.name };
+    students: allStudents.map(function (x) {
+      return {
+        email: x.email,
+        studentId: x.studentId,
+        name: x.name,
+        cls: x.cls,
+      };
     }),
     sessions: sess.map(function (r) {
       const sid = String(r.sessionId);
+      const sCls = String(r["class"]);
+      const classRoster = rosterByClass[sCls] || [];
       const startMs = new Date(r.start).getTime();
       let st = "",
         ad = "";
       const notes = {};
       const ts = {}; // เวลาที่นักเรียนเช็กชื่อจริง (HH:mm:ss) จากชีต Attendance
-      roster.forEach(function (x) {
+      classRoster.forEach(function (x) {
         const a = adj[sid + "|" + x.email];
         const rec = att[sid] && att[sid][x.email];
         if (rec) ts[x.email] = { t: fmt(rec.t, "HH:mm:ss"), m: rec.m };
@@ -1027,12 +1069,13 @@ function getReport(cls, from, to) {
         }
       });
       const slot = matchSlot_(
-        sched,
+        schedByClass[sCls] || [],
         String(r.teacher).trim().toLowerCase(),
         startMs,
       );
       return {
         id: sid,
+        cls: sCls,
         date: fmt(startMs, "yyyy-MM-dd"),
         time: fmt(startMs, "HH:mm"),
         st: st,
@@ -1804,4 +1847,17 @@ function deleteNote_(email) {
   for (let i = emails.length - 1; i >= 0; i--) {
     if (noteKey_(emails[i][0]) === key) sh.deleteRow(i + 2);
   }
+}
+
+function checkSecret() {
+  const k = PropertiesService.getScriptProperties().getProperty("AUTH_SECRET");
+  Logger.log(
+    k
+      ? k.length +
+          " ตัวอักษร, ขึ้นต้น " +
+          k.slice(0, 6) +
+          ", ลงท้าย " +
+          k.slice(-6)
+      : "ไม่มีค่า (MISSING)",
+  );
 }
